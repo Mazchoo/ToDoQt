@@ -39,5 +39,5 @@ class ToDoListController(QWidget):
     @staticmethod
     def initializeUi(self):
         self.parent.setWindowTitle(" To Do List")
-        setWindowIcon(self.parent, 'WoodenBow.png')
+        setWindowIcon(self.parent, 'Resources/Icons/WoodenBow.png')
     

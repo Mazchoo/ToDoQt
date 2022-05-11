@@ -13,7 +13,7 @@ from Controller.ControlFunctions import ToDoListController
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    loadQss(app, "ToDoApp.qss")
+    loadQss(app, "Resources/QSS/ToDoApp.qss")
 
     parent_window = QMainWindow()
     widget = ToDoListController(parent_window, ToDoModel, Ui_ToDoLayout)
