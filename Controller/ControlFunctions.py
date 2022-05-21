@@ -1,32 +1,16 @@
 
-from PyQt5.QtGui import QStandardItemModel, QStandardItem
-from PyQt5.QtWidgets import QListView
+from PyQt5.QtGui import QStandardItem
 
 from Common.ClassMethod import ClassMethod
 from Common.ModelViewController import QtControlFunction
+from Common.GitCommands import  (
+    git_restore, git_add_all_files_in_folder, git_commit, git_push
+)
+
 from Controller.Controller import ToDoListController
-
-
-def get_selected_item_from_list(model_list: QStandardItemModel, list_view: QListView):
-    selected_indices = list_view.selectedIndexes()
-    if selected_indices:
-        return model_list.item(selected_indices[0].row())
-
-
-def delete_item_if_selected(model_list: QStandardItemModel, list_view: QListView):
-    selected_indices = list_view.selectedIndexes()
-    if selected_indices:
-        deleted_item = model_list.takeRow(selected_indices[0].row())[0]
-        list_view.setModel(model_list)
-        return deleted_item
-
-
-def append_item_to_list_view(model_list: QStandardItemModel, list_view: QListView, standard_item: QStandardItem):
-    if not standard_item: return
-    model_list.appendRow(standard_item)
-    list_view.setModel(model_list)
-    return standard_item
-
+from Controller.ControlHelpers import (
+    get_selected_item_from_list, delete_item_if_selected, append_item_to_list_view
+)
 
 @ClassMethod(ToDoListController)
 @QtControlFunction(True)
@@ -121,3 +105,12 @@ def save_current_item_description(self, _click: bool):
 @QtControlFunction(True)
 def save_backups(self, _click: bool):
     self.model.save_to_folder("SavedToDo")
+
+
+@ClassMethod(ToDoListController)
+def git_push_backups(self, _click: bool):
+    # ToDo - see if button can be turned off while action in progress
+    git_restore('--staged SavedToDo')
+    if git_add_all_files_in_folder('SavedToDo'):
+        git_commit('Updated ToDo items')
+        git_push()

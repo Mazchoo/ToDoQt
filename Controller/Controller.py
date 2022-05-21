@@ -28,6 +28,7 @@ class ToDoListController(QWidget):
         
         self.layout.saveChanges_pushButton.clicked.connect(lambda x: self.save_current_item_description(self, x))
         self.layout.backup_pushButton.clicked.connect(lambda x: self.save_backups(self, x))
+        self.layout.upload_pushButtod.clicked.connect(lambda x: self.git_push_backups(x))
 
     @staticmethod
     def initializeModels(self):
