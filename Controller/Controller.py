@@ -3,6 +3,8 @@ from PyQt5.QtWidgets import QWidget
 
 from Common.QtHelpers import setWindowIcon
 from Common.ModelViewController import CreateQtController
+from DragEvents.DragEvents import enterTaskListBox, moveTaskListItem
+
 
 @CreateQtController # initialise with window, model, layout
 class ToDoListController(QWidget):
@@ -30,6 +32,12 @@ class ToDoListController(QWidget):
         self.layout.backup_pushButton.clicked.connect(lambda x: self.save_backups(self, x))
         self.layout.upload_pushButtod.clicked.connect(lambda x: self.git_push_backups(x))
 
+        pending_list = self.layout.pending_listView
+        setattr(pending_list, 'dragEnterEvent', lambda e: enterTaskListBox(pending_list, e))
+
+        in_progress_list = self.layout.inProgress_listView
+        setattr(in_progress_list, 'dragEnterEvent', lambda e: moveTaskListItem(self.layout, self.model, in_progress_list, e))
+
     @staticmethod
     def initializeModels(self):
         self.model.load_from_folder("SavedToDo")
@@ -41,4 +49,10 @@ class ToDoListController(QWidget):
     def initializeUi(self):
         self.parent.setWindowTitle(" To Do List")
         setWindowIcon(self.parent, 'Resources/Icons/WoodenBow.png')
-    
+
+        self.layout.pending_listView.setAcceptDrops(True)
+        self.layout.pending_listView.setDragEnabled(True)
+        self.layout.inProgress_listView.setAcceptDrops(True)
+        self.layout.inProgress_listView.setDragEnabled(True)
+        self.layout.done_listView.setAcceptDrops(True)
+        self.layout.done_listView.setDragEnabled(True)
