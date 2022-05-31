@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QWidget, QListView
 
 from Common.QtHelpers import setWindowIcon
 from Common.ModelViewController import CreateQtController
-from DragEvents.DragEvents import enterTaskListBox, moveTaskListItem
+from DragEvents.DragEvents import enterTaskListBox, dragMoveEvent, moveTaskListItem
 
 
 @CreateQtController # initialise with window, model, layout
@@ -34,14 +34,17 @@ class ToDoListController(QWidget):
 
         pending_list = self.layout.pending_listView
         setattr(pending_list, 'dragEnterEvent', lambda e: enterTaskListBox(pending_list, e))
+        setattr(pending_list, 'dragMoveEvent', lambda e: dragMoveEvent(pending_list, e))
         setattr(pending_list, 'dropEvent', lambda e: moveTaskListItem(self.layout, self.model, pending_list, e))
 
         in_progress_list = self.layout.inProgress_listView
         setattr(in_progress_list, 'dragEnterEvent', lambda e: enterTaskListBox(in_progress_list, e))
+        setattr(in_progress_list, 'dragMoveEvent', lambda e: dragMoveEvent(in_progress_list, e))
         setattr(in_progress_list, 'dropEvent', lambda e: moveTaskListItem(self.layout, self.model, in_progress_list, e))
 
         done_list = self.layout.done_listView
         setattr(done_list, 'dragEnterEvent', lambda e: enterTaskListBox(done_list, e))
+        setattr(done_list, 'dragMoveEvent', lambda e: dragMoveEvent(done_list, e))
         setattr(done_list, 'dropEvent', lambda e: moveTaskListItem(self.layout, self.model, done_list, e))
 
     @staticmethod

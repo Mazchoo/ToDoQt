@@ -2,15 +2,24 @@
 from Controller.ControlHelpers import (
     list_view_has_selected_item, delete_item_if_selected, append_item_to_list_view
 )
+from PyQt5.QtCore import Qt
 
 def enterTaskListBox(list_view, event):
-    '''
-        
-    '''
     is_model_list_item = event.mimeData().hasFormat('application/x-qabstractitemmodeldatalist')
     list_view_has_focus = list_view_has_selected_item(list_view)
 
     if is_model_list_item and not list_view_has_focus:
+        event.accept()
+    else:
+        event.ignore()
+
+
+def dragMoveEvent(list_view, event):
+    is_model_list_item = event.mimeData().hasFormat('application/x-qabstractitemmodeldatalist')
+    list_view_has_focus = list_view_has_selected_item(list_view)
+
+    if is_model_list_item and not list_view_has_focus:
+        event.setDropAction(Qt.MoveAction)
         event.accept()
     else:
         event.ignore()
