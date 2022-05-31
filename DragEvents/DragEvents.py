@@ -44,13 +44,21 @@ def moveTaskListItem(layout, model, target_view, event):
     '''
 
     target_model = getCorrespondingModelFromView(layout, model, target_view)
-    if target_model is None: return
+    if target_model is None:
+        event.ignore()
+        return
 
     source_view = event.source()
     source_model = getCorrespondingModelFromView(layout, model, source_view)
-    if source_model is None: return
+    if source_model is None:
+        event.ignore()
+        return
 
     move_item = delete_item_if_selected(source_model, source_view)
-    if move_item is None: return
+    if move_item is None:
+        event.ignore()
+        return
     append_item_to_list_view(target_model, target_view, move_item)
+
     clearAllSelections(layout)
+    event.accept()

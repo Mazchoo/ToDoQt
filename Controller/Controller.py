@@ -1,5 +1,5 @@
 
-from PyQt5.QtWidgets import QWidget
+from PyQt5.QtWidgets import QWidget, QListView
 
 from Common.QtHelpers import setWindowIcon
 from Common.ModelViewController import CreateQtController
@@ -34,9 +34,15 @@ class ToDoListController(QWidget):
 
         pending_list = self.layout.pending_listView
         setattr(pending_list, 'dragEnterEvent', lambda e: enterTaskListBox(pending_list, e))
+        setattr(pending_list, 'dropEvent', lambda e: moveTaskListItem(self.layout, self.model, pending_list, e))
 
         in_progress_list = self.layout.inProgress_listView
-        setattr(in_progress_list, 'dragEnterEvent', lambda e: moveTaskListItem(self.layout, self.model, in_progress_list, e))
+        setattr(in_progress_list, 'dragEnterEvent', lambda e: enterTaskListBox(in_progress_list, e))
+        setattr(in_progress_list, 'dropEvent', lambda e: moveTaskListItem(self.layout, self.model, in_progress_list, e))
+
+        done_list = self.layout.done_listView
+        setattr(done_list, 'dragEnterEvent', lambda e: enterTaskListBox(done_list, e))
+        setattr(done_list, 'dropEvent', lambda e: moveTaskListItem(self.layout, self.model, done_list, e))
 
     @staticmethod
     def initializeModels(self):
@@ -52,7 +58,12 @@ class ToDoListController(QWidget):
 
         self.layout.pending_listView.setAcceptDrops(True)
         self.layout.pending_listView.setDragEnabled(True)
-        self.layout.inProgress_listView.setAcceptDrops(True)
+        self.layout.pending_listView.setMovement(QListView.Snap)
+
+        self.layout.inProgress_listView.setAcceptDrops(True)        
         self.layout.inProgress_listView.setDragEnabled(True)
+        self.layout.pending_listView.setMovement(QListView.Snap)
+    
         self.layout.done_listView.setAcceptDrops(True)
         self.layout.done_listView.setDragEnabled(True)
+        self.layout.pending_listView.setMovement(QListView.Snap)
