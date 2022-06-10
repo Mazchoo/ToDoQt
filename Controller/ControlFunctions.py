@@ -1,6 +1,8 @@
 
 from PyQt5.QtGui import QStandardItem
 
+from unittest.mock import MagicMock
+
 from Common.ClassMethod import ClassMethod
 from Common.ModelViewController import QtControlFunction
 from Common.GitCommands import  (
@@ -15,11 +17,15 @@ from Controller.ControlHelpers import (
 @ClassMethod(ToDoListController)
 @QtControlFunction(True)
 def delete_current_item(self, _click):
-    deleted_item = delete_item_if_selected(self.model.pending_list, self.layout.pending_listView)
-    if deleted_item is None:
-        deleted_item = delete_item_if_selected(self.model.in_progress_list, self.layout.inProgress_listView)
-    if deleted_item is None:
-        deleted_item = delete_item_if_selected(self.model.done_list, self.layout.done_listView)
+    if deleted_item := delete_item_if_selected(self.model.pending_list, self.layout.pending_listView):
+        if get_selected_item_from_list(self.model.pending_list, self.layout.pending_listView):
+            self.layout.delete_pushButton.setEnabled(False)
+    elif deleted_item := delete_item_if_selected(self.model.in_progress_list, self.layout.inProgress_listView):
+        if get_selected_item_from_list(self.model.pending_list, self.layout.pending_listView):
+            self.layout.delete_pushButton.setEnabled(False)
+    elif deleted_item := delete_item_if_selected(self.model.done_list, self.layout.done_listView):
+        if get_selected_item_from_list(self.model.pending_list, self.layout.pending_listView):
+            self.layout.delete_pushButton.setEnabled(False)
 
     if deleted_item:
         self.layout.description_textEdit.setText("")
@@ -35,12 +41,20 @@ def add_name_to_list(self, _click: bool):
 
 
 @ClassMethod(ToDoListController)
+@QtControlFunction(MagicMock())
+def set_text_description(self, selected_item: QStandardItem):
+    self.layout.description_textEdit.setText(selected_item.accessibleDescription())
+    self.layout.delete_pushButton.setEnabled(True)
+    self.layout.saveChanges_pushButton.setEnabled(False)
+
+
+@ClassMethod(ToDoListController)
 @QtControlFunction(True)
 def setFocus_to_pendingView(self, _click: bool):
     self.layout.inProgress_listView.clearSelection()
     self.layout.done_listView.clearSelection()
     selected_item = get_selected_item_from_list(self.model.pending_list, self.layout.pending_listView)
-    self.layout.description_textEdit.setText(selected_item.accessibleDescription())
+    set_text_description(self, selected_item)
 
 
 @ClassMethod(ToDoListController)
@@ -49,7 +63,7 @@ def setFocus_to_in_progressView(self, _click: bool):
     self.layout.pending_listView.clearSelection()
     self.layout.done_listView.clearSelection()
     selected_item = get_selected_item_from_list(self.model.in_progress_list, self.layout.inProgress_listView)
-    self.layout.description_textEdit.setText(selected_item.accessibleDescription())
+    set_text_description(self, selected_item)
 
 
 @ClassMethod(ToDoListController)
@@ -58,34 +72,7 @@ def setFocus_to_doneView(self, _click: bool):
     self.layout.inProgress_listView.clearSelection()
     self.layout.pending_listView.clearSelection()
     selected_item = get_selected_item_from_list(self.model.done_list, self.layout.done_listView)
-    self.layout.description_textEdit.setText(selected_item.accessibleDescription())
-
-
-@ClassMethod(ToDoListController)
-@QtControlFunction(True)
-def setCurrentTask_to_pending(self, _click: bool):
-    if item_taken := delete_item_if_selected(self.model.in_progress_list, self.layout.inProgress_listView):
-        return append_item_to_list_view(self.model.pending_list, self.layout.pending_listView, item_taken)
-    if item_taken := delete_item_if_selected(self.model.done_list, self.layout.done_listView):
-        return append_item_to_list_view(self.model.pending_list, self.layout.pending_listView, item_taken)
-
-
-@ClassMethod(ToDoListController)
-@QtControlFunction(True)
-def setCurrentTask_to_inProgress(self, _click: bool):
-    if item_taken := delete_item_if_selected(self.model.pending_list, self.layout.pending_listView):
-        return append_item_to_list_view(self.model.in_progress_list, self.layout.inProgress_listView, item_taken)
-    if item_taken := delete_item_if_selected(self.model.done_list, self.layout.done_listView):
-        return append_item_to_list_view(self.model.in_progress_list, self.layout.inProgress_listView, item_taken)
-
-
-@ClassMethod(ToDoListController)
-@QtControlFunction(True)
-def setCurrentTask_to_done(self, _click: bool):
-    if item_taken := delete_item_if_selected(self.model.pending_list, self.layout.pending_listView):
-        return append_item_to_list_view(self.model.done_list, self.layout.done_listView, item_taken)
-    if item_taken := delete_item_if_selected(self.model.in_progress_list, self.layout.inProgress_listView):
-        return append_item_to_list_view(self.model.done_list, self.layout.done_listView, item_taken)
+    set_text_description(self, selected_item)
 
 
 @ClassMethod(ToDoListController)
@@ -108,9 +95,21 @@ def save_backups(self, _click: bool):
 
 
 @ClassMethod(ToDoListController)
+@QtControlFunction(True)
+def close_window(self, _click: bool):
+    self.parent.close()
+
+
+@ClassMethod(ToDoListController)
 def git_push_backups(self, _click: bool):
     # ToDo - see if button can be turned off while action in progress
     git_restore('--staged SavedToDo')
     if git_add_all_files_in_folder('SavedToDo'):
         git_commit('Updated ToDo items')
         git_push()
+
+
+@ClassMethod(ToDoListController)
+@QtControlFunction()
+def enable_save_changes(self):
+    self.layout.saveChanges_pushButton.setEnabled(True)
