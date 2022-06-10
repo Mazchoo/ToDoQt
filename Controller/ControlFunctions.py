@@ -38,6 +38,7 @@ def add_name_to_list(self, _click: bool):
         standard_item = QStandardItem(item_name)
         append_item_to_list_view(self.model.pending_list, self.layout.pending_listView, standard_item)
         self.layout.newTask_lineEdit.setText("")
+        self.layout.addNewTask_pushButton.setEnabled(False)
 
 
 @ClassMethod(ToDoListController)
@@ -78,11 +79,12 @@ def setFocus_to_doneView(self, _click: bool):
 @ClassMethod(ToDoListController)
 @QtControlFunction(True)
 def save_current_item_description(self, _click: bool):
-    selected_item = get_selected_item_from_list(self.model.pending_list, self.layout.pending_listView)
-    if selected_item is None:
-        selected_item = get_selected_item_from_list(self.model.in_progress_list, self.layout.inProgress_listView)
-    if selected_item is None:
-        selected_item = get_selected_item_from_list(self.model.done_list, self.layout.done_listView)
+    if selected_item := get_selected_item_from_list(self.model.pending_list, self.layout.pending_listView):
+        pass
+    elif selected_item := get_selected_item_from_list(self.model.in_progress_list, self.layout.inProgress_listView):
+        pass
+    elif selected_item := get_selected_item_from_list(self.model.done_list, self.layout.done_listView):
+        pass
 
     if selected_item:
         selected_item.setAccessibleDescription(self.layout.description_textEdit.toPlainText())
@@ -113,3 +115,9 @@ def git_push_backups(self, _click: bool):
 @QtControlFunction()
 def enable_save_changes(self):
     self.layout.saveChanges_pushButton.setEnabled(True)
+
+
+@ClassMethod(ToDoListController)
+@QtControlFunction()
+def enable_add_new_item(self):
+    self.layout.addNewTask_pushButton.setEnabled(True)

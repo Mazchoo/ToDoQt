@@ -31,7 +31,7 @@ class ToDoListController(QWidget):
 
         self.layout.saveChanges_pushButton.clicked.connect(lambda x: self.save_current_item_description(self, x))
         self.layout.backup_pushButton.clicked.connect(lambda x: self.save_backups(self, x))
-        self.layout.upload_pushButtod.clicked.connect(lambda x: self.git_push_backups(x))
+        self.layout.upload_pushButton.clicked.connect(lambda x: self.git_push_backups(x))
 
         setattr(pending_list, 'dragEnterEvent', lambda e: enterTaskListBox(pending_list, e))
         setattr(pending_list, 'dragMoveEvent', lambda e: dragMoveEvent(pending_list, e))
@@ -45,7 +45,8 @@ class ToDoListController(QWidget):
         setattr(done_list, 'dragMoveEvent', lambda e: dragMoveEvent(done_list, e))
         setattr(done_list, 'dropEvent', lambda e: moveTaskListItem(self.layout, self.model, done_list, e))
 
-        self.layout.description_textEdit.textChanged.connect(lambda : self.enable_save_changes(self))
+        self.layout.description_textEdit.textChanged.connect(lambda: self.enable_save_changes(self))
+        self.layout.newTask_lineEdit.textChanged.connect(lambda: self.enable_add_new_item(self))
 
     @staticmethod
     def initializeModels(self):

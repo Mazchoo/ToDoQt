@@ -2,6 +2,7 @@
 from PyQt5.QtWidgets import QListView
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 
+
 def list_view_has_selected_item(list_view: QListView):
     return True if list_view.selectedIndexes() else False
 
