@@ -70,4 +70,5 @@ def moveTaskListItem(layout, model, target_view, event):
     append_item_to_list_view(target_model, target_view, move_item)
 
     clearAllSelections(layout)
+    layout.backup_pushButton.setEnabled(True)
     event.accept()

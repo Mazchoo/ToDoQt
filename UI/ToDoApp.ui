@@ -275,6 +275,9 @@
     </property>
    </widget>
    <widget class="QPushButton" name="backup_pushButton">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -301,6 +304,9 @@
     </property>
    </widget>
    <widget class="QPushButton" name="upload_pushButton">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>150</x>

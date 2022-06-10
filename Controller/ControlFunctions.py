@@ -29,6 +29,7 @@ def delete_current_item(self, _click):
 
     if deleted_item:
         self.layout.description_textEdit.setText("")
+        self.layout.backup_pushButton.setEnabled(True)
 
 
 @ClassMethod(ToDoListController)
@@ -39,11 +40,13 @@ def add_name_to_list(self, _click: bool):
         append_item_to_list_view(self.model.pending_list, self.layout.pending_listView, standard_item)
         self.layout.newTask_lineEdit.setText("")
         self.layout.addNewTask_pushButton.setEnabled(False)
+        self.layout.backup_pushButton.setEnabled(True)
 
 
 @ClassMethod(ToDoListController)
 @QtControlFunction(MagicMock())
 def set_text_description(self, selected_item: QStandardItem):
+    if selected_item is None: return
     self.layout.description_textEdit.setText(selected_item.accessibleDescription())
     self.layout.delete_pushButton.setEnabled(True)
     self.layout.saveChanges_pushButton.setEnabled(False)
@@ -88,12 +91,16 @@ def save_current_item_description(self, _click: bool):
 
     if selected_item:
         selected_item.setAccessibleDescription(self.layout.description_textEdit.toPlainText())
+        self.layout.saveChanges_pushButton.setEnabled(False)
+        self.layout.backup_pushButton.setEnabled(True)
 
 
 @ClassMethod(ToDoListController)
 @QtControlFunction(True)
 def save_backups(self, _click: bool):
     self.model.save_to_folder("SavedToDo")
+    self.layout.backup_pushButton.setEnabled(False)
+    self.layout.upload_pushButton.setEnabled(True)
 
 
 @ClassMethod(ToDoListController)
@@ -104,7 +111,8 @@ def close_window(self, _click: bool):
 
 @ClassMethod(ToDoListController)
 def git_push_backups(self, _click: bool):
-    # ToDo - see if button can be turned off while action in progress
+    # ToDo - see if loading icon can be shown when this is being done
+    self.layout.upload_pushButton.setEnabled(False)
     git_restore('--staged SavedToDo')
     if git_add_all_files_in_folder('SavedToDo'):
         git_commit('Updated ToDo items')
