@@ -11,7 +11,6 @@ from Models.ToDoModel import ToDoModel
 from Controller.ControlFunctions import ToDoListController
 
 
-# ToDo - If selected item is not edited then remove save button
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     loadQss(app, "Resources/QSS/ToDoApp.qss")

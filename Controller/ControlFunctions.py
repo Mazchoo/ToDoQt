@@ -109,7 +109,10 @@ def git_push_backups(self, _click: bool):
 @ClassMethod(ToDoListController)
 @QtControlFunction()
 def enable_save_changes(self):
-    self.layout.saveChanges_pushButton.setEnabled(True)
+    if selected_item := get_selected_task(self.model, self.layout):
+        old_description = selected_item.accessibleDescription()
+        description_changed = self.layout.description_textEdit.toPlainText() != old_description
+        self.layout.saveChanges_pushButton.setEnabled(description_changed)
 
 
 @ClassMethod(ToDoListController)
