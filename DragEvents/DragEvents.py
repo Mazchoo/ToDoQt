@@ -27,7 +27,7 @@ def dragMoveEvent(list_view, event):
 
 def getCorrespondingModelFromView(layout, model, view_list):
     '''
-        (Move to control helpers)
+        ToDo (Move to control helpers)
     '''
     corresponding_model = None
     if layout.inProgress_listView == view_list:
