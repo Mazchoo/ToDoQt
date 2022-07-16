@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QWidget, QListView
 
 from Common.QtHelpers import setWindowIcon
 from Common.ModelViewController import CreateQtController
-from DragEvents.DragEvents import enterTaskListBox, dragMoveEvent, moveTaskListItem
+from DragEvents.DragEvents import enter_task_list_box, drag_move_event, moveTaskListItem
 
 
 @CreateQtController # initialise with window, model, layout
@@ -33,16 +33,16 @@ class ToDoListController(QWidget):
         self.layout.backup_pushButton.clicked.connect(lambda x: self.save_backups(self, x))
         self.layout.upload_pushButton.clicked.connect(lambda x: self.git_push_backups(x))
 
-        setattr(pending_list, 'dragEnterEvent', lambda e: enterTaskListBox(pending_list, e))
-        setattr(pending_list, 'dragMoveEvent', lambda e: dragMoveEvent(pending_list, e))
+        setattr(pending_list, 'dragEnterEvent', lambda e: enter_task_list_box(pending_list, e))
+        setattr(pending_list, 'dragMoveEvent', lambda e: drag_move_event(pending_list, e))
         setattr(pending_list, 'dropEvent', lambda e: moveTaskListItem(self.layout, self.model, pending_list, e))
 
-        setattr(in_progress_list, 'dragEnterEvent', lambda e: enterTaskListBox(in_progress_list, e))
-        setattr(in_progress_list, 'dragMoveEvent', lambda e: dragMoveEvent(in_progress_list, e))
+        setattr(in_progress_list, 'dragEnterEvent', lambda e: enter_task_list_box(in_progress_list, e))
+        setattr(in_progress_list, 'dragMoveEvent', lambda e: drag_move_event(in_progress_list, e))
         setattr(in_progress_list, 'dropEvent', lambda e: moveTaskListItem(self.layout, self.model, in_progress_list, e))
 
-        setattr(done_list, 'dragEnterEvent', lambda e: enterTaskListBox(done_list, e))
-        setattr(done_list, 'dragMoveEvent', lambda e: dragMoveEvent(done_list, e))
+        setattr(done_list, 'dragEnterEvent', lambda e: enter_task_list_box(done_list, e))
+        setattr(done_list, 'dragMoveEvent', lambda e: drag_move_event(done_list, e))
         setattr(done_list, 'dropEvent', lambda e: moveTaskListItem(self.layout, self.model, done_list, e))
 
         self.layout.description_textEdit.textChanged.connect(lambda: self.enable_save_changes(self))

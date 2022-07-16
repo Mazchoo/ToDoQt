@@ -48,3 +48,25 @@ def delete_selected_task(model, layout):
         return deleted_item
     else:
         return None
+
+
+def get_corresponding_model(layout, model, view_list):
+    corresponding_model = None
+    if layout.inProgress_listView == view_list:
+        corresponding_model = model.in_progress_list
+    elif layout.pending_listView == view_list:
+        corresponding_model = model.pending_list
+    elif layout.done_listView == view_list:
+        corresponding_model = model.done_list
+
+    return corresponding_model
+
+
+def clear_all_selections(layout):
+    layout.pending_listView.clearSelection()
+    layout.inProgress_listView.clearSelection()
+    layout.done_listView.clearSelection()
+
+    layout.description_textEdit.setText("")
+    layout.delete_pushButton.setEnabled(False)
+    layout.saveChanges_pushButton.setEnabled(False)
