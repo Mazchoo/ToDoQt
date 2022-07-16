@@ -84,11 +84,11 @@ def load_jsons_from_folder(path: Path, encrypt_fields: set):
 def json_dict_is_valid_item(json_dict: dict):
     if 'title' not in json_dict:
         return False
-    if 'description' not in json_dict:
+    elif 'description' not in json_dict:
         return False
-    if 'status' not in json_dict:
+    elif 'status' not in json_dict:
         return False
-    if not hasattr(ToDoModel, json_dict['status']):
+    elif not hasattr(ToDoModel, json_dict['status']):
         return False
     else:
         return True

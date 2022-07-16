@@ -26,3 +26,25 @@ def append_item_to_list_view(model_list: QStandardItemModel, list_view: QListVie
     model_list.appendRow(standard_item)
     list_view.setModel(model_list)
     return standard_item
+
+
+def get_selected_task(model, layout):
+    if selected_item := get_selected_item_from_list(model.pending_list, layout.pending_listView):
+        return selected_item
+    elif selected_item := get_selected_item_from_list(model.in_progress_list, layout.inProgress_listView):
+        return selected_item
+    elif selected_item := get_selected_item_from_list(model.done_list, layout.done_listView):
+        return selected_item
+    else:
+        return None
+
+
+def delete_selected_task(model, layout):
+    if deleted_item := delete_item_if_selected(model.pending_list, layout.pending_listView):
+        return deleted_item
+    elif deleted_item := delete_item_if_selected(model.in_progress_list, layout.inProgress_listView):
+        return deleted_item
+    elif deleted_item := delete_item_if_selected(model.done_list, layout.done_listView):
+        return deleted_item
+    else:
+        return None

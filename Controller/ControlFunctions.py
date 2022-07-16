@@ -11,25 +11,19 @@ from Common.GitCommands import  (
 
 from Controller.Controller import ToDoListController
 from Controller.ControlHelpers import (
-    get_selected_item_from_list, delete_item_if_selected, append_item_to_list_view
+    get_selected_item_from_list, append_item_to_list_view, get_selected_task, delete_selected_task
 )
+
 
 @ClassMethod(ToDoListController)
 @QtControlFunction(True)
 def delete_current_item(self, _click):
-    if deleted_item := delete_item_if_selected(self.model.pending_list, self.layout.pending_listView):
-        if get_selected_item_from_list(self.model.pending_list, self.layout.pending_listView):
-            self.layout.delete_pushButton.setEnabled(False)
-    elif deleted_item := delete_item_if_selected(self.model.in_progress_list, self.layout.inProgress_listView):
-        if get_selected_item_from_list(self.model.pending_list, self.layout.pending_listView):
-            self.layout.delete_pushButton.setEnabled(False)
-    elif deleted_item := delete_item_if_selected(self.model.done_list, self.layout.done_listView):
-        if get_selected_item_from_list(self.model.pending_list, self.layout.pending_listView):
-            self.layout.delete_pushButton.setEnabled(False)
-
-    if deleted_item:
+    if delete_selected_task(self.model, self.layout):
         self.layout.description_textEdit.setText("")
         self.layout.backup_pushButton.setEnabled(True)
+
+        if not get_selected_task(self.model, self.layout):
+            self.layout.delete_pushButton.setEnabled(False)
 
 
 @ClassMethod(ToDoListController)
@@ -82,14 +76,7 @@ def setFocus_to_doneView(self, _click: bool):
 @ClassMethod(ToDoListController)
 @QtControlFunction(True)
 def save_current_item_description(self, _click: bool):
-    if selected_item := get_selected_item_from_list(self.model.pending_list, self.layout.pending_listView):
-        pass
-    elif selected_item := get_selected_item_from_list(self.model.in_progress_list, self.layout.inProgress_listView):
-        pass
-    elif selected_item := get_selected_item_from_list(self.model.done_list, self.layout.done_listView):
-        pass
-
-    if selected_item:
+    if selected_item := get_selected_task(self.model, self.layout):
         selected_item.setAccessibleDescription(self.layout.description_textEdit.toPlainText())
         self.layout.saveChanges_pushButton.setEnabled(False)
         self.layout.backup_pushButton.setEnabled(True)
@@ -128,4 +115,5 @@ def enable_save_changes(self):
 @ClassMethod(ToDoListController)
 @QtControlFunction()
 def enable_add_new_item(self):
-    self.layout.addNewTask_pushButton.setEnabled(True)
+    new_task_empty = self.layout.newTask_lineEdit.displayText() == ''
+    self.layout.addNewTask_pushButton.setEnabled(not new_task_empty)
