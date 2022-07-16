@@ -11,7 +11,8 @@ from Common.GitCommands import  (
 
 from Controller.Controller import ToDoListController
 from Controller.ControlHelpers import (
-    get_selected_item_from_list, append_item_to_list_view, get_selected_task, delete_selected_task
+    get_selected_item_from_list, append_item_to_list_view,
+    get_selected_task, delete_selected_task
 )
 
 

@@ -50,13 +50,13 @@ def delete_selected_task(model, layout):
         return None
 
 
-def get_corresponding_model(layout, model, view_list):
+def get_corresponding_model(model, layout, list_view: QListView):
     corresponding_model = None
-    if layout.inProgress_listView == view_list:
+    if layout.inProgress_listView == list_view:
         corresponding_model = model.in_progress_list
-    elif layout.pending_listView == view_list:
+    elif layout.pending_listView == list_view:
         corresponding_model = model.pending_list
-    elif layout.done_listView == view_list:
+    elif layout.done_listView == list_view:
         corresponding_model = model.done_list
 
     return corresponding_model

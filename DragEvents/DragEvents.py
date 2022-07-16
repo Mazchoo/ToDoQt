@@ -1,11 +1,14 @@
 
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QListView
+from PyQt5.QtGui import QDragEnterEvent, QDragMoveEvent, QDropEvent
+
 from Controller.ControlHelpers import (
     list_view_has_selected_item, delete_item_if_selected, append_item_to_list_view,
     get_corresponding_model, clear_all_selections
 )
-from PyQt5.QtCore import Qt
 
-def enter_task_list_box(list_view, event):
+def enter_task_list_box(list_view: QListView, event: QDragEnterEvent):
     is_model_list_item = event.mimeData().hasFormat('application/x-qabstractitemmodeldatalist')
     list_view_has_focus = list_view_has_selected_item(list_view)
 
@@ -15,7 +18,7 @@ def enter_task_list_box(list_view, event):
         event.ignore()
 
 
-def drag_move_event(list_view, event):
+def drag_move_event(list_view: QListView, event: QDragMoveEvent):
     is_model_list_item = event.mimeData().hasFormat('application/x-qabstractitemmodeldatalist')
     list_view_has_focus = list_view_has_selected_item(list_view)
 
@@ -26,11 +29,7 @@ def drag_move_event(list_view, event):
         event.ignore()
 
 
-def moveTaskListItem(layout, model, target_view, event):
-    '''
-        delete_item_if_selected(source_list, list_view)
-        append_item_to_list_view(model_list, list_view, standard_item)
-    '''
+def move_task_list_item(model, layout, target_view: QListView, event: QDropEvent):
 
     target_model = get_corresponding_model(layout, model, target_view)
     if target_model is None:

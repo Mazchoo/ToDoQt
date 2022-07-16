@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QWidget, QListView
 
 from Common.QtHelpers import setWindowIcon
 from Common.ModelViewController import CreateQtController
-from DragEvents.DragEvents import enter_task_list_box, drag_move_event, moveTaskListItem
+from DragEvents.DragEvents import enter_task_list_box, drag_move_event, move_task_list_item
 
 
 @CreateQtController # initialise with window, model, layout
@@ -35,15 +35,15 @@ class ToDoListController(QWidget):
 
         setattr(pending_list, 'dragEnterEvent', lambda e: enter_task_list_box(pending_list, e))
         setattr(pending_list, 'dragMoveEvent', lambda e: drag_move_event(pending_list, e))
-        setattr(pending_list, 'dropEvent', lambda e: moveTaskListItem(self.layout, self.model, pending_list, e))
+        setattr(pending_list, 'dropEvent', lambda e: move_task_list_item(self.model, self.layout, pending_list, e))
 
         setattr(in_progress_list, 'dragEnterEvent', lambda e: enter_task_list_box(in_progress_list, e))
         setattr(in_progress_list, 'dragMoveEvent', lambda e: drag_move_event(in_progress_list, e))
-        setattr(in_progress_list, 'dropEvent', lambda e: moveTaskListItem(self.layout, self.model, in_progress_list, e))
+        setattr(in_progress_list, 'dropEvent', lambda e: move_task_list_item(self.model, self.layout, in_progress_list, e))
 
         setattr(done_list, 'dragEnterEvent', lambda e: enter_task_list_box(done_list, e))
         setattr(done_list, 'dragMoveEvent', lambda e: drag_move_event(done_list, e))
-        setattr(done_list, 'dropEvent', lambda e: moveTaskListItem(self.layout, self.model, done_list, e))
+        setattr(done_list, 'dropEvent', lambda e: move_task_list_item(self.model, self.layout, done_list, e))
 
         self.layout.description_textEdit.textChanged.connect(lambda: self.enable_save_changes(self))
         self.layout.newTask_lineEdit.textChanged.connect(lambda: self.enable_add_new_item(self))
