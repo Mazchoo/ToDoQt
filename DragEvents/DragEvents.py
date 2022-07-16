@@ -45,6 +45,10 @@ def clearAllSelections(layout):
     layout.inProgress_listView.clearSelection()
     layout.done_listView.clearSelection()
 
+    layout.description_textEdit.setText("")
+    layout.delete_pushButton.setEnabled(False)
+    layout.saveChanges_pushButton.setEnabled(False)
+
 
 def moveTaskListItem(layout, model, target_view, event):
     '''
