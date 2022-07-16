@@ -31,13 +31,13 @@ def drag_move_event(list_view: QListView, event: QDragMoveEvent):
 
 def move_task_list_item(model, layout, target_view: QListView, event: QDropEvent):
 
-    target_model = get_corresponding_model(layout, model, target_view)
+    target_model = get_corresponding_model(model, layout, target_view)
     if target_model is None:
         event.ignore()
         return
 
     source_view = event.source()
-    source_model = get_corresponding_model(layout, model, source_view)
+    source_model = get_corresponding_model(model, layout, source_view)
     if source_model is None:
         event.ignore()
         return
