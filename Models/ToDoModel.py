@@ -58,7 +58,7 @@ def try_decrypting_json_dict(json_dict: dict, file_name: Path, encrypt_fields: s
     try:
         json_dict = decrypt_json_dict(json_dict, file_name, encrypt_fields)
     except:
-        print("Warning! Decryption failed")
+        print("Error! Decryption failed")
         return None
     else:
         return json_dict

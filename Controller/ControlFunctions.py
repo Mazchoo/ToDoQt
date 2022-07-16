@@ -99,7 +99,6 @@ def close_window(self, _click: bool):
 
 @ClassMethod(ToDoListController)
 def git_push_backups(self, _click: bool):
-    # ToDo - see if loading icon can be shown when this is being done
     self.layout.upload_pushButton.setEnabled(False)
     git_restore('--staged SavedToDo')
     if git_add_all_files_in_folder('SavedToDo'):
