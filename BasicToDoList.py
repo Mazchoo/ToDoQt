@@ -10,6 +10,8 @@ from UI.ToDoLayout import Ui_ToDoLayout
 from Models.ToDoModel import ToDoModel
 from Controller.ControlFunctions import ToDoListController
 
+# ToDo Add QML widget which is only visible when saving to Git
+# ToDo Only add update files where contents have changed
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
