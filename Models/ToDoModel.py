@@ -42,10 +42,7 @@ def save_dicts_as_json(json_dicts: list, status_name: str, path: Path, encrypt_f
 
 
 def convert_list_to_json_dicts(model_list: QStandardItemModel):
-    output_dicts = []
-    for i in range(model_list.rowCount()):
-        output_dicts.append(model_list.item(i).data())
-    return output_dicts
+    return [model_list.item(i).data() for i in range(model_list.rowCount())]
 
 
 def try_decrypting_json_dict(json_dict: dict, file_name: Path, encrypt_fields: set):
@@ -105,15 +102,17 @@ class ToDoModel(QtStaticModel):
         try:
             json_dict = update_note_data(json_dict)
             json_dict = NoteEntry(**json_dict).dict()
-        except:
-            return
 
-        model_list = self.__getattribute__(json_dict['status'])
-        if isinstance(model_list, QStandardItemModel):
-            new_item = QStandardItem(json_dict['title'])
-            new_item.setAccessibleDescription(json_dict['description'])
-            new_item.setData(json_dict)
-            model_list.appendRow(new_item)
+            model_list = self.__getattribute__(json_dict['status'])
+            assert(isinstance(model_list, QStandardItemModel))
+        except:
+            print(f'json dict {json_dict} cannot be read.')
+            return
+        
+        new_item = QStandardItem(json_dict['title'])
+        new_item.setAccessibleDescription(json_dict['description'])
+        new_item.setData(json_dict)
+        model_list.appendRow(new_item)
     
     def load_from_folder(self, rel_path: str):
         path = self.check_folder_path(rel_path)

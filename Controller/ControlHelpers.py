@@ -2,6 +2,14 @@
 from PyQt5.QtWidgets import QListView
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 
+from Models.GlobalParams import LIST_VIEW_TO_STATUS_TYPE
+
+def update_standard_item_fields(standard_item: QStandardItemModel, update_fields: dict):
+    selected_item_data = standard_item.data()
+    selected_item_data.update(update_fields)
+    standard_item.setData(selected_item_data)
+    return standard_item
+
 
 def list_view_has_selected_item(list_view: QListView):
     return True if list_view.selectedIndexes() else False
@@ -24,6 +32,11 @@ def delete_item_if_selected(model_list: QStandardItemModel, list_view: QListView
 def append_item_to_list_view(model_list: QStandardItemModel, list_view: QListView, standard_item: QStandardItem):
     if not standard_item:
         return
+
+    if list_view.objectName() in LIST_VIEW_TO_STATUS_TYPE:
+        update_fields = {'status': LIST_VIEW_TO_STATUS_TYPE[list_view.objectName()]}
+        standard_item = update_standard_item_fields(standard_item, update_fields)
+
     model_list.appendRow(standard_item)
     list_view.setModel(model_list)
     return standard_item

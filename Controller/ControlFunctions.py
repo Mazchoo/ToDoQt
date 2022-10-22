@@ -12,8 +12,9 @@ from Common.GitCommands import  (
 from Controller.Controller import ToDoListController
 from Controller.ControlHelpers import (
     get_selected_item_from_list, append_item_to_list_view,
-    get_selected_task, delete_selected_task
+    get_selected_task, delete_selected_task, update_standard_item_fields
 )
+from Models.NoteEntry import create_new_note
 
 
 @ClassMethod(ToDoListController)
@@ -32,6 +33,8 @@ def delete_current_item(self, _click):
 def add_name_to_list(self, _click: bool):
     if item_name := self.layout.newTask_lineEdit.text():
         standard_item = QStandardItem(item_name)
+        standard_item.setData(create_new_note(item_name))
+
         append_item_to_list_view(self.model.pending_list, self.layout.pending_listView, standard_item)
         self.layout.newTask_lineEdit.setText("")
         self.layout.addNewTask_pushButton.setEnabled(False)
@@ -80,6 +83,9 @@ def setFocus_to_doneView(self, _click: bool):
 def save_current_item_description(self, _click: bool):
     if selected_item := get_selected_task(self.model, self.layout):
         selected_item.setAccessibleDescription(self.layout.description_textEdit.toPlainText())
+        update_fields = {'description': selected_item.accessibleDescription()}
+        selected_item = update_standard_item_fields(selected_item, update_fields)
+
         self.layout.saveChanges_pushButton.setEnabled(False)
         self.layout.backup_pushButton.setEnabled(True)
 
