@@ -119,3 +119,5 @@ class ToDoModel(QtStaticModel):
         
         for json_dict in load_jsons_from_folder(path, self.encrypt_fields):
             self.save_json_dict_into_model(json_dict)
+
+# ToDo - Data would be better stored in a csv and only check items that have a new id

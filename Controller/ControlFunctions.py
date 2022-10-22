@@ -14,7 +14,7 @@ from Controller.ControlHelpers import (
     get_selected_item_from_list, append_item_to_list_view,
     get_selected_task, delete_selected_task, update_standard_item_fields
 )
-from Models.NoteEntry import create_new_note
+from Models.NoteEntry import create_new_note, get_date_tuple_now
 
 
 @ClassMethod(ToDoListController)
@@ -83,7 +83,8 @@ def setFocus_to_doneView(self, _click: bool):
 def save_current_item_description(self, _click: bool):
     if selected_item := get_selected_task(self.model, self.layout):
         selected_item.setAccessibleDescription(self.layout.description_textEdit.toPlainText())
-        update_fields = {'description': selected_item.accessibleDescription()}
+        update_fields = {'description': selected_item.accessibleDescription(),
+                         'date_edited': get_date_tuple_now()}
         selected_item = update_standard_item_fields(selected_item, update_fields)
 
         self.layout.saveChanges_pushButton.setEnabled(False)

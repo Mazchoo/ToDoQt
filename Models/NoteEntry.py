@@ -24,6 +24,7 @@ class NoteEntry(BaseModel):
         assert value in status_types, f'Status must be one of {status_types}'
         return value
 
+
 def get_date_tuple_now():
     return eval(repr(datetime.now())[17:])
 
