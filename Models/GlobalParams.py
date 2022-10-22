@@ -1,5 +1,5 @@
 
-LATEST_VERSION = 1
+LATEST_VERSION = 2
 MAX_TITLE_LENGTH = 20
 STATUS_TYPES = ['pending_list', 'in_progress_list', 'done_list']
 LIST_VIEW_TO_STATUS_TYPE = {
@@ -7,3 +7,15 @@ LIST_VIEW_TO_STATUS_TYPE = {
     'pending_listView': 'pending_list', 
     'done_listView': 'done_list',
 }
+
+class NoteIdProvider:
+    max_id = 0
+    
+    @staticmethod
+    def get_new_id():
+        NoteIdProvider.max_id += 1
+        return NoteIdProvider.max_id
+
+    @staticmethod
+    def update_max_id(new_id):
+        NoteIdProvider.max_id = max(new_id, NoteIdProvider.max_id)

@@ -7,11 +7,13 @@ import Models.GlobalParams as GlobalParams
 
 class NoteEntry(BaseModel):
     version: int = GlobalParams.LATEST_VERSION
+    id_number: int
     title: str
     status: str
     description: str
     date_created: Tuple[int, int, int, int, int, int, int]
     date_edited: Tuple[int, int, int, int, int, int, int]
+    date_moved: Tuple[int, int, int, int, int, int, int]
     
     @validator('title')
     def title_must_be_right_length(cls, value):
@@ -35,8 +37,15 @@ def update_0_to_1(data):
     data['date_edited'] = date_now_tuple
 
 
+def update_1_to_2(data):
+    date_now_tuple = get_date_tuple_now()
+    data['date_moved'] = date_now_tuple
+    data['id_number'] = GlobalParams.NoteIdProvider.get_new_id()
+
+
 note_update_version = [
-    update_0_to_1
+    update_0_to_1,
+    update_1_to_2,
 ]
 
 def update_note_data(note_data: dict):
@@ -59,6 +68,8 @@ def create_new_note(item_name: str):
         'description': '',
         'date_created': date_now_tuple,
         'date_edited': date_now_tuple,
+        'date_moved': date_now_tuple,
+        'id_number': GlobalParams.NoteIdProvider.get_new_id()
     }
 
 
