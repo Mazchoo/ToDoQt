@@ -7,60 +7,14 @@ cwd = os.getcwd()
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 
 from Common.QtModel import QtStaticModel
-from Common.GenerateEncryption import encrypt_dictionary_and_save_key, decrypt_json_dict
 
 from Models.GlobalParams import FIELDS_TO_EVAL, FIELDS_TO_ENCRYPT, STATUS_TYPES, NoteIdProvider
 from Models.NoteEntry import NoteEntry, update_note_data
-
-
-def delete_old_hash_browns(output_df: pd.DataFrame, path: Path):
-    hash_brown_files = [path/f for f in os.listdir(path) if Path(f).suffix == '.hash_brown']
-    delete_hash_paths = [f for f in hash_brown_files if f.stem + f.suffix not in output_df.index]
-    for hash_path in delete_hash_paths:
-        hash_path.unlink() 
-
-
-def turn_json_dicts_into_df(json_dicts: list, status_name: str, path: Path, encrypt_fields: set):
-    encrypted_dicts = {}
-    for json_dict in json_dicts:
-        file_name = f"{status_name}_{json_dict['id_number']}.hash_brown"
-        file_path = path/file_name
-
-        try:
-            encrypted_dict = encrypt_dictionary_and_save_key(json_dict, file_path, encrypt_fields)
-        except:
-            print(f"Error! Encryption failed {file_name}")
-        else:
-            encrypted_dicts[file_name] = encrypted_dict
-
-    return pd.DataFrame.from_dict(encrypted_dicts, orient='index')
-
-
-def convert_list_to_json_dicts(model_list: QStandardItemModel):
-    return [model_list.item(i).data() for i in range(model_list.rowCount())]
-
-
-def try_decrypting_json_dict(json_dict: dict, file_name: Path, encrypt_fields: set, eval_fields: set):
-    try:
-        json_dict = decrypt_json_dict(json_dict, file_name, encrypt_fields, eval_fields)
-    except:
-        print("Error! Decryption failed")
-        return None
-    else:
-        return json_dict
-
-
-def load_jsons_from_folder(path: Path, encrypt_fields: set, eval_fields: set):
-    loaded_dicts = pd.read_csv(path/'saved_content.csv', index_col=0).to_dict(orient='index')
-
-    decrypted_jsons = {}
-    for file_name, json_dict in loaded_dicts.items():
-        file_path = path/file_name
-        if decrypted_dict := try_decrypting_json_dict(json_dict, file_path, encrypt_fields, eval_fields):
-            decrypted_jsons[file_name] = decrypted_dict
-
-    sorted_list = sorted([f for f in decrypted_jsons.keys()])
-    return [decrypted_jsons[f] for f in sorted_list]
+from Models.NoteFileHelpers import (
+    delete_old_hash_browns, get_hash_file_from_note_data, turn_note_data_into_df,
+    convert_list_to_note_data, load_notes_from_folder, get_all_new_notes,
+    get_all_edited_notes, get_all_delete_notes, get_new_columns
+)
 
 
 class ToDoModel(QtStaticModel):
@@ -69,6 +23,7 @@ class ToDoModel(QtStaticModel):
     done_list = QStandardItemModel
     encrypt_fields = FIELDS_TO_ENCRYPT
     eval_fields = FIELDS_TO_EVAL
+    initial_file_data = {}
 
     def check_folder_path(self, rel_path: str):
         path = Path(f"{cwd}/{rel_path}")
@@ -76,20 +31,40 @@ class ToDoModel(QtStaticModel):
             raise FileNotFoundError(f"Invalid directory {path}")
         return path
 
-    def save_list_as_jsons(self, status_name: str, path: Path):
-        model_list = self.__getattribute__(status_name)
-        pending_dicts = convert_list_to_json_dicts(model_list)
-        return turn_json_dicts_into_df(pending_dicts, status_name, path, self.encrypt_fields)
+    def get_all_note_data(self):
+        all_note_data = []
+        for status in STATUS_TYPES:
+            model_list = self.__getattribute__(status)
+            all_note_data.extend(convert_list_to_note_data(model_list))
+
+        return {get_hash_file_from_note_data(note): note for note in all_note_data}
+
 
     def save_to_folder(self, rel_path: str):
         path = self.check_folder_path(rel_path)
-        output_dfs = [self.save_list_as_jsons(status, path) for status in STATUS_TYPES]
-
-        new_df = pd.concat(output_dfs)
-        new_df.sort_values(by=['id_number'])
-        new_df.to_csv(path/'saved_content.csv')
         
-        delete_old_hash_browns(new_df, path)
+        all_note_data = self.get_all_note_data()
+        edited_rows = get_all_edited_notes(all_note_data, self.initial_file_data)
+        new_row_set = get_all_new_notes(all_note_data, self.initial_file_data)
+        deleted_row_set = get_all_delete_notes(all_note_data, self.initial_file_data)
+
+        final_df = pd.read_csv(path/'saved_content.csv', index_col=0)
+        new_columns = get_new_columns(all_note_data, final_df.columns)
+        new_rows = {k: v for k, v in all_note_data.items() if k in new_row_set}
+
+        edited_rows_df = turn_note_data_into_df(edited_rows, path, self.encrypt_fields)
+        new_rows_df = turn_note_data_into_df(new_rows, path, self.encrypt_fields)
+
+        for col in new_columns:
+            final_df[col] = None
+        final_df.loc[edited_rows_df.index] = edited_rows_df
+        final_df = pd.concat([final_df, new_rows_df])
+        final_df.drop(deleted_row_set, inplace=True)
+
+        final_df.sort_values(by=['id_number'])
+        final_df.to_csv(path/'saved_content.csv')
+        
+        delete_old_hash_browns(final_df, path)
     
     def save_json_dict_into_model(self, json_dict: dict):
         try:
@@ -111,7 +86,7 @@ class ToDoModel(QtStaticModel):
     def load_from_folder(self, rel_path: str):
         path = self.check_folder_path(rel_path)
         
-        for json_dict in load_jsons_from_folder(path, self.encrypt_fields, self.eval_fields):
-            self.save_json_dict_into_model(json_dict)
-
-# ToDo - Data would be better stored in a csv and only check items that have a new id
+        self.initial_file_data = load_notes_from_folder(path, self.encrypt_fields, self.eval_fields)
+        sorted_keys = sorted(self.initial_file_data.keys())
+        for key in sorted_keys:
+            self.save_json_dict_into_model(self.initial_file_data[key])
