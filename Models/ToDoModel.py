@@ -9,28 +9,21 @@ from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from Common.QtModel import QtStaticModel
 from Common.GenerateEncryption import encrypt_dictionary_and_save_key, decrypt_json_dict
 
-from Models.GlobalParams import FIELDS_TO_EVAL, FIELDS_TO_ENCRYPT, STATUS_TYPES
+from Models.GlobalParams import FIELDS_TO_EVAL, FIELDS_TO_ENCRYPT, STATUS_TYPES, NoteIdProvider
 from Models.NoteEntry import NoteEntry, update_note_data
 
 
-def delete_all_jsons_in_folder(path):
-    for filename in os.listdir(path):   
-        delete_path = path/filename
-        if delete_path.suffix == '.json':
-            delete_path.unlink()
-
-
-def delete_all_hash_browns_in_folder(path):
-    for filename in os.listdir(path):   
-        delete_path = path/filename
-        if delete_path.suffix == '.hash_brown':
-            delete_path.unlink()
+def delete_old_hash_browns(output_df: pd.DataFrame, path: Path):
+    hash_brown_files = [path/f for f in os.listdir(path) if Path(f).suffix == '.hash_brown']
+    delete_hash_paths = [f for f in hash_brown_files if f.stem + f.suffix not in output_df.index]
+    for hash_path in delete_hash_paths:
+        hash_path.unlink() 
 
 
 def turn_json_dicts_into_df(json_dicts: list, status_name: str, path: Path, encrypt_fields: set):
     encrypted_dicts = {}
-    for i, json_dict in enumerate(json_dicts):
-        file_name = f"{status_name}_{i}.json"
+    for json_dict in json_dicts:
+        file_name = f"{status_name}_{json_dict['id_number']}.hash_brown"
         file_path = path/file_name
 
         try:
@@ -58,10 +51,10 @@ def try_decrypting_json_dict(json_dict: dict, file_name: Path, encrypt_fields: s
 
 
 def load_jsons_from_folder(path: Path, encrypt_fields: set, eval_fields: set):
-    all_jsons = pd.read_csv(path/'saved_content.csv', index_col=0).to_dict(orient='index')
+    loaded_dicts = pd.read_csv(path/'saved_content.csv', index_col=0).to_dict(orient='index')
 
     decrypted_jsons = {}
-    for filename, json_dict in all_jsons.items():
+    for filename, json_dict in loaded_dicts.items():
         file_path = path/filename
         if decrypted_dict := try_decrypting_json_dict(json_dict, file_path, encrypt_fields, eval_fields):
             decrypted_jsons[filename] = decrypted_dict
@@ -95,6 +88,8 @@ class ToDoModel(QtStaticModel):
         new_df = pd.concat(output_dfs)
         new_df.sort_values(by=['id_number'])
         new_df.to_csv(path/'saved_content.csv')
+        
+        delete_old_hash_browns(new_df, path)
     
     def save_json_dict_into_model(self, json_dict: dict):
         try:
@@ -107,6 +102,7 @@ class ToDoModel(QtStaticModel):
             print(f'json dict {json_dict} cannot be read.')
             return
         
+        NoteIdProvider.update_max_id(json_dict['id_number'])
         new_item = QStandardItem(json_dict['title'])
         new_item.setAccessibleDescription(json_dict['description'])
         new_item.setData(json_dict)

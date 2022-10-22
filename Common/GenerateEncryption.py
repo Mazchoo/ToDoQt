@@ -2,9 +2,6 @@ from click import FileError
 from cryptography.fernet import Fernet
 from pathlib import Path
 
-def get_key_file_name_from_json_name(json_file_name: Path):
-    return json_file_name.parent/(json_file_name.stem + '.hash_brown')
-
 
 def save_encryption_key_to_disk(key_file_name: Path, key: bytes):
     if key_file_name.exists():
@@ -17,16 +14,29 @@ def save_encryption_key_to_disk(key_file_name: Path, key: bytes):
         raise FileError("Could not write key to disk.")
 
 
+def load_fernet_key_from_path(key_file_name: Path) -> Fernet:
+    key_file_handler = open(str(key_file_name), 'r')
+
+    try:
+        fernet_key = eval(key_file_handler.read())
+        fernet = Fernet(fernet_key)
+    except:
+        key_file_handler.close()
+        raise ValueError(f"Fernet key {key_file_name} is not valid.")
+    else:
+        key_file_handler.close()
+
+    return fernet
+
+
 def fernet_encrypt_string(fernet: Fernet, plain_text: str):
     str_as_bytes = bytes(plain_text, 'utf-8')
     encrypted_bytes = fernet.encrypt(str_as_bytes)
     return str(encrypted_bytes)
 
 
-def encrypt_dictionary_and_save_key(json_dict: dict, file_name: Path, fields: set):
+def encrypt_dictionary_and_save_key(json_dict: dict, key_file_name: Path, fields: set):
     fernet_key = Fernet.generate_key()
-    key_file_name = get_key_file_name_from_json_name(file_name)
-    
     save_encryption_key_to_disk(key_file_name, fernet_key)
 
     fernet = Fernet(fernet_key)
@@ -54,23 +64,7 @@ def fernet_decrypt_string(fernet: Fernet, cipher_text: str):
     return format_decrypted_string(decrypted_string)
 
 
-def load_fernet_key_from_path(key_file_name: Path) -> Fernet:
-    key_file_handler = open(str(key_file_name), 'r')
-
-    try:
-        fernet_key = eval(key_file_handler.read())
-        fernet = Fernet(fernet_key)
-    except:
-        key_file_handler.close()
-        raise ValueError(f"Fernet key {key_file_name} is not valid.")
-    else:
-        key_file_handler.close()
-
-    return fernet
-
-
-def decrypt_json_dict(json_dict: dict, json_file_name: Path, fields: set, eval_fields: set):
-    key_file_name = get_key_file_name_from_json_name(json_file_name)
+def decrypt_json_dict(json_dict: dict, key_file_name: Path, fields: set, eval_fields: set):
     
     if not key_file_name.exists():
         raise FileNotFoundError(f"Decryption key {json_file_name} not found")
