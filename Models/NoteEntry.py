@@ -1,4 +1,5 @@
 
+from typing import Tuple
 from datetime import datetime
 from pydantic import BaseModel, validator
 
@@ -13,7 +14,8 @@ class NoteEntry(BaseModel):
     title: str
     status: str
     description: str
-    date_created: datetime
+    date_created: Tuple[int, int, int, int, int, int, int]
+    date_edited: Tuple[int, int, int, int, int, int, int]
     
     @validator('title')
     def title_must_be_right_length(cls, value):
@@ -23,13 +25,13 @@ class NoteEntry(BaseModel):
 
     @validator('status')
     def status_must_be_recognised(cls, value):
-        if value not in STATUS_TYPES:
-            raise ValueError(f'Status must be one of {STATUS_TYPES}')
+        assert(value in STATUS_TYPES, f'Status must be one of {STATUS_TYPES}')
         return value
 
-
 def update_0_to_1(data):
-    data['date_created'] = datetime.now()
+    date_now_str_repr = repr(datetime.now())[17:]
+    data['date_created'] = eval(date_now_str_repr)
+    data['date_edited'] = eval(date_now_str_repr)
 
 
 note_update_version = [
@@ -48,11 +50,13 @@ def update_note_data(note_data: dict):
 
 
 if __name__ == '__main__':
+    date_now = eval(repr(datetime.now())[17:])
     note_data = {
         'version': 1,
         'title': 'Noob',
         'status': 'pending_list',
         'description': 'Hello',
-        'date_created': datetime.now()
+        'date_created': date_now,
+        'date_edited': date_now,
     }
     model = NoteEntry(**note_data)

@@ -26,14 +26,6 @@ def delete_all_hash_browns_in_folder(path):
             delete_path.unlink()
 
 
-def convert_item_to_dict(save_item: QStandardItem, status_name: str):
-    return {
-        'title': save_item.text(),
-        'description': save_item.accessibleDescription(),
-        'status': status_name
-    }
-
-
 def save_dicts_as_json(json_dicts: list, status_name: str, path: Path, encrypt_fields: set):
     for i, json_dict in enumerate(json_dicts):
         file_name = path/f"{status_name}_{i}.json"
@@ -49,10 +41,10 @@ def save_dicts_as_json(json_dicts: list, status_name: str, path: Path, encrypt_f
             json.dump(json_dict, f)
 
 
-def convert_list_to_json_dicts(model_list: QStandardItemModel, status_name: str):
+def convert_list_to_json_dicts(model_list: QStandardItemModel):
     output_dicts = []
     for i in range(model_list.rowCount()):
-        output_dicts.append(convert_item_to_dict(model_list.item(i), status_name))
+        output_dicts.append(model_list.item(i).data())
     return output_dicts
 
 
@@ -97,7 +89,7 @@ class ToDoModel(QtStaticModel):
 
     def save_list_as_jsons(self, status_name: str, path: Path):
         model_list = self.__getattribute__(status_name)
-        pending_dicts = convert_list_to_json_dicts(model_list, status_name)
+        pending_dicts = convert_list_to_json_dicts(model_list)
         save_dicts_as_json(pending_dicts, status_name, path, self.encrypt_fields)
 
     def save_to_folder(self, rel_path: str):
@@ -120,6 +112,7 @@ class ToDoModel(QtStaticModel):
         if isinstance(model_list, QStandardItemModel):
             new_item = QStandardItem(json_dict['title'])
             new_item.setAccessibleDescription(json_dict['description'])
+            new_item.setData(json_dict)
             model_list.appendRow(new_item)
     
     def load_from_folder(self, rel_path: str):
