@@ -41,7 +41,8 @@ def add_name_to_list(self, _click: bool):
 @ClassMethod(ToDoListController)
 @QtControlFunction(MagicMock())
 def set_text_description(self, selected_item: QStandardItem):
-    if selected_item is None: return
+    if selected_item is None:
+        return
     self.layout.description_textEdit.setText(selected_item.accessibleDescription())
     self.layout.delete_pushButton.setEnabled(True)
     self.layout.saveChanges_pushButton.setEnabled(False)

@@ -22,7 +22,8 @@ def delete_item_if_selected(model_list: QStandardItemModel, list_view: QListView
 
 
 def append_item_to_list_view(model_list: QStandardItemModel, list_view: QListView, standard_item: QStandardItem):
-    if not standard_item: return
+    if not standard_item:
+        return
     model_list.appendRow(standard_item)
     list_view.setModel(model_list)
     return standard_item

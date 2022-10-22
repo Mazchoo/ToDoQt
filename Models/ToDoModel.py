@@ -9,6 +9,8 @@ from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from Common.QtModel import QtStaticModel
 from Common.GenerateEncryption import encrypt_dictionary_and_save_key, decrypt_json_dict
 
+from Models.NoteEntry import NoteEntry, update_note_data
+
 
 def delete_all_jsons_in_folder(path):
     for filename in os.listdir(path):   
@@ -81,19 +83,6 @@ def load_jsons_from_folder(path: Path, encrypt_fields: set):
     return [decrypted_jsons[filename] for filename in sorted_list]
 
 
-def json_dict_is_valid_item(json_dict: dict):
-    if 'title' not in json_dict:
-        return False
-    elif 'description' not in json_dict:
-        return False
-    elif 'status' not in json_dict:
-        return False
-    elif not hasattr(ToDoModel, json_dict['status']):
-        return False
-    else:
-        return True
-
-
 class ToDoModel(QtStaticModel):
     pending_list = QStandardItemModel
     in_progress_list = QStandardItemModel
@@ -121,7 +110,10 @@ class ToDoModel(QtStaticModel):
         self.save_list_as_jsons('done_list', path)
     
     def save_json_dict_into_model(self, json_dict: dict):
-        if not json_dict_is_valid_item(json_dict):
+        try:
+            json_dict = update_note_data(json_dict)
+            json_dict = NoteEntry(**json_dict).dict()
+        except:
             return
 
         model_list = self.__getattribute__(json_dict['status'])
