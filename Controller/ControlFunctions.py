@@ -85,7 +85,7 @@ def save_current_item_description(self, _click: bool):
         selected_item.setAccessibleDescription(self.layout.description_textEdit.toPlainText())
         update_fields = {'description': selected_item.accessibleDescription(),
                          'date_edited': get_date_tuple_now()}
-        selected_item = update_standard_item_fields(selected_item, update_fields)
+        selected_item = update_standard_item_fields(selected_item, **update_fields)
 
         self.layout.saveChanges_pushButton.setEnabled(False)
         self.layout.backup_pushButton.setEnabled(True)

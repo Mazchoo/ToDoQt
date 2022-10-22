@@ -68,7 +68,8 @@ def load_fernet_key_from_path(key_file_name: Path) -> Fernet:
 
     return fernet
 
-def decrypt_json_dict(json_dict: dict, json_file_name: Path, fields: set):
+
+def decrypt_json_dict(json_dict: dict, json_file_name: Path, fields: set, eval_fields: set):
     key_file_name = get_key_file_name_from_json_name(json_file_name)
     
     if not key_file_name.exists():
@@ -78,9 +79,7 @@ def decrypt_json_dict(json_dict: dict, json_file_name: Path, fields: set):
 
     output_dict = {}
     for key, value in json_dict.items():
-        if key in fields:
-            output_dict[key] = fernet_decrypt_string(fernet, value)
-        else:
-            output_dict[key] = value
+        decrpyted_value = fernet_decrypt_string(fernet, value) if key in fields else value
+        output_dict[key] = eval(decrpyted_value) if key in eval_fields else decrpyted_value
     
     return output_dict

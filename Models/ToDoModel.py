@@ -1,7 +1,7 @@
 
 import os
 from pathlib import Path
-import json
+import pandas as pd
 cwd = os.getcwd()
 
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
@@ -9,6 +9,7 @@ from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from Common.QtModel import QtStaticModel
 from Common.GenerateEncryption import encrypt_dictionary_and_save_key, decrypt_json_dict
 
+from Models.GlobalParams import FIELDS_TO_EVAL
 from Models.NoteEntry import NoteEntry, update_note_data
 
 
@@ -26,19 +27,20 @@ def delete_all_hash_browns_in_folder(path):
             delete_path.unlink()
 
 
-def save_dicts_as_json(json_dicts: list, status_name: str, path: Path, encrypt_fields: set):
+def turn_json_dicts_into_df(json_dicts: list, status_name: str, path: Path, encrypt_fields: set):
+    encrypted_dicts = {}
     for i, json_dict in enumerate(json_dicts):
-        file_name = path/f"{status_name}_{i}.json"
+        file_name = f"{status_name}_{i}.json"
+        file_path = path/file_name
 
         try:
-            encrypted_dict = encrypt_dictionary_and_save_key(json_dict, file_name, encrypt_fields)
+            encrypted_dict = encrypt_dictionary_and_save_key(json_dict, file_path, encrypt_fields)
         except:
-            print("Warning! Decryption failed")
+            print(f"Error! Encryption failed {file_name}")
         else:
-            json_dict = encrypted_dict
-        
-        with open(str(file_name), 'w') as f:
-            json.dump(json_dict, f)
+            encrypted_dicts[file_name] = encrypted_dict
+
+    return pd.DataFrame.from_dict(encrypted_dicts, orient='index')
 
 
 def convert_list_to_json_dicts(model_list: QStandardItemModel):
@@ -47,7 +49,7 @@ def convert_list_to_json_dicts(model_list: QStandardItemModel):
 
 def try_decrypting_json_dict(json_dict: dict, file_name: Path, encrypt_fields: set):
     try:
-        json_dict = decrypt_json_dict(json_dict, file_name, encrypt_fields)
+        json_dict = decrypt_json_dict(json_dict, file_name, encrypt_fields, FIELDS_TO_EVAL)
     except:
         print("Error! Decryption failed")
         return None
@@ -56,11 +58,7 @@ def try_decrypting_json_dict(json_dict: dict, file_name: Path, encrypt_fields: s
 
 
 def load_jsons_from_folder(path: Path, encrypt_fields: set):
-    all_jsons = {}
-    for filename in os.listdir(path):
-        if Path(filename).suffix == '.json':
-            with open(str(path/filename), 'r') as f:
-                all_jsons[filename] = json.load(f)
+    all_jsons = pd.read_csv(path/'saved_content.csv', index_col=0).to_dict(orient='index')
 
     decrypted_jsons = {}
     for filename, json_dict in all_jsons.items():
@@ -87,16 +85,22 @@ class ToDoModel(QtStaticModel):
     def save_list_as_jsons(self, status_name: str, path: Path):
         model_list = self.__getattribute__(status_name)
         pending_dicts = convert_list_to_json_dicts(model_list)
-        save_dicts_as_json(pending_dicts, status_name, path, self.encrypt_fields)
+        return turn_json_dicts_into_df(pending_dicts, status_name, path, self.encrypt_fields)
 
     def save_to_folder(self, rel_path: str):
         path = self.check_folder_path(rel_path)
 
         delete_all_jsons_in_folder(path)
 
-        self.save_list_as_jsons('pending_list', path)
-        self.save_list_as_jsons('in_progress_list', path)
-        self.save_list_as_jsons('done_list', path)
+        output_dfs = [
+            self.save_list_as_jsons('pending_list', path),
+            self.save_list_as_jsons('in_progress_list', path),
+            self.save_list_as_jsons('done_list', path),
+        ]
+
+        new_df = pd.concat(output_dfs)
+        new_df.sort_values(by=['id_number'])
+        new_df.to_csv(path/'saved_content.csv')
     
     def save_json_dict_into_model(self, json_dict: dict):
         try:
