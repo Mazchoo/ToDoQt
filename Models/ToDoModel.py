@@ -9,7 +9,7 @@ from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from Common.QtModel import QtStaticModel
 from Common.GenerateEncryption import encrypt_dictionary_and_save_key, decrypt_json_dict
 
-from Models.GlobalParams import FIELDS_TO_EVAL
+from Models.GlobalParams import FIELDS_TO_EVAL, FIELDS_TO_ENCRYPT, STATUS_TYPES
 from Models.NoteEntry import NoteEntry, update_note_data
 
 
@@ -47,9 +47,9 @@ def convert_list_to_json_dicts(model_list: QStandardItemModel):
     return [model_list.item(i).data() for i in range(model_list.rowCount())]
 
 
-def try_decrypting_json_dict(json_dict: dict, file_name: Path, encrypt_fields: set):
+def try_decrypting_json_dict(json_dict: dict, file_name: Path, encrypt_fields: set, eval_fields: set):
     try:
-        json_dict = decrypt_json_dict(json_dict, file_name, encrypt_fields, FIELDS_TO_EVAL)
+        json_dict = decrypt_json_dict(json_dict, file_name, encrypt_fields, eval_fields)
     except:
         print("Error! Decryption failed")
         return None
@@ -57,13 +57,13 @@ def try_decrypting_json_dict(json_dict: dict, file_name: Path, encrypt_fields: s
         return json_dict
 
 
-def load_jsons_from_folder(path: Path, encrypt_fields: set):
+def load_jsons_from_folder(path: Path, encrypt_fields: set, eval_fields: set):
     all_jsons = pd.read_csv(path/'saved_content.csv', index_col=0).to_dict(orient='index')
 
     decrypted_jsons = {}
     for filename, json_dict in all_jsons.items():
         file_path = path/filename
-        if decrypted_dict := try_decrypting_json_dict(json_dict, file_path, encrypt_fields):
+        if decrypted_dict := try_decrypting_json_dict(json_dict, file_path, encrypt_fields, eval_fields):
             decrypted_jsons[filename] = decrypted_dict
 
     sorted_list = sorted([filename for filename in decrypted_jsons.keys()])
@@ -74,7 +74,8 @@ class ToDoModel(QtStaticModel):
     pending_list = QStandardItemModel
     in_progress_list = QStandardItemModel
     done_list = QStandardItemModel
-    encrypt_fields = {'title', 'description'}
+    encrypt_fields = FIELDS_TO_ENCRYPT
+    eval_fields = FIELDS_TO_EVAL
 
     def check_folder_path(self, rel_path: str):
         path = Path(f"{cwd}/{rel_path}")
@@ -89,14 +90,7 @@ class ToDoModel(QtStaticModel):
 
     def save_to_folder(self, rel_path: str):
         path = self.check_folder_path(rel_path)
-
-        delete_all_jsons_in_folder(path)
-
-        output_dfs = [
-            self.save_list_as_jsons('pending_list', path),
-            self.save_list_as_jsons('in_progress_list', path),
-            self.save_list_as_jsons('done_list', path),
-        ]
+        output_dfs = [self.save_list_as_jsons(status, path) for status in STATUS_TYPES]
 
         new_df = pd.concat(output_dfs)
         new_df.sort_values(by=['id_number'])
@@ -107,8 +101,8 @@ class ToDoModel(QtStaticModel):
             json_dict = update_note_data(json_dict)
             json_dict = NoteEntry(**json_dict).dict()
 
+            assert(json_dict['status'] in STATUS_TYPES)
             model_list = self.__getattribute__(json_dict['status'])
-            assert(isinstance(model_list, QStandardItemModel))
         except:
             print(f'json dict {json_dict} cannot be read.')
             return
@@ -121,7 +115,7 @@ class ToDoModel(QtStaticModel):
     def load_from_folder(self, rel_path: str):
         path = self.check_folder_path(rel_path)
         
-        for json_dict in load_jsons_from_folder(path, self.encrypt_fields):
+        for json_dict in load_jsons_from_folder(path, self.encrypt_fields, self.eval_fields):
             self.save_json_dict_into_model(json_dict)
 
 # ToDo - Data would be better stored in a csv and only check items that have a new id
