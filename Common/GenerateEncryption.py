@@ -35,11 +35,19 @@ def fernet_encrypt_string(fernet: Fernet, plain_text: str):
     return str(encrypted_bytes)
 
 
-def encrypt_dictionary_and_save_key(json_dict: dict, key_file_name: Path, fields: set):
-    fernet_key = Fernet.generate_key()
-    save_encryption_key_to_disk(key_file_name, fernet_key)
+def load_fernet_key_if_exists(key_file_name: Path):
+    if key_file_name.exists():
+        fernet = load_fernet_key_from_path(key_file_name)
+    else:
+        fernet_key = Fernet.generate_key()
+        save_encryption_key_to_disk(key_file_name, fernet_key)
+        fernet = Fernet(fernet_key)
+    return fernet
 
-    fernet = Fernet(fernet_key)
+
+def encrypt_dictionary_and_save_key(json_dict: dict, key_file_name: Path, fields: set):
+    fernet = load_fernet_key_if_exists(key_file_name)
+    
     output_dict = {}
     for key, value in json_dict.items():
         if key in fields:

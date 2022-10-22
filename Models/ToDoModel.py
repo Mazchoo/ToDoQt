@@ -54,13 +54,13 @@ def load_jsons_from_folder(path: Path, encrypt_fields: set, eval_fields: set):
     loaded_dicts = pd.read_csv(path/'saved_content.csv', index_col=0).to_dict(orient='index')
 
     decrypted_jsons = {}
-    for filename, json_dict in loaded_dicts.items():
-        file_path = path/filename
+    for file_name, json_dict in loaded_dicts.items():
+        file_path = path/file_name
         if decrypted_dict := try_decrypting_json_dict(json_dict, file_path, encrypt_fields, eval_fields):
-            decrypted_jsons[filename] = decrypted_dict
+            decrypted_jsons[file_name] = decrypted_dict
 
-    sorted_list = sorted([filename for filename in decrypted_jsons.keys()])
-    return [decrypted_jsons[filename] for filename in sorted_list]
+    sorted_list = sorted([f for f in decrypted_jsons.keys()])
+    return [decrypted_jsons[f] for f in sorted_list]
 
 
 class ToDoModel(QtStaticModel):
