@@ -5,11 +5,9 @@ from unittest.mock import MagicMock
 
 from Common.ClassMethod import ClassMethod
 from Common.ModelViewController import QtControlFunction
-from Common.GitCommands import  (
-    git_restore, git_add_all_files_in_folder, git_commit, git_push
-)
 
 from Controller.Controller import ToDoListController
+from Controller.UploadGitThread import upload_thread
 from Controller.ControlHelpers import (
     get_selected_item_from_list, append_item_to_list_view,
     get_selected_task, delete_selected_task, update_standard_item_fields
@@ -106,12 +104,24 @@ def close_window(self, _click: bool):
 
 
 @ClassMethod(ToDoListController)
+def stop_animation(self):
+    self.layout.loaderAnimation_label.setVisible(False)
+    upload_thread.running = False
+
+
+@ClassMethod(ToDoListController)
+def start_upload(self):
+    upload_thread.running = True
+
+
+@ClassMethod(ToDoListController)
 def git_push_backups(self, _click: bool):
-    self.layout.upload_pushButton.setEnabled(False)
-    git_restore('--staged SavedToDo')
-    if git_add_all_files_in_folder('SavedToDo'):
-        git_commit('Updated ToDo items')
-        git_push()
+    if not upload_thread.running:
+        self.layout.upload_pushButton.setEnabled(False)
+        self.layout.loaderAnimation_label.setVisible(True)
+        upload_thread.finished.connect(self.stop_animation)
+        upload_thread.started.connect(self.start_upload)
+        upload_thread.start()
 
 
 @ClassMethod(ToDoListController)

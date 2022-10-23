@@ -1,5 +1,8 @@
 
 from PyQt5.QtWidgets import QWidget, QListView
+from PyQt5.QtGui import QMovie
+from PyQt5.QtCore import QSize
+from PyQt5.Qt import Qt
 
 from Common.QtHelpers import setWindowIcon
 from Common.ModelViewController import CreateQtController
@@ -14,6 +17,8 @@ class ToDoListController(QWidget):
 
     def __init__(self, *args, **kwargs):
         super().__init__()
+        self.loader_animation = QMovie('Resources/Animations/loader.gif')
+        self.loader_animation.setScaledSize(QSize().scaled(40, 40, Qt.KeepAspectRatio))
 
     @staticmethod
     def setupCallbacks(self):
@@ -71,3 +76,7 @@ class ToDoListController(QWidget):
         self.layout.done_listView.setAcceptDrops(True)
         self.layout.done_listView.setDragEnabled(True)
         self.layout.pending_listView.setMovement(QListView.Snap)
+        
+        self.layout.loaderAnimation_label.setMovie(self.loader_animation)
+        self.loader_animation.start()
+        self.layout.loaderAnimation_label.setVisible(False)

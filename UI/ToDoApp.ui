@@ -2,14 +2,6 @@
 <ui version="4.0">
  <class>ToDoLayout</class>
  <widget class="QMainWindow" name="ToDoLayout">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>685</width>
-    <height>630</height>
-   </rect>
-  </property>
   <property name="minimumSize">
    <size>
     <width>685</width>
@@ -128,7 +120,7 @@
       <x>20</x>
       <y>560</y>
       <width>121</width>
-      <height>41</height>
+      <height>40</height>
      </rect>
     </property>
     <property name="text">
@@ -141,7 +133,7 @@
       <x>550</x>
       <y>560</y>
       <width>121</width>
-      <height>41</height>
+      <height>40</height>
      </rect>
     </property>
     <property name="text">
@@ -157,7 +149,7 @@
       <x>150</x>
       <y>560</y>
       <width>121</width>
-      <height>41</height>
+      <height>40</height>
      </rect>
     </property>
     <property name="text">
@@ -305,6 +297,19 @@
       </widget>
      </item>
     </layout>
+   </widget>
+   <widget class="QLabel" name="loaderAnimation_label">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>560</y>
+      <width>40</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
