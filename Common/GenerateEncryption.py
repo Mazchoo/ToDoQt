@@ -72,10 +72,10 @@ def fernet_decrypt_string(fernet: Fernet, cipher_text: str):
     return format_decrypted_string(decrypted_string)
 
 
-def decrypt_json_dict(json_dict: dict, key_file_name: Path, fields: set, eval_fields: set):
+def decrypt_json_dict(json_dict: dict, key_file_name: Path, fields: set=(), eval_fields: set=()):
     
     if not key_file_name.exists():
-        raise FileNotFoundError(f"Decryption key {json_file_name} not found")
+        raise FileNotFoundError(f"Decryption key {key_file_name} not found")
 
     fernet = load_fernet_key_from_path(key_file_name)
 
