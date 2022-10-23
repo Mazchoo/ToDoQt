@@ -3,7 +3,7 @@ import pandas as pd
 from pathlib import Path
 from os import listdir
 
-from PyQt5.QtGui import QStandardItemModel
+from PyQt5.QtGui import QStandardItemModel, QStandardItem
 
 from Common.GenerateEncryption import encrypt_dictionary_and_save_key, decrypt_json_dict
 
@@ -62,3 +62,10 @@ def load_notes_from_folder(path: Path, encrypt_fields: set, eval_fields: set):
             decrypted_notes[file_name] = decrypted_note
 
     return decrypted_notes
+
+
+def add_new_item_to_model_list(model_list: QStandardItemModel, note_data: dict):
+    new_item = QStandardItem(note_data['title'])
+    new_item.setAccessibleDescription(note_data['description'])
+    new_item.setData(note_data)
+    model_list.appendRow(new_item)

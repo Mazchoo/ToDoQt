@@ -42,6 +42,10 @@ def get_deleted_columns(all_note_data: dict, current_cols: list):
     return deleted_columns
 
 
+def get_new_rows_from_keys(all_note_data: dict, new_row_set: set):
+    return {k: v for k, v in all_note_data.items() if k in new_row_set}
+
+
 def create_updated_df(original_df: pd.DataFrame, all_note_data: dict, initial_data: dict,
                       path: Path, encrypt_fields: set):
     final_df = original_df.copy()
@@ -52,7 +56,7 @@ def create_updated_df(original_df: pd.DataFrame, all_note_data: dict, initial_da
 
     new_columns = get_new_columns(all_note_data, final_df.columns)
     deleted_columns = get_deleted_columns(all_note_data, final_df.columns)
-    new_rows = {k: v for k, v in all_note_data.items() if k in new_row_set}
+    new_rows = get_new_rows_from_keys(all_note_data, new_row_set)
 
     edited_rows_df = turn_note_data_into_df(edited_rows, path, encrypt_fields)
     new_rows_df = turn_note_data_into_df(new_rows, path, encrypt_fields)

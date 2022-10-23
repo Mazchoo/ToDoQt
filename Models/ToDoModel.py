@@ -12,7 +12,7 @@ from Models.GlobalParams import FIELDS_TO_EVAL, FIELDS_TO_ENCRYPT, STATUS_TYPES,
 from Models.NoteEntry import NoteEntry, update_note_data
 from Models.NoteFileHelpers import (
     delete_old_hash_browns, get_hash_file_from_note_data,
-    convert_list_to_note_data, load_notes_from_folder
+    convert_list_to_note_data, load_notes_from_folder, add_new_item_to_model_list
 )
 from Models.CsvGeneration import create_updated_df
 
@@ -39,7 +39,6 @@ class ToDoModel(QtStaticModel):
 
         return {get_hash_file_from_note_data(note): note for note in all_note_data}
 
-
     def save_to_folder(self, rel_path: str):
         path = self.check_folder_path(rel_path)
         
@@ -51,23 +50,20 @@ class ToDoModel(QtStaticModel):
         final_df.to_csv(path/'saved_content.csv')
         
         delete_old_hash_browns(final_df, path)
-    
-    def save_json_dict_into_model(self, json_dict: dict):
-        try:
-            json_dict = update_note_data(json_dict)
-            json_dict = NoteEntry(**json_dict).dict()
 
-            assert(json_dict['status'] in STATUS_TYPES)
-            model_list = self.__getattribute__(json_dict['status'])
+    def save_json_dict_into_model(self, note_data: dict):
+        try:
+            note_data = update_note_data(note_data)
+            note_data = NoteEntry(**note_data).dict()
+
+            assert(note_data['status'] in STATUS_TYPES)
+            model_list = self.__getattribute__(note_data['status'])
         except:
-            print(f'json dict {json_dict} cannot be read.')
+            print(f'json dict {note_data} cannot be read.')
             return
         
-        NoteIdProvider.update_max_id(json_dict['id_number'])
-        new_item = QStandardItem(json_dict['title'])
-        new_item.setAccessibleDescription(json_dict['description'])
-        new_item.setData(json_dict)
-        model_list.appendRow(new_item)
+        NoteIdProvider.update_max_id(note_data['id_number'])
+        add_new_item_to_model_list(model_list, note_data)
     
     def load_from_folder(self, rel_path: str):
         path = self.check_folder_path(rel_path)
