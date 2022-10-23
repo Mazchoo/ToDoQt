@@ -13,7 +13,7 @@ from Models.NoteEntry import NoteEntry, update_note_data
 from Models.NoteFileHelpers import (
     delete_old_hash_browns, get_hash_file_from_note_data, turn_note_data_into_df,
     convert_list_to_note_data, load_notes_from_folder, get_all_new_notes,
-    get_all_edited_notes, get_all_delete_notes, get_new_columns
+    get_all_edited_notes, get_all_delete_notes, get_new_columns, get_deleted_columns
 )
 
 
@@ -50,6 +50,7 @@ class ToDoModel(QtStaticModel):
 
         final_df = pd.read_csv(path/'saved_content.csv', index_col=0)
         new_columns = get_new_columns(all_note_data, final_df.columns)
+        deleted_columns = get_deleted_columns(all_note_data, final_df.columns)
         new_rows = {k: v for k, v in all_note_data.items() if k in new_row_set}
 
         edited_rows_df = turn_note_data_into_df(edited_rows, path, self.encrypt_fields)
@@ -60,6 +61,7 @@ class ToDoModel(QtStaticModel):
         final_df.loc[edited_rows_df.index] = edited_rows_df
         final_df = pd.concat([final_df, new_rows_df])
         final_df.drop(deleted_row_set, inplace=True)
+        final_df.drop(columns=deleted_columns, inplace=True)
 
         final_df.sort_values(by=['id_number'])
         final_df.to_csv(path/'saved_content.csv')
