@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'D:\PyQtApps\ToDoQt\UI\ToDoApp.ui'
+# Form implementation generated from reading ui file 'd:\PyQtApps\ToDoQt\UI\ToDoApp.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.2
 #
@@ -133,14 +133,4 @@ class Ui_ToDoLayout(object):
         self.inProgress_label.setText(_translate("ToDoLayout", "In Progress"))
         self.pending_label.setText(_translate("ToDoLayout", "Pending"))
         self.done_label.setText(_translate("ToDoLayout", "Done"))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    ToDoLayout = QtWidgets.QMainWindow()
-    ui = Ui_ToDoLayout()
-    ui.setupUi(ToDoLayout)
-    ToDoLayout.show()
-    sys.exit(app.exec_())
 
