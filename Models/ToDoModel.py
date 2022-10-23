@@ -11,10 +11,10 @@ from Common.QtModel import QtStaticModel
 from Models.GlobalParams import FIELDS_TO_EVAL, FIELDS_TO_ENCRYPT, STATUS_TYPES, NoteIdProvider
 from Models.NoteEntry import NoteEntry, update_note_data
 from Models.NoteFileHelpers import (
-    delete_old_hash_browns, get_hash_file_from_note_data, turn_note_data_into_df,
-    convert_list_to_note_data, load_notes_from_folder, get_all_new_notes,
-    get_all_edited_notes, get_all_delete_notes, get_new_columns, get_deleted_columns
+    delete_old_hash_browns, get_hash_file_from_note_data,
+    convert_list_to_note_data, load_notes_from_folder
 )
+from Models.CsvGeneration import create_updated_df
 
 
 class ToDoModel(QtStaticModel):
@@ -44,26 +44,10 @@ class ToDoModel(QtStaticModel):
         path = self.check_folder_path(rel_path)
         
         all_note_data = self.get_all_note_data()
-        edited_rows = get_all_edited_notes(all_note_data, self.initial_file_data)
-        new_row_set = get_all_new_notes(all_note_data, self.initial_file_data)
-        deleted_row_set = get_all_delete_notes(all_note_data, self.initial_file_data)
+        original_df = pd.read_csv(path/'saved_content.csv', index_col=0)
 
-        final_df = pd.read_csv(path/'saved_content.csv', index_col=0)
-        new_columns = get_new_columns(all_note_data, final_df.columns)
-        deleted_columns = get_deleted_columns(all_note_data, final_df.columns)
-        new_rows = {k: v for k, v in all_note_data.items() if k in new_row_set}
-
-        edited_rows_df = turn_note_data_into_df(edited_rows, path, self.encrypt_fields)
-        new_rows_df = turn_note_data_into_df(new_rows, path, self.encrypt_fields)
-
-        for col in new_columns:
-            final_df[col] = None
-        final_df.loc[edited_rows_df.index] = edited_rows_df
-        final_df = pd.concat([final_df, new_rows_df])
-        final_df.drop(deleted_row_set, inplace=True)
-        final_df.drop(columns=deleted_columns, inplace=True)
-
-        final_df.sort_values(by=['id_number'])
+        final_df = create_updated_df(original_df, all_note_data, self.initial_file_data,
+                                     path, self.encrypt_fields)
         final_df.to_csv(path/'saved_content.csv')
         
         delete_old_hash_browns(final_df, path)
