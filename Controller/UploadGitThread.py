@@ -14,4 +14,4 @@ class UploadToGitThread(QThread):
             git_commit('Updated ToDo items')
             git_push()
 
-upload_thread = UploadToGitThread()
+upload_thread_singleton = UploadToGitThread()

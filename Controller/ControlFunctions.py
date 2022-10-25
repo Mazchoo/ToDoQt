@@ -7,7 +7,7 @@ from Common.ClassMethod import ClassMethod
 from Common.ModelViewController import QtControlFunction
 
 from Controller.Controller import ToDoListController
-from Controller.UploadGitThread import upload_thread
+from Controller.UploadGitThread import upload_thread_singleton
 from Controller.ControlHelpers import (
     get_selected_item_from_list, append_item_to_list_view,
     get_selected_task, delete_selected_task, update_standard_item_fields
@@ -106,22 +106,24 @@ def close_window(self, _click: bool):
 @ClassMethod(ToDoListController)
 def stop_animation(self):
     self.layout.loaderAnimation_label.setVisible(False)
-    upload_thread.running = False
+    upload_thread_singleton.running = False
+    upload_thread_singleton.finished.disconnect()
 
 
 @ClassMethod(ToDoListController)
 def start_upload(self):
-    upload_thread.running = True
+    self.layout.loaderAnimation_label.setVisible(True)
+    upload_thread_singleton.running = True
+    upload_thread_singleton.started.disconnect()
 
 
 @ClassMethod(ToDoListController)
 def git_push_backups(self, _click: bool):
-    if not upload_thread.running:
+    if not upload_thread_singleton.running:
         self.layout.upload_pushButton.setEnabled(False)
-        self.layout.loaderAnimation_label.setVisible(True)
-        upload_thread.finished.connect(self.stop_animation)
-        upload_thread.started.connect(self.start_upload)
-        upload_thread.start()
+        upload_thread_singleton.finished.connect(self.stop_animation)
+        upload_thread_singleton.started.connect(self.start_upload)
+        upload_thread_singleton.start()
 
 
 @ClassMethod(ToDoListController)
