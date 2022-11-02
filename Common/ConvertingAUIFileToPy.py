@@ -9,7 +9,6 @@
 
 import os
 from pathlib import Path
-import shutil
 
 
 UI_FOLDER = f"{os.getcwd()}/UI"
