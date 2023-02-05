@@ -5,6 +5,7 @@ from typing import Any
 
 methods_to_ignore = {'__iter__'}
 
+
 class TestableControlFunction:
     '''
         Creates a testable class function that has test arguments
@@ -52,7 +53,8 @@ def verify_object_field_has_mock_attributes(mock: MagicMock, field_name: str, sc
         we verify that these attributes are present in the
         the class that we expect to extract it from.
     '''
-    if field_name not in mock._mock_children: return
+    if field_name not in mock._mock_children:
+        return
 
     mocked_field = mock._mock_children[field_name]
     for key in mocked_field._mock_children.keys():

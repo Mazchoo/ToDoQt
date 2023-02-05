@@ -8,6 +8,7 @@ from Controller.ControlHelpers import (
     get_corresponding_model, clear_all_selections
 )
 
+
 def enter_task_list_box(list_view: QListView, event: QDragEnterEvent):
     is_model_list_item = event.mimeData().hasFormat('application/x-qabstractitemmodeldatalist')
     list_view_has_focus = list_view_has_selected_item(list_view)

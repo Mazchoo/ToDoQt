@@ -1,9 +1,3 @@
-import sys
-import os
-cwd = os.getcwd()
-
-if cwd not in sys.path:
-    sys.path.append(cwd)
 
 from collections.abc import Callable
 from functools import update_wrapper
@@ -28,7 +22,7 @@ def CreateQtController(cls):
     '''
     class QtController(cls):
         ''' Inner class for controller '''
-        
+
         def __init__(self, parent_window, Model, Layout, *args, **kwargs):
             super().__init__(*args, **kwargs)
 
@@ -44,13 +38,13 @@ def CreateQtController(cls):
             self.verifyModelAndLayoutAttributes()
 
             self.setup()
-            update_wrapper(self, parent_class) # Updates doc strings
-        
+            update_wrapper(self, parent_class)  # Updates doc strings
+
         def setup(self):
             self.setupCallbacks(self)
             self.initializeModels(self)
             self.initializeUi(self)
-        
+
         def verifyModelAndLayoutAttributes(self):
             mock_controller = FlexibleMagicMock()
             self.setupCallbacks(mock_controller)

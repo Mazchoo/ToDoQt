@@ -9,7 +9,7 @@ from Common.ModelViewController import CreateQtController
 from DragEvents.DragEvents import enter_task_list_box, drag_move_event, move_task_list_item
 
 
-@CreateQtController # initialise with window, model, layout
+@CreateQtController  # initialise with window, model, layout
 class ToDoListController(QWidget):
     '''
         Abstract Class import with ControlFunctions implementations.
@@ -72,11 +72,11 @@ class ToDoListController(QWidget):
         self.layout.inProgress_listView.setAcceptDrops(True)        
         self.layout.inProgress_listView.setDragEnabled(True)
         self.layout.pending_listView.setMovement(QListView.Snap)
-    
+
         self.layout.done_listView.setAcceptDrops(True)
         self.layout.done_listView.setDragEnabled(True)
         self.layout.pending_listView.setMovement(QListView.Snap)
-        
+
         self.layout.loaderAnimation_label.setMovie(self.loader_animation)
         self.loader_animation.start()
         self.layout.loaderAnimation_label.setVisible(False)

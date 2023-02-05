@@ -1,5 +1,6 @@
 from unittest.mock import MagicMock
 
+
 def compareAlwaysTrue(_self, _other):
     return True
 

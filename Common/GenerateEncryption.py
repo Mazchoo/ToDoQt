@@ -6,7 +6,7 @@ from pathlib import Path
 def save_encryption_key_to_disk(key_file_name: Path, key: bytes):
     if key_file_name.exists():
         key_file_name.unlink()
-    
+
     with open(str(key_file_name), 'w') as f:
         f.write(str(key))
 
@@ -20,7 +20,7 @@ def load_fernet_key_from_path(key_file_name: Path) -> Fernet:
     try:
         fernet_key = eval(key_file_handler.read())
         fernet = Fernet(fernet_key)
-    except:
+    except Exception:
         key_file_handler.close()
         raise ValueError(f"Fernet key {key_file_name} is not valid.")
     else:
@@ -47,7 +47,7 @@ def load_fernet_key_if_exists(key_file_name: Path):
 
 def encrypt_dictionary_and_save_key(json_dict: dict, key_file_name: Path, fields: set):
     fernet = load_fernet_key_if_exists(key_file_name)
-    
+
     output_dict = {}
     for key, value in json_dict.items():
         if key in fields:
@@ -72,8 +72,8 @@ def fernet_decrypt_string(fernet: Fernet, cipher_text: str):
     return format_decrypted_string(decrypted_string)
 
 
-def decrypt_json_dict(json_dict: dict, key_file_name: Path, fields: set=(), eval_fields: set=()):
-    
+def decrypt_json_dict(json_dict: dict, key_file_name: Path, fields: set = (), eval_fields: set = ()):
+
     if not key_file_name.exists():
         raise FileNotFoundError(f"Decryption key {key_file_name} not found")
 
@@ -83,5 +83,5 @@ def decrypt_json_dict(json_dict: dict, key_file_name: Path, fields: set=(), eval
     for key, value in json_dict.items():
         decrpyted_value = fernet_decrypt_string(fernet, value) if key in fields else value
         output_dict[key] = eval(decrpyted_value) if key in eval_fields else decrpyted_value
-    
+
     return output_dict

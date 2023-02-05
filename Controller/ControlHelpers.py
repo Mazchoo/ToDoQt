@@ -4,6 +4,7 @@ from PyQt5.QtGui import QStandardItemModel, QStandardItem
 
 from Models.GlobalParams import LIST_VIEW_TO_STATUS_TYPE
 
+
 def update_standard_item_fields(standard_item: QStandardItemModel, **kwargs):
     selected_item_data = standard_item.data()
     selected_item_data.update(kwargs)

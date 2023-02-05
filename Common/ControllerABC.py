@@ -2,6 +2,7 @@ from abc import ABCMeta
 from abc import abstractmethod
 from inspect import signature, getattr_static
 
+
 class ControllerABC(metaclass=ABCMeta):
     '''
         A Controller object has to adhere to the functions defined in this class.
@@ -9,13 +10,16 @@ class ControllerABC(metaclass=ABCMeta):
     '''
 
     @abstractmethod
-    def setupCallbacks(self): raise NotImplemented
+    def setupCallbacks(self):
+        raise NotImplementedError
 
     @abstractmethod
-    def initializeModels(self): raise NotImplemented
+    def initializeModels(self):
+        raise NotImplementedError
 
     @abstractmethod
-    def initializeUi(self): raise NotImplemented
+    def initializeUi(self):
+        raise NotImplementedError
 
     @classmethod
     def __subclasshook__(cls, sub):

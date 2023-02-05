@@ -1,9 +1,10 @@
 
 from PyQt5.QtCore import QThread
 
-from Common.GitCommands import  (
+from Common.GitCommands import (
     git_restore, git_add_all_files_in_folder, git_commit, git_push
 )
+
 
 class UploadToGitThread(QThread):
     running = False
@@ -14,4 +15,5 @@ class UploadToGitThread(QThread):
             git_commit('Updated ToDo items')
             git_push()
 
-upload_thread_singleton = UploadToGitThread()
+
+UPLOAD_THREAD_SINGLETON = UploadToGitThread()

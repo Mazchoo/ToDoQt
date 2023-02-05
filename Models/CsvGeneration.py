@@ -4,6 +4,7 @@ from pathlib import Path
 
 from Models.NoteFileHelpers import turn_note_data_into_df
 
+
 def get_all_new_notes(all_note_data: dict, initial_data: dict):
     all_previous_keys = initial_data.keys()
     all_current_keys = set(all_note_data.keys())
@@ -46,6 +47,17 @@ def get_new_rows_from_keys(all_note_data: dict, new_row_set: set):
     return {k: v for k, v in all_note_data.items() if k in new_row_set}
 
 
+def check_for_duplicate_index(df):
+    init_len = len(df)
+    df["_index"] = df.index
+
+    df.drop_duplicates(subset="_index", keep='last', inplace=True)
+    if len(df) < init_len:
+        print('Warning!: Duplicate rows trying to be saved to database!')
+
+    df.drop(columns="_index", inplace=True)
+
+
 def create_updated_df(original_df: pd.DataFrame, all_note_data: dict, initial_data: dict,
                       path: Path, encrypt_fields: set):
     final_df = original_df.copy()
@@ -66,8 +78,10 @@ def create_updated_df(original_df: pd.DataFrame, all_note_data: dict, initial_da
     final_df.drop(columns=deleted_columns, inplace=True)
 
     final_df.loc[edited_rows_df.index] = edited_rows_df
-    final_df = pd.concat([final_df, new_rows_df])
     final_df.drop(deleted_row_set, inplace=True)
+    final_df = pd.concat([final_df, new_rows_df])
 
     final_df.sort_values(by=['id_number'])
+    check_for_duplicate_index(final_df)
+
     return final_df

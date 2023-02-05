@@ -10,9 +10,10 @@ LIST_VIEW_TO_STATUS_TYPE = {
 FIELDS_TO_EVAL = {'date_created', 'date_edited', 'date_moved'}
 FIELDS_TO_ENCRYPT = {'title', 'description'}
 
+
 class NoteIdProvider:
     max_id = 0
-    
+
     @staticmethod
     def get_new_id():
         NoteIdProvider.max_id += 1

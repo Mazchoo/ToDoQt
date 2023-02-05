@@ -13,6 +13,7 @@ from pathlib import Path
 
 UI_FOLDER = f"{os.getcwd()}/UI"
 
+
 def convertUiFileToPython(input_file, output_name):
     ui_path = Path(f"{UI_FOLDER}/{input_file}")
 

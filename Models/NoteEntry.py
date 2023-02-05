@@ -5,6 +5,7 @@ from pydantic import BaseModel, validator
 
 import Models.GlobalParams as GlobalParams
 
+
 class NoteEntry(BaseModel):
     version: int = GlobalParams.LATEST_VERSION
     id_number: int
@@ -14,7 +15,7 @@ class NoteEntry(BaseModel):
     date_created: Tuple[int, int, int, int, int, int, int]
     date_edited: Tuple[int, int, int, int, int, int, int]
     date_moved: Tuple[int, int, int, int, int, int, int]
-    
+
     @validator('title')
     def title_must_be_right_length(cls, value):
         assert len(value) <= GlobalParams.MAX_TITLE_LENGTH, 'Title too long'
@@ -48,6 +49,7 @@ note_update_version = [
     update_1_to_2,
 ]
 
+
 def update_note_data(note_data: dict):
     if 'version' not in note_data:
         note_data['version'] = 0
@@ -55,7 +57,7 @@ def update_note_data(note_data: dict):
     while note_data['version'] < GlobalParams.LATEST_VERSION:
         note_update_version[note_data['version']](note_data)
         note_data['version'] += 1
-    
+
     return note_data
 
 

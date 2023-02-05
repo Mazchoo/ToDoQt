@@ -1,6 +1,7 @@
 
 from types import LambdaType
 
+
 class QtStaticModel:
     def __init__(self):
         for var_name, cls in vars(self.__class__).items():
