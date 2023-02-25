@@ -1,4 +1,5 @@
 
+import sys
 from collections.abc import Callable
 from functools import update_wrapper
 
@@ -35,7 +36,8 @@ def CreateQtController(cls):
             self.model = Model()
             self.parent = parent_window
 
-            self.verifyModelAndLayoutAttributes()
+            if 'MOCK_INTERFACES' in sys.argv:
+                self.verifyModelAndLayoutAttributes()
 
             self.setup()
             update_wrapper(self, parent_class)  # Updates doc strings

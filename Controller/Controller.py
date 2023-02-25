@@ -44,7 +44,8 @@ class ToDoListController(QWidget):
 
         setattr(in_progress_list, 'dragEnterEvent', lambda e: enter_task_list_box(in_progress_list, e))
         setattr(in_progress_list, 'dragMoveEvent', lambda e: drag_move_event(in_progress_list, e))
-        setattr(in_progress_list, 'dropEvent', lambda e: move_task_list_item(self.model, self.layout, in_progress_list, e))
+        setattr(in_progress_list, 'dropEvent',
+                lambda e: move_task_list_item(self.model, self.layout, in_progress_list, e))
 
         setattr(done_list, 'dragEnterEvent', lambda e: enter_task_list_box(done_list, e))
         setattr(done_list, 'dragMoveEvent', lambda e: drag_move_event(done_list, e))
@@ -69,7 +70,7 @@ class ToDoListController(QWidget):
         self.layout.pending_listView.setDragEnabled(True)
         self.layout.pending_listView.setMovement(QListView.Snap)
 
-        self.layout.inProgress_listView.setAcceptDrops(True)        
+        self.layout.inProgress_listView.setAcceptDrops(True)    
         self.layout.inProgress_listView.setDragEnabled(True)
         self.layout.pending_listView.setMovement(QListView.Snap)
 
