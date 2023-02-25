@@ -7,7 +7,6 @@ from UI.ToDoLayout import Ui_ToDoLayout
 from Models.ToDoModel import ToDoModel
 from Controller.ControlFunctions import ToDoListController
 
-# ToDo - Turn off attribute checking when in release mode
 # ToDo - Enable backup when there are uncommitted changes
 
 if __name__ == '__main__':

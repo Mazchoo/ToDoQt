@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>ToDoLayout</class>
  <widget class="QMainWindow" name="ToDoLayout">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>685</width>
+    <height>630</height>
+   </rect>
+  </property>
   <property name="minimumSize">
    <size>
     <width>685</width>
@@ -264,9 +272,9 @@
     </property>
     <layout class="QHBoxLayout" name="statusTitle_layout">
      <item>
-      <widget class="QLabel" name="inProgress_label">
+      <widget class="QLabel" name="pending_label">
        <property name="text">
-        <string>In Progress</string>
+        <string>Pending</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
@@ -274,9 +282,9 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="pending_label">
+      <widget class="QLabel" name="inProgress_label">
        <property name="text">
-        <string>Pending</string>
+        <string>In Progress</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
