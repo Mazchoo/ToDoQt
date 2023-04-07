@@ -44,6 +44,7 @@ def add_name_to_list(self, _click: bool):
 def set_text_description(self, selected_item: QStandardItem):
     if selected_item is None:
         return
+
     self.layout.description_textEdit.setText(selected_item.accessibleDescription())
     self.layout.delete_pushButton.setEnabled(True)
     self.layout.saveChanges_pushButton.setEnabled(False)
@@ -54,6 +55,7 @@ def set_text_description(self, selected_item: QStandardItem):
 def setFocus_to_pendingView(self, _click: bool):
     self.layout.inProgress_listView.clearSelection()
     self.layout.done_listView.clearSelection()
+
     selected_item = get_selected_item_from_list(self.model.pending_list, self.layout.pending_listView)
     set_text_description(self, selected_item)
 
@@ -63,6 +65,7 @@ def setFocus_to_pendingView(self, _click: bool):
 def setFocus_to_in_progressView(self, _click: bool):
     self.layout.pending_listView.clearSelection()
     self.layout.done_listView.clearSelection()
+
     selected_item = get_selected_item_from_list(self.model.in_progress_list, self.layout.inProgress_listView)
     set_text_description(self, selected_item)
 
@@ -72,6 +75,7 @@ def setFocus_to_in_progressView(self, _click: bool):
 def setFocus_to_doneView(self, _click: bool):
     self.layout.inProgress_listView.clearSelection()
     self.layout.pending_listView.clearSelection()
+
     selected_item = get_selected_item_from_list(self.model.done_list, self.layout.done_listView)
     set_text_description(self, selected_item)
 
