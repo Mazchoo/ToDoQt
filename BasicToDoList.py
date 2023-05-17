@@ -8,6 +8,8 @@ from Models.ToDoModel import ToDoModel
 from Controller.ControlFunctions import ToDoListController
 
 # ToDo - Enable backup when there are uncommitted changes
+# ToDo - Find the git push crash
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
