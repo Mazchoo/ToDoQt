@@ -8,8 +8,6 @@ from Models.ToDoModel import ToDoModel
 from Controller.ControlFunctions import ToDoListController
 
 # ToDo - Enable backup when there are uncommitted changes
-# ToDo - Find the git push crash
-# ToDo - Add a .bat to install venv
 
 
 if __name__ == '__main__':

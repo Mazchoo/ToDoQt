@@ -1,55 +1,61 @@
-from git import Repo, Git
-from os import getcwd
+from git import Repo, Git, GitError
 from pathlib import Path
 
-REPO_DIR = getcwd()
-CURRENT_REPO = Repo(REPO_DIR)
-GIT_EXEC = Git(REPO_DIR)
 
-
-def git_commit(message: str):
+def git_commit(message: str, git: Git):
     cleaned_message = message.replace('"', '').replace("'", "")
-    GIT_EXEC.execute(f'git commit -m "{cleaned_message}"')
-
-
-def git_push():
-    GIT_EXEC.execute('git push')
-
-
-def git_add(file_path: str):
-    GIT_EXEC.execute(f'git add {file_path}')
-
-
-def git_restore(file_path: str):
-    GIT_EXEC.execute(f'git restore {file_path}')
-
-
-def path_is_relative_to(path: str, base_path: str):
     try:
-        Path(path).relative_to(Path(base_path))
-    except Exception:
+        git.execute(f'git commit -m "{cleaned_message}"')
+    except GitError:
         return False
     else:
         return True
 
 
-def git_add_all_files_in_folder(folder_path: str):
-    repo_changed_files = CURRENT_REPO.index.diff(None)
-    changed_files_in_folder = [
-        file.a_path for file in repo_changed_files if path_is_relative_to(file.a_path, folder_path)
+def git_push(git: Git):
+    try:
+        git.execute('git push')
+    except GitError:
+        return False
+    else:
+        return True
+
+
+def git_add(file_path: str, git: Git):
+    try:
+        git.execute(f'git add {file_path}')
+    except GitError:
+        return None
+    else:
+        return file_path
+
+
+def git_restore(file_path: str, git: Git):
+    try:
+        git.execute(f'git restore {file_path}')
+    except GitError:
+        return None
+    else:
+        return file_path
+
+
+def path_is_relative_to(path: str, base_path: str):
+    try:
+        Path(path).relative_to(Path(base_path))
+    except ValueError:
+        return False
+    else:
+        return True
+
+
+def get_all_changed_files_in_repo_folder(path: str, repo: Repo):
+    changed_files = repo.index.diff(None)
+    return [
+        f.a_path for f in changed_files if path_is_relative_to(f.a_path, path)
     ]
-    new_files_in_folder = [
-        file for file in CURRENT_REPO.untracked_files if path_is_relative_to(file, folder_path)
+
+
+def get_all_new_files_in_repo_folder(path: str, repo: Repo):
+    return [
+        f for f in repo.untracked_files if path_is_relative_to(f, path)
     ]
-    changed_files_in_folder.extend(new_files_in_folder)
-
-    for file_path in changed_files_in_folder:
-        git_add(file_path)
-    return changed_files_in_folder
-
-
-if __name__ == '__main__':
-    git_restore('--staged SavedToDo')
-    if git_add_all_files_in_folder('SavedToDo'):
-        git_commit('Updated ToDo items')
-        git_push()
