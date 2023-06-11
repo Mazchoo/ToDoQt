@@ -108,10 +108,11 @@ def close_window(self, _click: bool):
 
 
 @ClassMethod(ToDoListController)
-def stop_animation(self):
+def end_upload(self):
     self.layout.loaderAnimation_label.setVisible(False)
     UPLOAD_THREAD_SINGLETON.running = False
     UPLOAD_THREAD_SINGLETON.finished.disconnect()
+    self.layout.upload_pushButton.setEnabled(not UPLOAD_THREAD_SINGLETON.upload_success)
 
 
 @ClassMethod(ToDoListController)
@@ -125,7 +126,7 @@ def start_upload(self):
 def git_push_backups(self, _click: bool):
     if not UPLOAD_THREAD_SINGLETON.running:
         self.layout.upload_pushButton.setEnabled(False)
-        UPLOAD_THREAD_SINGLETON.finished.connect(self.stop_animation)
+        UPLOAD_THREAD_SINGLETON.finished.connect(self.end_upload)
         UPLOAD_THREAD_SINGLETON.started.connect(self.start_upload)
         UPLOAD_THREAD_SINGLETON.start()
 

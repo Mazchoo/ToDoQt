@@ -24,12 +24,17 @@ def git_add_all_files_in_folder(folder_path: str):
 
 class UploadToGitThread(QThread):
     running = False
+    _upload_success = False
 
     def run(self):
-        git_restore('--staged SavedToDo', GIT_EXEC)
-        if git_add_all_files_in_folder('SavedToDo'):
-            git_commit('Updated ToDo items', GIT_EXEC)
-            git_push(GIT_EXEC)
+        git_restore('SavedToDo', GIT_EXEC)
+        git_add_all_files_in_folder('SavedToDo')
+        self._upload_success = git_commit('Updated ToDo items', GIT_EXEC)
+        self._upload_success = self._upload_success and git_push(GIT_EXEC)
+
+    @property
+    def upload_success(self):
+        return self._upload_success
 
 
 UPLOAD_THREAD_SINGLETON = UploadToGitThread()
