@@ -6,7 +6,8 @@ def git_commit(message: str, git: Git):
     cleaned_message = message.replace('"', '').replace("'", "")
     try:
         git.execute(f'git commit -m "{cleaned_message}"')
-    except GitError:
+    except GitError as e:
+        print(f'Commit error {e}')
         return False
     else:
         return True
@@ -15,7 +16,8 @@ def git_commit(message: str, git: Git):
 def git_push(git: Git):
     try:
         git.execute('git push')
-    except GitError:
+    except GitError as e:
+        print(f'Push error {e}')
         return False
     else:
         return True
@@ -24,15 +26,16 @@ def git_push(git: Git):
 def git_add(file_path: str, git: Git):
     try:
         git.execute(f'git add {file_path}')
-    except GitError:
+    except GitError as e:
+        print(f'Git add error {e}')
         return None
     else:
         return file_path
 
 
-def git_restore(file_path: str, git: Git):
+def git_restore_staged(file_path: str, git: Git):
     try:
-        git.execute(f'git restore {file_path}')
+        git.execute(f'git restore --staged {file_path}')
     except GitError:
         return None
     else:

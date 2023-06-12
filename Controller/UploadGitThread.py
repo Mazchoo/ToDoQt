@@ -4,7 +4,7 @@ from git import Repo, Git
 from os import getcwd
 
 from Common.GitCommands import (
-    git_restore, git_commit, git_push, git_add,
+    git_restore_staged, git_commit, git_push, git_add,
     get_all_changed_files_in_repo_folder,
     get_all_new_files_in_repo_folder
 )
@@ -27,7 +27,8 @@ class UploadToGitThread(QThread):
     _upload_success = False
 
     def run(self):
-        git_restore('SavedToDo', GIT_EXEC)
+        git_push(GIT_EXEC)
+        git_restore_staged('SavedToDo', GIT_EXEC)
         git_add_all_files_in_folder('SavedToDo')
         self._upload_success = git_commit('Updated ToDo items', GIT_EXEC)
         self._upload_success = self._upload_success and git_push(GIT_EXEC)
