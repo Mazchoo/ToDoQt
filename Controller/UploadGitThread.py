@@ -27,11 +27,13 @@ class UploadToGitThread(QThread):
     _upload_success = False
 
     def run(self):
-        git_push(GIT_EXEC)
-        git_restore_staged('SavedToDo', GIT_EXEC)
-        git_add_all_files_in_folder('SavedToDo')
-        self._upload_success = git_commit('Updated ToDo items', GIT_EXEC)
-        self._upload_success = self._upload_success and git_push(GIT_EXEC)
+        git_restore_staged('SavedToDo', GIT_EXEC)  # Restores commited but not pushed
+        if git_add_all_files_in_folder('SavedToDo'):
+            self._upload_success = git_commit('Updated ToDo items', GIT_EXEC)
+        else:
+            self._upload_success = True
+
+        self._upload_success &= git_push(GIT_EXEC)
 
     @property
     def upload_success(self):
