@@ -60,7 +60,7 @@ def encrypt_dictionary_and_save_key(json_dict: dict, key_file_name: Path, fields
 
 def format_decrypted_string(decrypted_string: str):
     decrypted_string = decrypted_string[2:(len(decrypted_string) - 1)]
-    return decrypted_string.replace('\\n', '\n').replace('\\t', '\t') 
+    return decrypted_string.replace('\\n', '\n').replace('\\t', '\t')
 
 
 def fernet_decrypt_string(fernet: Fernet, cipher_text: str):
