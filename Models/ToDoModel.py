@@ -41,7 +41,14 @@ class ToDoModel(QtStaticModel):
         path = self.check_folder_path(rel_path)
 
         all_note_data = self.get_all_note_data()
-        original_df = pd.read_csv(path / 'saved_content.csv', index_col=0)
+
+        content_path = path / 'saved_content.csv'
+        if content_path.exists():
+            original_df = pd.read_csv(content_path, index_col=0)
+        else:
+            columns = list(NoteEntry.__fields__.keys())
+            original_df = pd.DataFrame(columns=columns)
+
         initial_file_data = load_notes_from_folder(path, self.encrypt_fields, self.eval_fields)
 
         final_df = create_updated_df(original_df, all_note_data, initial_file_data,

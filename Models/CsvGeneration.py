@@ -77,7 +77,8 @@ def create_updated_df(original_df: pd.DataFrame, all_note_data: dict, initial_da
         final_df[col] = None
     final_df.drop(columns=deleted_columns, inplace=True)
 
-    final_df.loc[edited_rows_df.index] = edited_rows_df
+    if not edited_rows_df.empty:
+        final_df.loc[edited_rows_df.index] = edited_rows_df
     final_df.drop(deleted_row_set, inplace=True)
     final_df = pd.concat([final_df, new_rows_df])
 

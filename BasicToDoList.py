@@ -8,6 +8,8 @@ from Models.ToDoModel import ToDoModel
 from Controller.ControlFunctions import ToDoListController
 
 # ToDo - Enable backup when there are uncommitted changes
+# ToDo - Allow editing of title to persist in saved data
+# ToDo - Disallow editing of an empty note
 
 
 if __name__ == '__main__':

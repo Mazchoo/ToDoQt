@@ -53,7 +53,11 @@ def try_decrypting_note(note_data: dict, file_name: Path, encrypt_fields: set, e
 
 
 def load_notes_from_folder(path: Path, encrypt_fields: set, eval_fields: set):
-    loaded_dicts = pd.read_csv(path / 'saved_content.csv', index_col=0).to_dict(orient='index')
+    content_path = path / 'saved_content.csv'
+    if content_path.exists():
+        loaded_dicts = pd.read_csv(content_path, index_col=0).to_dict(orient='index')
+    else:
+        loaded_dicts = {}
 
     decrypted_notes = {}
     for file_name, note_data in loaded_dicts.items():
