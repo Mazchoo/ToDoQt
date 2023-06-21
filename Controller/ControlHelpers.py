@@ -4,6 +4,10 @@ from PyQt5.QtGui import QStandardItemModel, QStandardItem
 
 from Models.GlobalParams import LIST_VIEW_TO_STATUS_TYPE
 
+from Common.GitCommands import (get_all_uncomitted_files_in_folder,
+                                get_all_unpushed_commits_in_folder)
+from Controller.UploadGitThread import CURRENT_REPO
+
 
 def update_standard_item_fields(standard_item: QStandardItemModel, **kwargs):
     selected_item_data = standard_item.data()
@@ -85,3 +89,8 @@ def clear_all_selections(layout):
     layout.description_textEdit.setText("")
     layout.delete_pushButton.setEnabled(False)
     layout.saveChanges_pushButton.setEnabled(False)
+
+
+def unuploaded_changes_present():
+    args = "SavedToDo", CURRENT_REPO
+    return get_all_uncomitted_files_in_folder(*args) or get_all_unpushed_commits_in_folder(*args)

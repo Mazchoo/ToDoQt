@@ -82,3 +82,5 @@ class ToDoListController(QWidget):
         self.layout.loaderAnimation_label.setMovie(self.loader_animation)
         self.loader_animation.start()
         self.layout.loaderAnimation_label.setVisible(False)
+
+        self.enable_upload_if_uncomitted_changes(self)

@@ -5,8 +5,7 @@ from os import getcwd
 
 from Common.GitCommands import (
     git_restore_staged, git_commit, git_push, git_add,
-    get_all_changed_files_in_repo_folder,
-    get_all_new_files_in_repo_folder
+    get_all_uncomitted_files_in_folder
 )
 
 
@@ -16,9 +15,7 @@ GIT_EXEC = Git(CWD)
 
 
 def git_add_all_files_in_folder(folder_path: str):
-    changed_files = get_all_changed_files_in_repo_folder(folder_path, CURRENT_REPO)
-    changed_files.extend(get_all_new_files_in_repo_folder(folder_path, CURRENT_REPO))
-
+    changed_files = get_all_uncomitted_files_in_folder(folder_path, CURRENT_REPO)
     return [git_add(path, GIT_EXEC) for path in changed_files]
 
 

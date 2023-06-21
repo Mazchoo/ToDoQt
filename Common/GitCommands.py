@@ -80,6 +80,12 @@ def get_all_new_files_in_repo_folder(path: str, repo: Repo):
     ]
 
 
+def get_all_uncomitted_files_in_folder(path: str, repo: Repo):
+    files = get_all_new_files_in_repo_folder(path, repo)
+    files += get_all_changed_files_in_repo_folder(path, repo)
+    return files
+
+
 def get_all_unpushed_commits_in_folder(path: str, repo: Repo):
     branch = repo.active_branch
     commits = repo.iter_commits(f'{branch}@{{u}}..{branch}')

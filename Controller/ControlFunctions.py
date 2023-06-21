@@ -9,8 +9,8 @@ from Common.ModelViewController import QtControlFunction
 from Controller.Controller import ToDoListController
 from Controller.UploadGitThread import UPLOAD_THREAD_SINGLETON
 from Controller.ControlHelpers import (
-    get_selected_item_from_list, append_item_to_list_view,
-    get_selected_task, delete_selected_task, update_standard_item_fields
+    get_selected_item_from_list, append_item_to_list_view, get_selected_task,
+    delete_selected_task, update_standard_item_fields, unuploaded_changes_present
 )
 from Models.NoteEntry import create_new_note, get_date_tuple_now
 
@@ -145,3 +145,9 @@ def enable_save_changes(self):
 def enable_add_new_item(self):
     new_task_empty = self.layout.newTask_lineEdit.displayText() == ''
     self.layout.addNewTask_pushButton.setEnabled(not new_task_empty)
+
+
+@ClassMethod(ToDoListController)
+@QtControlFunction()
+def enable_upload_if_uncomitted_changes(self):
+    self.layout.upload_pushButton.setEnabled(bool(unuploaded_changes_present()))
