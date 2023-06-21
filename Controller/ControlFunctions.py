@@ -112,7 +112,7 @@ def end_upload(self):
     self.layout.loaderAnimation_label.setVisible(False)
     UPLOAD_THREAD_SINGLETON.running = False
     UPLOAD_THREAD_SINGLETON.finished.disconnect()
-    self.layout.upload_pushButton.setEnabled(not UPLOAD_THREAD_SINGLETON.upload_success)
+    self.layout.upload_pushButton.setEnabled(unuploaded_changes_present())
 
 
 @ClassMethod(ToDoListController)
@@ -150,4 +150,4 @@ def enable_add_new_item(self):
 @ClassMethod(ToDoListController)
 @QtControlFunction()
 def enable_upload_if_uncomitted_changes(self):
-    self.layout.upload_pushButton.setEnabled(bool(unuploaded_changes_present()))
+    self.layout.upload_pushButton.setEnabled(unuploaded_changes_present())
