@@ -44,6 +44,8 @@ def git_restore_staged(path: str, git: Git):
 
 
 def git_reset_directory(directory: str, git: Git):
+    ''' Removes directory and checks out from repo. '''
+    # ToDo : Make a backup of the folder to a temp directory and restore it upon GitError
     try:
         rmtree(directory)
         git.execute(f'git checkout -- {directory}')
@@ -76,3 +78,15 @@ def get_all_new_files_in_repo_folder(path: str, repo: Repo):
     return [
         f for f in repo.untracked_files if path_is_relative_to(f, path)
     ]
+
+
+def get_all_unpushed_commits_in_folder(path: str, repo: Repo):
+    branch = repo.active_branch
+    commits = repo.iter_commits(f'{branch}@{{u}}..{branch}')
+
+    unpushed_in_folder = []
+    for commit in commits:
+        if all([path_is_relative_to(f, path) for f in commit.stats.files]):
+            unpushed_in_folder.append(commit)
+
+    return unpushed_in_folder
