@@ -93,4 +93,5 @@ def clear_all_selections(layout):
 
 def unuploaded_changes_present():
     args = "SavedToDo", CURRENT_REPO
-    return bool(get_all_uncomitted_files_in_folder(*args) or get_all_unpushed_commits_in_folder(*args))
+    return any(get_all_uncomitted_files_in_folder(*args),
+               get_all_unpushed_commits_in_folder(*args))
