@@ -1,5 +1,6 @@
 from git import Repo, Git, GitError
 from pathlib import Path
+from shutil import rmtree
 
 
 def git_commit(message: str, git: Git):
@@ -23,23 +24,36 @@ def git_push(git: Git):
         return True
 
 
-def git_add(file_path: str, git: Git):
+def git_add(path: str, git: Git):
     try:
-        git.execute(f'git add {file_path}')
+        git.execute(f'git add {path}')
     except GitError as e:
         print(f'Git add error {e}')
         return None
     else:
-        return file_path
+        return path
 
 
-def git_restore_staged(file_path: str, git: Git):
+def git_restore_staged(path: str, git: Git):
     try:
-        git.execute(f'git restore --staged {file_path}')
+        git.execute(f'git restore --staged {path}')
     except GitError:
         return None
     else:
-        return file_path
+        return path
+
+
+def git_reset_directory(directory: str, git: Git):
+    try:
+        rmtree(directory)
+        git.execute(f'git checkout -- {directory}')
+    except GitError:
+        return False
+    except OSError as e:
+        print(f"Path cannot be removed {e}")
+        return False
+    else:
+        return True
 
 
 def path_is_relative_to(path: str, base_path: str):
