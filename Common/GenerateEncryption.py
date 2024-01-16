@@ -1,4 +1,3 @@
-from click import FileError
 from cryptography.fernet import Fernet
 from pathlib import Path
 
@@ -11,7 +10,7 @@ def save_encryption_key_to_disk(key_file_name: Path, key: bytes):
         f.write(str(key))
 
     if not key_file_name.exists():
-        raise FileError("Could not write key to disk.")
+        raise FileNotFoundError("Could not write key to disk.")
 
 
 def load_fernet_key_from_path(key_file_name: Path) -> Fernet:
