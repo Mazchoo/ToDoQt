@@ -53,7 +53,9 @@ class ToDoListController(QWidget):
                                                                       done_list, e))
 
         self.layout.description_textEdit.textChanged.connect(lambda: self.enable_save_changes(self))
-        self.layout.newTask_lineEdit.textChanged.connect(lambda: self.enable_add_new_item(self))
+        self.layout.newTask_lineEdit.textChanged.connect(lambda: self.enable_add_new_task(self))
+
+        self.layout.newProject_lineEdit.textChanged.connect(lambda: self.enable_add_new_project(self))
 
     @staticmethod
     def initializeModels(self):

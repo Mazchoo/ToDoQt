@@ -142,9 +142,16 @@ def enable_save_changes(self):
 
 @ClassMethod(ToDoListController)
 @QtControlFunction()
-def enable_add_new_item(self):
+def enable_add_new_task(self):
     new_task_empty = self.layout.newTask_lineEdit.displayText() == ''
     self.layout.addNewTask_pushButton.setEnabled(not new_task_empty)
+
+
+@ClassMethod(ToDoListController)
+@QtControlFunction()
+def enable_add_new_project(self):
+    new_task_empty = self.layout.newProject_lineEdit.displayText() == ''
+    self.layout.addNewProject_pushButton.setEnabled(not new_task_empty)
 
 
 @ClassMethod(ToDoListController)
