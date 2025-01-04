@@ -2,7 +2,7 @@
 import pandas as pd
 from pathlib import Path
 
-from Models.NoteFileHelpers import turn_note_data_into_df
+from Models.FileHelpers import turn_loaded_dict_into_df
 
 
 def get_all_new_notes(all_note_data: dict, initial_data: dict):
@@ -70,8 +70,8 @@ def create_updated_df(original_df: pd.DataFrame, all_note_data: dict, initial_da
     deleted_columns = get_deleted_columns(all_note_data, final_df.columns)
     new_rows = get_new_rows_from_keys(all_note_data, new_row_set)
 
-    edited_rows_df = turn_note_data_into_df(edited_rows, path, encrypt_fields)
-    new_rows_df = turn_note_data_into_df(new_rows, path, encrypt_fields)
+    edited_rows_df = turn_loaded_dict_into_df(edited_rows, path, encrypt_fields)
+    new_rows_df = turn_loaded_dict_into_df(new_rows, path, encrypt_fields)
 
     for col in new_columns:
         final_df[col] = None

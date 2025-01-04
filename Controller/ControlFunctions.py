@@ -12,7 +12,7 @@ from Controller.ControlHelpers import (
     get_selected_item_from_list, append_item_to_list_view, get_selected_task,
     delete_selected_task, update_standard_item_fields, unuploaded_changes_present
 )
-from Models.NoteEntry import create_new_note, get_date_tuple_now
+from Models.TaskEntry import create_new_note, get_date_tuple_now
 
 
 @ClassMethod(ToDoListController)

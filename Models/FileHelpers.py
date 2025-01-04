@@ -29,15 +29,16 @@ def delete_old_hash_browns(output_df: pd.DataFrame, path: Path):
         hash_path.unlink()
 
 
-def turn_note_data_into_df(note_data_dict: dict, path: Path, encrypt_fields: set):
+def turn_loaded_dict_into_df(note_data_dict: dict, path: Path, encrypt_fields: set):
     encrypted_notes = {}
     for file_name, note_data in note_data_dict.items():
         file_path = get_full_hash_path(path, file_name)
 
         try:
             encrypted_note = encrypt_dictionary_and_save_key(note_data, file_path, encrypt_fields)
-        except Exception:
+        except Exception as e:
             print(f"Error! Encryption failed {file_name}")
+            print(e)
         else:
             encrypted_notes[file_name] = encrypted_note
 

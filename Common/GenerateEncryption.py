@@ -55,7 +55,7 @@ def encrypt_dictionary_and_save_key(json_dict: dict, key_file_name: Path, fields
     output_dict = {}
     for key, value in json_dict.items():
         if key in fields:
-            output_dict[key] = fernet_encrypt_string(fernet, value)
+            output_dict[key] = fernet_encrypt_string(fernet, str(value))
         else:
             output_dict[key] = value
 

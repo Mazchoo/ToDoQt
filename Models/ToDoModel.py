@@ -7,12 +7,13 @@ from PyQt5.QtGui import QStandardItemModel
 from Common.QtModel import QtStaticModel
 from Models.GlobalParams import (FIELDS_TO_EVAL, FIELDS_TO_ENCRYPT,
                                  STATUS_TYPES, TaskIdProvider, SAVED_TASKS_FILENAME)
-from Models.NoteEntry import TaskEntry, update_note_data
-from Models.NoteFileHelpers import (
+from Models.TaskEntry import TaskEntry, update_note_data
+from Models.FileHelpers import (
     delete_old_hash_browns, get_hash_file_from_note_data,
     convert_list_to_note_data, load_notes_from_folder, add_new_item_to_model_list
 )
 from Models.CsvGeneration import create_updated_df
+from Models.PandasTable import PandasModel
 
 CWD = os.getcwd()
 
@@ -21,6 +22,7 @@ class ToDoModel(QtStaticModel):
     pending_list = QStandardItemModel
     in_progress_list = QStandardItemModel
     done_list = QStandardItemModel
+    project_list = PandasModel
 
     encrypt_fields = FIELDS_TO_ENCRYPT
     eval_fields = FIELDS_TO_EVAL

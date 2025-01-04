@@ -3,7 +3,7 @@ from typing import Tuple
 from pydantic import BaseModel, field_validator
 
 import Models.GlobalParams as GlobalParams
-from Models.NoteFileHelpers import get_date_tuple_now
+from Models.FileHelpers import get_date_tuple_now
 
 
 class Project(BaseModel):
