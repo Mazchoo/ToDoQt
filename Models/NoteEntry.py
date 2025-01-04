@@ -6,7 +6,7 @@ import Models.GlobalParams as GlobalParams
 from Models.NoteFileHelpers import get_date_tuple_now
 
 
-class NoteEntry(BaseModel):
+class TaskEntry(BaseModel):
     version: int
     id_number: int
     title: str
@@ -69,7 +69,7 @@ def update_note_data(note_data: dict):
     return note_data
 
 
-def create_new_note(item_name: str):
+def create_new_note(item_name: str, project_id: int):
     date_now_tuple = get_date_tuple_now()
     return {
         'title': item_name,
@@ -79,10 +79,14 @@ def create_new_note(item_name: str):
         'date_created': date_now_tuple,
         'date_edited': date_now_tuple,
         'date_moved': date_now_tuple,
+        'project_id': project_id,
+        'time_spent_seconds': 0,
+        'estimated_time_seconds': 0,
+        'points': 0,
         'id_number': GlobalParams.TaskIdProvider.get_new_id()
     }
 
 
 if __name__ == '__main__':
-    note_data = create_new_note('Spam')
-    model = NoteEntry(**note_data)
+    note_data = create_new_note('Spam', 0)
+    model = TaskEntry(**note_data)

@@ -9,6 +9,8 @@ LIST_VIEW_TO_STATUS_TYPE = {
 }
 FIELDS_TO_EVAL = {'date_created', 'date_edited', 'date_moved'}
 FIELDS_TO_ENCRYPT = {'title', 'description'}
+SAVED_TASKS_FILENAME = 'saved_tasks.csv'
+SAVED_PROJECTS_FILENAME = 'saved_projects.csv'
 
 
 class TaskIdProvider:

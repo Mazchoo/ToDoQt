@@ -7,6 +7,7 @@ from datetime import datetime
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 
 from Common.GenerateEncryption import encrypt_dictionary_and_save_key, decrypt_json_dict
+from Models.GlobalParams import SAVED_TASKS_FILENAME
 
 
 def get_date_tuple_now():
@@ -58,7 +59,7 @@ def try_decrypting_note(note_data: dict, file_name: Path, encrypt_fields: set, e
 
 
 def load_notes_from_folder(path: Path, encrypt_fields: set, eval_fields: set):
-    content_path = path / 'saved_content.csv'
+    content_path = path / SAVED_TASKS_FILENAME
     if content_path.exists():
         loaded_dicts = pd.read_csv(content_path, index_col=0).to_dict(orient='index')
     else:

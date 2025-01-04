@@ -5,8 +5,9 @@ import pandas as pd
 from PyQt5.QtGui import QStandardItemModel
 
 from Common.QtModel import QtStaticModel
-from Models.GlobalParams import FIELDS_TO_EVAL, FIELDS_TO_ENCRYPT, STATUS_TYPES, TaskIdProvider
-from Models.NoteEntry import NoteEntry, update_note_data
+from Models.GlobalParams import (FIELDS_TO_EVAL, FIELDS_TO_ENCRYPT,
+                                 STATUS_TYPES, TaskIdProvider, SAVED_TASKS_FILENAME)
+from Models.NoteEntry import TaskEntry, update_note_data
 from Models.NoteFileHelpers import (
     delete_old_hash_browns, get_hash_file_from_note_data,
     convert_list_to_note_data, load_notes_from_folder, add_new_item_to_model_list
@@ -20,6 +21,7 @@ class ToDoModel(QtStaticModel):
     pending_list = QStandardItemModel
     in_progress_list = QStandardItemModel
     done_list = QStandardItemModel
+
     encrypt_fields = FIELDS_TO_ENCRYPT
     eval_fields = FIELDS_TO_EVAL
 
@@ -42,25 +44,25 @@ class ToDoModel(QtStaticModel):
 
         all_note_data = self.get_all_note_data()
 
-        content_path = path / 'saved_content.csv'
+        content_path = path / SAVED_TASKS_FILENAME
         if content_path.exists():
             original_df = pd.read_csv(content_path, index_col=0)
         else:
-            columns = list(NoteEntry.__fields__.keys())
+            columns = list(TaskEntry.model_fields.keys())
             original_df = pd.DataFrame(columns=columns)
 
         initial_file_data = load_notes_from_folder(path, self.encrypt_fields, self.eval_fields)
 
         final_df = create_updated_df(original_df, all_note_data, initial_file_data,
                                      path, self.encrypt_fields)
-        final_df.to_csv(path / 'saved_content.csv')
+        final_df.to_csv(path / SAVED_TASKS_FILENAME)
 
         delete_old_hash_browns(final_df, path)
 
     def save_json_dict_into_model(self, note_data: dict):
         try:
             note_data = update_note_data(note_data)
-            note_data = NoteEntry(**note_data).dict()
+            note_data = TaskEntry(**note_data).dict()
 
             assert (note_data['status'] in STATUS_TYPES)
             model_list = self.__getattribute__(note_data['status'])

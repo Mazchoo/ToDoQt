@@ -31,7 +31,7 @@ def delete_current_item(self, _click):
 def add_name_to_list(self, _click: bool):
     if item_name := self.layout.newTask_lineEdit.text():
         standard_item = QStandardItem(item_name)
-        standard_item.setData(create_new_note(item_name))
+        standard_item.setData(create_new_note(item_name, 0))
 
         append_item_to_list_view(self.model.pending_list, self.layout.pending_listView, standard_item)
         self.layout.newTask_lineEdit.setText("")

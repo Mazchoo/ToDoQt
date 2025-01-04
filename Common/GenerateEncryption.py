@@ -1,5 +1,6 @@
 from cryptography.fernet import Fernet
 from pathlib import Path
+from os import mkdir
 
 
 def save_encryption_key_to_disk(key_file_name: Path, key: bytes):
@@ -34,12 +35,16 @@ def fernet_encrypt_string(fernet: Fernet, plain_text: str):
     return str(encrypted_bytes)
 
 
-def load_fernet_key_if_exists(key_file_name: Path):
-    if key_file_name.exists():
-        fernet = load_fernet_key_from_path(key_file_name)
+def load_fernet_key_if_exists(key_path: Path):
+    if key_path.exists():
+        fernet = load_fernet_key_from_path(key_path)
     else:
         fernet_key = Fernet.generate_key()
-        save_encryption_key_to_disk(key_file_name, fernet_key)
+
+        if not key_path.parent.is_dir():
+            mkdir(str(key_path.parent))
+
+        save_encryption_key_to_disk(key_path, fernet_key)
         fernet = Fernet(fernet_key)
     return fernet
 
