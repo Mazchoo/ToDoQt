@@ -154,6 +154,18 @@ QTextEdit
 	font-size: 16px;
 }
 
+QTimeEdit
+{
+	color: #000000;
+	font-size: 16px;
+}
+
+QSpinBox
+{
+	color: #000000;
+	font-size: 16px;
+}
+
 /*-----QListView-----*/
 QListView
 {
