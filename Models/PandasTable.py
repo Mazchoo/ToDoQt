@@ -3,13 +3,14 @@ from typing import Self
 import pandas as pd
 
 from PyQt5.QtCore import QAbstractTableModel, Qt
+from Models.GlobalParams import PROJECT_FIELDS_TO_DISPLAY
 
 
 class PandasModel(QAbstractTableModel):
 
     def __init__(self, data=None):
         QAbstractTableModel.__init__(self)
-        self._df = data or pd.DataFrame([])
+        self._df = data or pd.DataFrame([], columns=PROJECT_FIELDS_TO_DISPLAY)
 
     def rowCount(self, _parent=None):
         return self._df.shape[0]
