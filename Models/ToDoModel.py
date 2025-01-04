@@ -5,7 +5,7 @@ import pandas as pd
 from PyQt5.QtGui import QStandardItemModel
 
 from Common.QtModel import QtStaticModel
-from Models.GlobalParams import FIELDS_TO_EVAL, FIELDS_TO_ENCRYPT, STATUS_TYPES, NoteIdProvider
+from Models.GlobalParams import FIELDS_TO_EVAL, FIELDS_TO_ENCRYPT, STATUS_TYPES, TaskIdProvider
 from Models.NoteEntry import NoteEntry, update_note_data
 from Models.NoteFileHelpers import (
     delete_old_hash_browns, get_hash_file_from_note_data,
@@ -68,7 +68,7 @@ class ToDoModel(QtStaticModel):
             print(f'json dict {note_data} cannot be read.')
             return
 
-        NoteIdProvider.update_max_id(note_data['id_number'])
+        TaskIdProvider.update_max_id(note_data['id_number'])
         add_new_item_to_model_list(model_list, note_data)
 
     def load_from_folder(self, rel_path: str):

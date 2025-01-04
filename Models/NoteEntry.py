@@ -1,35 +1,35 @@
 
 from typing import Tuple
-from datetime import datetime
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, field_validator
 
 import Models.GlobalParams as GlobalParams
+from Models.NoteFileHelpers import get_date_tuple_now
 
 
 class NoteEntry(BaseModel):
-    version: int = GlobalParams.LATEST_VERSION
+    version: int
     id_number: int
     title: str
     status: str
     description: str
+    project_id: int
+    time_spent_seconds: int
+    estimated_time_seconds: int
+    points: int
     date_created: Tuple[int, int, int, int, int, int, int]
     date_edited: Tuple[int, int, int, int, int, int, int]
     date_moved: Tuple[int, int, int, int, int, int, int]
 
-    @validator('title')
+    @field_validator('title')
     def title_must_be_right_length(cls, value):
         assert len(value) <= GlobalParams.MAX_TITLE_LENGTH, 'Title too long'
         return value
 
-    @validator('status')
+    @field_validator('status')
     def status_must_be_recognised(cls, value):
         status_types = GlobalParams.STATUS_TYPES
         assert value in status_types, f'Status must be one of {status_types}'
         return value
-
-
-def get_date_tuple_now():
-    return eval(repr(datetime.now())[17:])
 
 
 def update_0_to_1(data):
@@ -41,12 +41,20 @@ def update_0_to_1(data):
 def update_1_to_2(data):
     date_now_tuple = get_date_tuple_now()
     data['date_moved'] = date_now_tuple
-    data['id_number'] = GlobalParams.NoteIdProvider.get_new_id()
+    data['id_number'] = GlobalParams.TaskIdProvider.get_new_id()
+
+
+def update_2_to_3(data):
+    data['project_id'] = 0
+    data['time_spent_seconds'] = 0
+    data['estimated_time_seconds'] = 0
+    data['points'] = 0
 
 
 note_update_version = [
     update_0_to_1,
     update_1_to_2,
+    update_2_to_3,
 ]
 
 
@@ -71,7 +79,7 @@ def create_new_note(item_name: str):
         'date_created': date_now_tuple,
         'date_edited': date_now_tuple,
         'date_moved': date_now_tuple,
-        'id_number': GlobalParams.NoteIdProvider.get_new_id()
+        'id_number': GlobalParams.TaskIdProvider.get_new_id()
     }
 
 

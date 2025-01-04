@@ -2,10 +2,15 @@
 import pandas as pd
 from pathlib import Path
 from os import listdir
+from datetime import datetime
 
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 
 from Common.GenerateEncryption import encrypt_dictionary_and_save_key, decrypt_json_dict
+
+
+def get_date_tuple_now():
+    return eval(repr(datetime.now())[17:])
 
 
 def get_hash_file_from_note_data(note_data: dict):

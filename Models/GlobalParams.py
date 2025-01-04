@@ -1,6 +1,6 @@
 
-LATEST_VERSION = 2
-MAX_TITLE_LENGTH = 20
+LATEST_VERSION = 3
+MAX_TITLE_LENGTH = 30
 STATUS_TYPES = {'pending_list', 'in_progress_list', 'done_list'}
 LIST_VIEW_TO_STATUS_TYPE = {
     'inProgress_listView': 'in_progress_list',
@@ -11,14 +11,27 @@ FIELDS_TO_EVAL = {'date_created', 'date_edited', 'date_moved'}
 FIELDS_TO_ENCRYPT = {'title', 'description'}
 
 
-class NoteIdProvider:
+class TaskIdProvider:
     max_id = 0
 
     @staticmethod
     def get_new_id():
-        NoteIdProvider.max_id += 1
-        return NoteIdProvider.max_id
+        TaskIdProvider.max_id += 1
+        return TaskIdProvider.max_id
 
     @staticmethod
     def update_max_id(new_id):
-        NoteIdProvider.max_id = max(new_id, NoteIdProvider.max_id)
+        TaskIdProvider.max_id = max(new_id, TaskIdProvider.max_id)
+
+
+class ProjectIdProvider:
+    max_id = 0
+
+    @staticmethod
+    def get_new_id():
+        ProjectIdProvider.max_id += 1
+        return ProjectIdProvider.max_id
+
+    @staticmethod
+    def update_max_id(new_id):
+        ProjectIdProvider.max_id = max(new_id, ProjectIdProvider.max_id)
