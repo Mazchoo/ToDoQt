@@ -1,5 +1,5 @@
 import sys
-from typing import Optional
+from typing import Optional, Self
 
 import pandas as pd
 
@@ -36,6 +36,10 @@ class PandasModel(QAbstractTableModel):
             self._df.iloc[index.row(), index.column() - 1] = value
             return True
 
+    def add_row(self, row: dict) -> Self:
+        self._df.loc[self.rowCount()] = pd.Series(row)
+        return PandasModel(self._df)
+
     def headerData(self, col, orientation, role):
         if orientation == Qt.Horizontal and role == Qt.DisplayRole:
             if col == 0:
@@ -51,21 +55,24 @@ class PandasModel(QAbstractTableModel):
 
 class PandasTableView(QTableView):
 
-    def __init__(self, size, parent_window):
+    def __init__(self, rows, cols, parent_window):
         self.parent = parent_window
         QTableView.__init__(self, parent_window)
-        self.resize(*size)
+        self.adjust_size(rows, cols)
         self.clicked.connect(self.rowClick)
 
         self._selected_row = None
 
-    def rowClick(self, clickedIndex):
-        col = clickedIndex.column()
+    def adjust_size(self, rows, cols):
+        self.resize((cols + 1) * 127, (rows + 1) * 36)
+
+    def rowClick(self, clicked_index):
+        col = clicked_index.column()
 
         if col == 0:
-            row = clickedIndex.row()
-            model = clickedIndex.model()
-            columnsTotal = model.columnCount(None)
+            row = clicked_index.row()
+            model = clicked_index.model()
+            columnsTotal = model.columnCount()
 
             for _ in range(columnsTotal):
                 self.selectRow(row)
@@ -86,10 +93,13 @@ if __name__ == '__main__':
     parent_window = QMainWindow()
     model = PandasModel(df)
 
-    view = PandasTableView(
-        ((len(df.columns) + 1) * 127, (len(df) + 1) * 36),
-        parent_window)
+    view = PandasTableView(len(df), len(df.columns), parent_window)
     view.setModel(model)
+    view.showGrid()
+
+    model = model.add_row({'a': 'Bob', 'b': 400, 'c': 'd'})
+    view.setModel(model)
+    view.adjust_size(len(df), len(df.columns))
     view.showGrid()
 
     parent_window.show()
