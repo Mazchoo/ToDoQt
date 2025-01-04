@@ -25,7 +25,7 @@ class ToDoListController(QWidget):
         done_list = self.layout.done_listView
 
         self.layout.delete_pushButton.clicked.connect(lambda x: self.delete_current_item(self, x))
-        self.layout.addNewTask_pushButton.clicked.connect(lambda x: self.add_name_to_list(self, x))
+        self.layout.addNewTask_pushButton.clicked.connect(lambda x: self.add_new_task_to_pending(self, x))
         self.layout.close_pushButton.clicked.connect(lambda x: self.close_window(self, x))
 
         pending_list.clicked.connect(lambda x: self.setFocus_to_pendingView(self, x))
@@ -56,6 +56,7 @@ class ToDoListController(QWidget):
         self.layout.newTask_lineEdit.textChanged.connect(lambda: self.enable_add_new_task(self))
 
         self.layout.newProject_lineEdit.textChanged.connect(lambda: self.enable_add_new_project(self))
+        self.layout.addNewProject_pushButton.clicked.connect(lambda x: self.add_new_project(self, x))
 
     @staticmethod
     def initializeModels(self):

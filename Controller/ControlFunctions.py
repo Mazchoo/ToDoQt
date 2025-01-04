@@ -28,14 +28,27 @@ def delete_current_item(self, _click):
 
 @ClassMethod(ToDoListController)
 @QtControlFunction(True)
-def add_name_to_list(self, _click: bool):
-    if item_name := self.layout.newTask_lineEdit.text():
-        standard_item = QStandardItem(item_name)
-        standard_item.setData(create_new_note(item_name, 0))
+def add_new_task_to_pending(self, _click: bool):
+    if task_name := self.layout.newTask_lineEdit.text():
+        standard_item = QStandardItem(task_name)
+        standard_item.setData(create_new_note(task_name, 0))
 
         append_item_to_list_view(self.model.pending_list, self.layout.pending_listView, standard_item)
         self.layout.newTask_lineEdit.setText("")
         self.layout.addNewTask_pushButton.setEnabled(False)
+        self.layout.backup_pushButton.setEnabled(True)
+
+
+@ClassMethod(ToDoListController)
+@QtControlFunction(True)
+def add_new_project(self, _click: bool):
+    if project_name := self.layout.newProject_lineEdit.text():
+        standard_item = QStandardItem(project_name)
+        standard_item.setData(create_new_note(project_name, 0))
+
+        append_item_to_list_view(self.model.pending_list, self.layout.pending_listView, standard_item)
+        self.layout.newProject_lineEdit.setText("")
+        self.layout.addNewProject_pushButton.setEnabled(False)
         self.layout.backup_pushButton.setEnabled(True)
 
 
