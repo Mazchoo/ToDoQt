@@ -312,7 +312,7 @@
    <widget class="QLabel" name="loaderAnimation_label">
     <property name="geometry">
      <rect>
-      <x>290</x>
+      <x>1350</x>
       <y>830</y>
       <width>40</width>
       <height>40</height>
