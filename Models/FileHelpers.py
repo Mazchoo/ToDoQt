@@ -3,6 +3,7 @@ import pandas as pd
 from pathlib import Path
 from os import listdir
 from datetime import datetime
+from typing import Dict
 
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 
@@ -59,7 +60,7 @@ def try_decrypting_note(note_data: dict, file_name: Path, encrypt_fields: set, e
         return decrypted_note
 
 
-def load_notes_from_folder(path: Path, encrypt_fields: set, eval_fields: set):
+def load_tasks_from_csv(path: Path, encrypt_fields: set, eval_fields: set) -> Dict[str, dict]:
     content_path = path / SAVED_TASKS_FILENAME
     if content_path.exists():
         loaded_dicts = pd.read_csv(content_path, index_col=0).to_dict(orient='index')
@@ -73,6 +74,10 @@ def load_notes_from_folder(path: Path, encrypt_fields: set, eval_fields: set):
             decrypted_notes[file_name] = decrypted_note
 
     return decrypted_notes
+
+
+def load_projects_from_csv(path: Path) -> Dict[str, dict]:
+    return {}
 
 
 def add_new_item_to_model_list(model_list: QStandardItemModel, note_data: dict):

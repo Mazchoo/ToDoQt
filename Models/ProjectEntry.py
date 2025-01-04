@@ -1,5 +1,5 @@
 
-from typing import Tuple
+from typing import Tuple, Optional
 from pydantic import BaseModel, field_validator
 
 import Models.GlobalParams as GlobalParams
@@ -13,6 +13,10 @@ class Project(BaseModel):
     description: str
     date_created: Tuple[int, int, int, int, int, int, int]
     date_last_worked_on: Tuple[int, int, int, int, int, int, int]
+    hr_remain: Optional[int] = 0
+    hr_spent: Optional[int] = 0
+    perc_complete: Optional[float] = 0.
+    points_gained: Optional[int] = 0
 
     @field_validator('title')
     def title_must_be_right_length(cls, value):
@@ -20,15 +24,15 @@ class Project(BaseModel):
         return value
 
 
-def create_new_project(item_name: str):
+def create_new_project(name: str):
     date_now_tuple = get_date_tuple_now()
     return {
-        'title': item_name,
+        'title': name,
+        'id_number': GlobalParams.ProjectIdProvider.get_new_id(),
         'version': GlobalParams.LATEST_VERSION,
         'description': '',
         'date_created': date_now_tuple,
         'date_last_worked_on': date_now_tuple,
-        'id_number': GlobalParams.ProjectIdProvider.get_new_id()
     }
 
 

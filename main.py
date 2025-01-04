@@ -8,6 +8,7 @@ from Models.ToDoModel import ToDoModel
 from Controller.ControlFunctions import ToDoListController
 
 # ToDo - Add the ability to save and load projects
+# ToDo - Allow field to be loaded if it is unexpectedly not encrypted
 # ToDo - Allow editing of time and points on notes
 # ToDo - Add time recorder for notes
 # ToDo - Add linking of task to selected project

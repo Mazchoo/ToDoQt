@@ -5,12 +5,13 @@ import pandas as pd
 from PyQt5.QtGui import QStandardItemModel
 
 from Common.QtModel import QtStaticModel
-from Models.GlobalParams import (FIELDS_TO_EVAL, FIELDS_TO_ENCRYPT,
+from Models.GlobalParams import (TASK_FIELDS_APPLY_EVAL, TASK_FIELDS_TO_ENCRYPT,
                                  STATUS_TYPES, TaskIdProvider, SAVED_TASKS_FILENAME)
 from Models.TaskEntry import TaskEntry, update_note_data
 from Models.FileHelpers import (
     delete_old_hash_browns, get_hash_file_from_note_data,
-    convert_list_to_note_data, load_notes_from_folder, add_new_item_to_model_list
+    convert_list_to_note_data, load_tasks_from_csv, add_new_item_to_model_list,
+    load_projects_from_csv
 )
 from Models.CsvGeneration import create_updated_df
 from Models.PandasTable import PandasModel
@@ -24,8 +25,8 @@ class ToDoModel(QtStaticModel):
     done_list = QStandardItemModel
     project_list = PandasModel
 
-    encrypt_fields = FIELDS_TO_ENCRYPT
-    eval_fields = FIELDS_TO_EVAL
+    encrypt_fields = TASK_FIELDS_TO_ENCRYPT
+    eval_fields = TASK_FIELDS_APPLY_EVAL
 
     def check_folder_path(self, rel_path: str):
         path = Path(f"{CWD}/{rel_path}")
@@ -46,14 +47,14 @@ class ToDoModel(QtStaticModel):
 
         all_note_data = self.get_all_note_data()
 
-        content_path = path / SAVED_TASKS_FILENAME
-        if content_path.exists():
-            original_df = pd.read_csv(content_path, index_col=0)
+        saved_tasks_path = path / SAVED_TASKS_FILENAME
+        if saved_tasks_path.exists():
+            original_df = pd.read_csv(saved_tasks_path, index_col=0)
         else:
             columns = list(TaskEntry.model_fields.keys())
             original_df = pd.DataFrame(columns=columns)
 
-        initial_file_data = load_notes_from_folder(path, self.encrypt_fields, self.eval_fields)
+        initial_file_data = load_tasks_from_csv(path, self.encrypt_fields, self.eval_fields)
 
         final_df = create_updated_df(original_df, all_note_data, initial_file_data,
                                      path, self.encrypt_fields)
@@ -77,8 +78,9 @@ class ToDoModel(QtStaticModel):
 
     def load_from_folder(self, rel_path: str):
         path = self.check_folder_path(rel_path)
-        initial_file_data = load_notes_from_folder(path, self.encrypt_fields, self.eval_fields)
 
-        sorted_keys = sorted(initial_file_data.keys())
-        for key in sorted_keys:
-            self.save_json_dict_into_model(initial_file_data[key])
+        decrypted_note_data = load_tasks_from_csv(path, self.encrypt_fields, self.eval_fields)
+        for key in sorted(decrypted_note_data.keys()):
+            self.save_json_dict_into_model(decrypted_note_data[key])
+
+        decrypted_project_data = load_projects_from_csv(path)

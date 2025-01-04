@@ -7,11 +7,16 @@ LIST_VIEW_TO_STATUS_TYPE = {
     'pending_listView': 'pending_list', 
     'done_listView': 'done_list',
 }
-FIELDS_TO_EVAL = ['date_created', 'date_edited', 'date_moved', 'project_id',
-                  'time_spent_seconds', 'estimated_time_seconds', 'points']
-FIELDS_TO_ENCRYPT = ['title', 'description', 'project_id', 'project_id',
-                     'time_spent_seconds', 'estimated_time_seconds', 'points',
-                     'date_created', 'date_edited', 'date_moved']
+
+TASK_FIELDS_APPLY_EVAL = ['date_created', 'date_edited', 'date_moved', 'project_id',
+                          'time_spent_seconds', 'estimated_time_seconds', 'points']
+TASK_FIELDS_TO_ENCRYPT = ['title', 'description', 'project_id', 'project_id',
+                          'time_spent_seconds', 'estimated_time_seconds', 'points',
+                          'date_created', 'date_edited', 'date_moved']
+
+PROJECT_FIELDS_TO_DISPLAY = ['title', 'date_created', 'date_last_worked_on',
+                             'hr_remain', 'hr_spent', 'perc_complete', 'points_gained']
+
 SAVED_TASKS_FILENAME = 'saved_tasks.csv'
 SAVED_PROJECTS_FILENAME = 'saved_projects.csv'
 
