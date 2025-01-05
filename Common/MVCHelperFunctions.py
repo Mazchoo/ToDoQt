@@ -3,7 +3,7 @@ from collections.abc import Callable
 from unittest.mock import MagicMock
 from typing import Any
 
-methods_to_ignore = {'__iter__'}
+methods_to_ignore = {'__iter__', 'replaceWidget'}
 
 
 class TestableControlFunction:

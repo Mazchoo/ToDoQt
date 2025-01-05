@@ -307,22 +307,19 @@ QTreeView::branch:open:has-children:has-siblings
 QTableView
 {
     background-color: #fff;
-	border: 1px solid gray;
-    color: #454544;
+    color: black;
     gridline-color: gray;
     outline : 0;
-
+	font-size: 16px;
+	border-radius: 5px;
+	font-weight: bold;
 }
 
-
-QTableView::disabled
-{
-    background-color: #242526;
-    border: 1px solid #32414B;
-    color: #656565;
-    gridline-color: #656565;
-    outline : 0;
-
+QHeaderView::section {
+    color: black;
+	background-color: #b7b7b7;
+	font-weight: bold;
+    border-radius: 5px;
 }
 
 
@@ -342,84 +339,12 @@ QTableView::item:selected
 }
 
 
-QTableView::item:selected:disabled
-{
-    background-color: #1a1b1c;
-    border: 2px solid #525251;
-    color: #656565;
-
-}
-
 
 QTableCornerButton::section
 {
 	background-color: #ced5e3;
 	border: none;
     color: #fff;
-
-}
-
-
-QHeaderView::section
-{
-	color: #2a547f;
-	border: 0px;
-	background-color: #ced5e3;
-	padding: 5px;
-
-}
-
-
-QHeaderView::section:disabled
-{
-    background-color: #525251;
-    color: #656565;
-
-}
-
-
-QHeaderView::section:checked
-{
-    color: #fff;
-    background-color: #5c55e9;
-
-}
-
-
-QHeaderView::section:checked:disabled
-{
-    color: #656565;
-    background-color: #525251;
-
-}
-
-
-QHeaderView::section::vertical::first,
-QHeaderView::section::vertical::only-one
-{
-    border-top: 1px solid #353635;
-
-}
-
-
-QHeaderView::section::vertical
-{
-    border-top: 1px solid #353635;
-
-}
-
-
-QHeaderView::section::horizontal::first,
-QHeaderView::section::horizontal::only-one
-{
-    border-left: 1px solid #353635;
-
-}
-
-
-QHeaderView::section::horizontal
-{
-    border-left: 1px solid #353635;
 
 }
 

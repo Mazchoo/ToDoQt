@@ -30,10 +30,10 @@ def delete_current_item(self, _click):
 @QtControlFunction(True)
 def add_new_task_to_pending(self, _click: bool):
     if task_name := self.layout.newTask_lineEdit.text():
-        standard_item = QStandardItem(task_name)
-        standard_item.setData(create_new_note(task_name, 0))
+        new_task = QStandardItem(task_name)
+        new_task.setData(create_new_note(task_name, 0))
 
-        append_item_to_list_view(self.model.pending_list, self.layout.pending_listView, standard_item)
+        append_item_to_list_view(self.model.pending_list, self.layout.pending_listView, new_task)
         self.layout.newTask_lineEdit.setText("")
         self.layout.addNewTask_pushButton.setEnabled(False)
         self.layout.backup_pushButton.setEnabled(True)

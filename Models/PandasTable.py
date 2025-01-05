@@ -10,7 +10,10 @@ class PandasModel(QAbstractTableModel):
 
     def __init__(self, data=None):
         QAbstractTableModel.__init__(self)
-        self._df = data or pd.DataFrame([], columns=PROJECT_FIELDS_TO_DISPLAY)
+        if data is not None:
+            self._df = data
+        else:
+            self._df = pd.DataFrame([], columns=PROJECT_FIELDS_TO_DISPLAY.values())
 
     def rowCount(self, _parent=None):
         return self._df.shape[0]
@@ -38,7 +41,7 @@ class PandasModel(QAbstractTableModel):
     def headerData(self, col, orientation, role):
         if orientation == Qt.Horizontal and role == Qt.DisplayRole:
             if col == 0:
-                return "index / cols"
+                return "ind / cols"
             else:
                 return self._df.columns[col - 1]
 

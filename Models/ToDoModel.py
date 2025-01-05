@@ -65,7 +65,7 @@ class ToDoModel(QtStaticModel):
     def save_json_dict_into_model(self, note_data: dict):
         try:
             note_data = update_note_data(note_data)
-            note_data = TaskEntry(**note_data).dict()
+            note_data = TaskEntry(**note_data).model_dump()
 
             assert (note_data['status'] in STATUS_TYPES)
             model_list = self.__getattribute__(note_data['status'])

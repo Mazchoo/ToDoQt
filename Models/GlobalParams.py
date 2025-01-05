@@ -14,8 +14,12 @@ TASK_FIELDS_TO_ENCRYPT = ['title', 'description', 'project_id', 'project_id',
                           'time_spent_seconds', 'estimated_time_seconds', 'points',
                           'date_created', 'date_edited', 'date_moved']
 
-PROJECT_FIELDS_TO_DISPLAY = ['title', 'date_created', 'date_last_worked_on',
-                             'hr_remain', 'hr_spent', 'perc_complete', 'points_gained']
+PROJECT_FIELDS_TO_DISPLAY = {'title': "Title",
+                             'last_update': "Latest",
+                             'hr_remain': 'Remain',
+                             'hr_spent': 'Spent',
+                             'perc_complete': 'Time %',
+                             'points_gained': 'points'}
 
 SAVED_TASKS_FILENAME = 'saved_tasks.csv'
 SAVED_PROJECTS_FILENAME = 'saved_projects.csv'

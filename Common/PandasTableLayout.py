@@ -1,11 +1,10 @@
 import sys
-from typing import Optional
+from typing import Optional, List
 
 import pandas as pd
 
 from PyQt5.QtWidgets import QApplication, QTableView, QMainWindow
 from Models.PandasTable import PandasModel
-
 
 df = pd.DataFrame({'a': ['Mary', 'Jim', 'John'],
                    'b': [100, 200, 300],
@@ -14,16 +13,18 @@ df = pd.DataFrame({'a': ['Mary', 'Jim', 'John'],
 
 class PandasTableView(QTableView):
 
-    def __init__(self, rows, cols, parent_window):
+    def __init__(self, parent_window):
         self.parent = parent_window
-        QTableView.__init__(self, parent_window)
-        self.adjust_size(rows, cols)
+        super().__init__(parent_window)
+
         self.clicked.connect(self.rowClick)
 
         self._selected_row = None
 
-    def adjust_size(self, rows, cols):
-        self.resize((cols + 1) * 127, (rows + 1) * 36)
+    def adjust_size(self, nr_rows, row_height, col_widths):
+        self.set_column_widths(col_widths)
+        self.set_row_heights(nr_rows, row_height)
+        self.resize(sum(col_widths), (nr_rows + 1) * row_height)
 
     def rowClick(self, clicked_index):
         col = clicked_index.column()
@@ -45,6 +46,15 @@ class PandasTableView(QTableView):
         ''' If an entire row is highlighted this is the selected project '''
         return self._selected_row
 
+    def set_column_widths(self, widths: List[int]):
+        for i, width in enumerate(widths):
+            self.setColumnWidth(i, width)
+
+    def set_row_heights(self, nr_rows: int, height: int):
+        self.horizontalHeader().setFixedHeight(height) 
+        for i in range(nr_rows):
+            self.setRowHeight(i, height)
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
@@ -52,13 +62,12 @@ if __name__ == '__main__':
     parent_window = QMainWindow()
     model = PandasModel(df)
 
-    view = PandasTableView(len(df), len(df.columns), parent_window)
+    view = PandasTableView(parent_window)
     view.setModel(model)
-    view.showGrid()
 
     model = model.add_row({'a': 'Bob', 'b': 400, 'c': 'd'})
     view.setModel(model)
-    view.adjust_size(len(df), len(df.columns))
+    view.adjust_size(model.rowCount(), 36, [100, 100, 100, 100])
 
     parent_window.show()
 
