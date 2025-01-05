@@ -10,7 +10,7 @@ from Common.GitCommands import (get_all_uncomitted_files_in_folder,
 from Common.PandasTableLayout import PandasTableView
 from Common.FlexibleMagicMock import FlexibleMagicMock
 
-import Resources.DisplayParameters as DisplayParameters 
+import UI.DisplayParameters as DisplayParameters 
 from Controller.UploadGitThread import CURRENT_REPO
 
 

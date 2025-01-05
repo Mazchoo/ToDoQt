@@ -4,6 +4,7 @@ import pandas as pd
 
 from PyQt5.QtCore import QAbstractTableModel, Qt
 from Models.GlobalParams import PROJECT_FIELDS_TO_DISPLAY
+from UI.DisplayParameters import PROJECT_TABLE_LEFT_ALGIN_COLUMNS
 
 
 class PandasModel(QAbstractTableModel):
@@ -28,6 +29,10 @@ class PandasModel(QAbstractTableModel):
                     return str(self._df.index[index.row()])
                 else:
                     return str(self._df.iloc[index.row(), index.column() - 1])
+            if role == Qt.TextAlignmentRole:
+                # Alignment should be left center vertical by default
+                if index.column() not in PROJECT_TABLE_LEFT_ALGIN_COLUMNS:
+                    return Qt.AlignCenter
 
     def setData(self, index, value, role):
         if role == Qt.EditRole:
