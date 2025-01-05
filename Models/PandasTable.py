@@ -4,7 +4,8 @@ import pandas as pd
 
 from PyQt5.QtCore import QAbstractTableModel, Qt
 from Models.GlobalParams import PROJECT_FIELDS_TO_DISPLAY
-from UI.DisplayParameters import PROJECT_TABLE_LEFT_ALGIN_COLUMNS
+from UI.DisplayParameters import (PROJECT_TABLE_LEFT_ALGIN_COLUMNS,
+                                  PROJECT_TABLE_EDITABLE_COLUMNS)
 
 
 class PandasModel(QAbstractTableModel):
@@ -22,21 +23,21 @@ class PandasModel(QAbstractTableModel):
     def columnCount(self, _parent=None):
         return self._df.shape[1] + 1
 
-    def data(self, index, role=Qt.DisplayRole):
-        if index.isValid():
+    def data(self, ind, role=Qt.DisplayRole):
+        if ind.isValid():
             if role in (Qt.EditRole, Qt.DisplayRole):
-                if index.column() == 0:
-                    return str(self._df.index[index.row()])
+                if ind.column() == 0:
+                    return str(self._df.index[ind.row()])
                 else:
-                    return str(self._df.iloc[index.row(), index.column() - 1])
+                    return str(self._df.iloc[ind.row(), ind.column() - 1])
             if role == Qt.TextAlignmentRole:
                 # Alignment should be left center vertical by default
-                if index.column() not in PROJECT_TABLE_LEFT_ALGIN_COLUMNS:
+                if ind.column() not in PROJECT_TABLE_LEFT_ALGIN_COLUMNS:
                     return Qt.AlignCenter
 
-    def setData(self, index, value, role):
+    def setData(self, ind, value, role):
         if role == Qt.EditRole:
-            self._df.iloc[index.row(), index.column() - 1] = value
+            self._df.iloc[ind.row(), ind.column() - 1] = value
             return True
 
     def add_row(self, row: dict) -> Self:
@@ -46,11 +47,11 @@ class PandasModel(QAbstractTableModel):
     def headerData(self, col, orientation, role):
         if orientation == Qt.Horizontal and role == Qt.DisplayRole:
             if col == 0:
-                return "ind / cols"
+                return "Index"
             else:
                 return self._df.columns[col - 1]
 
-    def flags(self, _index):
-        if _index.column() != 0:
+    def flags(self, ind):
+        if ind.column() in PROJECT_TABLE_EDITABLE_COLUMNS:
             return Qt.ItemIsSelectable | Qt.ItemIsEnabled | Qt.ItemIsEditable
         return Qt.ItemIsSelectable | Qt.ItemIsEnabled

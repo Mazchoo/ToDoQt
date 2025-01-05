@@ -9,19 +9,19 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1800</width>
+    <width>1850</width>
     <height>900</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>1800</width>
+    <width>1850</width>
     <height>900</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>1800</width>
+    <width>1850</width>
     <height>900</height>
    </size>
   </property>
@@ -35,7 +35,7 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>1100</x>
+      <x>1150</x>
       <y>5</y>
       <width>151</width>
       <height>41</height>
@@ -48,7 +48,7 @@
    <widget class="QLineEdit" name="newTask_lineEdit">
     <property name="geometry">
      <rect>
-      <x>760</x>
+      <x>810</x>
       <y>10</y>
       <width>331</width>
       <height>31</height>
@@ -67,7 +67,7 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>760</x>
+      <x>810</x>
       <y>680</y>
       <width>1011</width>
       <height>141</height>
@@ -83,7 +83,7 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>930</x>
+      <x>980</x>
       <y>635</y>
       <width>150</width>
       <height>40</height>
@@ -99,7 +99,7 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>1090</x>
+      <x>1140</x>
       <y>635</y>
       <width>100</width>
       <height>40</height>
@@ -112,7 +112,7 @@
    <widget class="QLabel" name="editDescription_label">
     <property name="geometry">
      <rect>
-      <x>770</x>
+      <x>820</x>
       <y>646</y>
       <width>151</width>
       <height>20</height>
@@ -128,7 +128,7 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>1400</x>
+      <x>1450</x>
       <y>830</y>
       <width>121</width>
       <height>40</height>
@@ -141,7 +141,7 @@
    <widget class="QPushButton" name="close_pushButton">
     <property name="geometry">
      <rect>
-      <x>1660</x>
+      <x>1710</x>
       <y>830</y>
       <width>121</width>
       <height>40</height>
@@ -157,7 +157,7 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>1530</x>
+      <x>1580</x>
       <y>830</y>
       <width>121</width>
       <height>40</height>
@@ -170,7 +170,7 @@
    <widget class="QWidget" name="horizontalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>760</x>
+      <x>810</x>
       <y>100</y>
       <width>1011</width>
       <height>521</height>
@@ -267,7 +267,7 @@
    <widget class="QWidget" name="horizontalLayoutWidget_2">
     <property name="geometry">
      <rect>
-      <x>760</x>
+      <x>810</x>
       <y>60</y>
       <width>1011</width>
       <height>41</height>
@@ -312,7 +312,7 @@
    <widget class="QLabel" name="loaderAnimation_label">
     <property name="geometry">
      <rect>
-      <x>1350</x>
+      <x>1400</x>
       <y>830</y>
       <width>40</width>
       <height>40</height>
@@ -328,7 +328,7 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>1200</x>
+      <x>1250</x>
       <y>635</y>
       <width>111</width>
       <height>40</height>
@@ -344,7 +344,7 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>20</x>
+      <x>30</x>
       <y>680</y>
       <width>721</width>
       <height>141</height>
@@ -357,7 +357,7 @@
    <widget class="QLabel" name="editProjectDescription_label">
     <property name="geometry">
      <rect>
-      <x>30</x>
+      <x>40</x>
       <y>646</y>
       <width>181</width>
       <height>20</height>
@@ -370,7 +370,7 @@
    <widget class="QLabel" name="project_label">
     <property name="geometry">
      <rect>
-      <x>20</x>
+      <x>30</x>
       <y>60</y>
       <width>721</width>
       <height>39</height>
@@ -389,7 +389,7 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>1330</x>
+      <x>1380</x>
       <y>635</y>
       <width>81</width>
       <height>40</height>
@@ -409,7 +409,7 @@
    <widget class="QLabel" name="estimate_label">
     <property name="geometry">
      <rect>
-      <x>1430</x>
+      <x>1480</x>
       <y>646</y>
       <width>91</width>
       <height>20</height>
@@ -425,7 +425,7 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>1530</x>
+      <x>1580</x>
       <y>635</y>
       <width>81</width>
       <height>40</height>
@@ -445,7 +445,7 @@
    <widget class="QSpinBox" name="points_spinBox">
     <property name="geometry">
      <rect>
-      <x>1700</x>
+      <x>1750</x>
       <y>635</y>
       <width>71</width>
       <height>40</height>
@@ -461,7 +461,7 @@
    <widget class="QLabel" name="points_label">
     <property name="geometry">
      <rect>
-      <x>1630</x>
+      <x>1680</x>
       <y>646</y>
       <width>61</width>
       <height>20</height>
@@ -474,14 +474,14 @@
    <widget class="QLineEdit" name="newProject_lineEdit">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>50</x>
       <y>10</y>
       <width>331</width>
       <height>31</height>
      </rect>
     </property>
     <property name="maxLength">
-     <number>20</number>
+     <number>25</number>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -493,7 +493,7 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>350</x>
+      <x>390</x>
       <y>5</y>
       <width>191</width>
       <height>41</height>
@@ -506,7 +506,7 @@
    <widget class="QTableView" name="project_tableView">
     <property name="geometry">
      <rect>
-      <x>20</x>
+      <x>30</x>
       <y>106</y>
       <width>721</width>
       <height>514</height>
@@ -519,7 +519,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1800</width>
+     <width>1850</width>
      <height>26</height>
     </rect>
    </property>

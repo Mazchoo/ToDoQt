@@ -115,7 +115,7 @@ def replace_table_view_in_layout(layout, model, parent):
     if isinstance(parent, FlexibleMagicMock):
         projects_view = FlexibleMagicMock()
     else:
-        projects_view = PandasTableView(parent)
+        projects_view = PandasTableView(parent, placeholder.geometry().height())
 
     update_pandas_table_in_layout(projects_view, projects_model)
     projects_view.setGeometry(placeholder.geometry())

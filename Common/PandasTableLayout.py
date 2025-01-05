@@ -13,8 +13,9 @@ df = pd.DataFrame({'a': ['Mary', 'Jim', 'John'],
 
 class PandasTableView(QTableView):
 
-    def __init__(self, parent_window):
+    def __init__(self, parent_window, max_height: int):
         self.parent = parent_window
+        self.max_height = max_height
         super().__init__(parent_window)
 
         self.clicked.connect(self.rowClick)
@@ -24,7 +25,7 @@ class PandasTableView(QTableView):
     def adjust_size(self, nr_rows, row_height, col_widths):
         self.set_column_widths(col_widths)
         self.set_row_heights(nr_rows, row_height)
-        self.resize(sum(col_widths), (nr_rows + 1) * row_height)
+        self.resize(sum(col_widths), min((nr_rows + 1) * row_height, self.max_height))
 
     def rowClick(self, clicked_index):
         col = clicked_index.column()
@@ -62,12 +63,12 @@ if __name__ == '__main__':
     parent_window = QMainWindow()
     model = PandasModel(df)
 
-    view = PandasTableView(parent_window)
+    view = PandasTableView(parent_window, 500)
     view.setModel(model)
 
     model = model.add_row({'a': 'Bob', 'b': 400, 'c': 'd'})
     view.setModel(model)
-    view.adjust_size(model.rowCount(), 36, [100, 100, 100, 100])
+    view.adjust_size(model.rowCount(), 50, [100, 100, 100, 100, 25])
 
     parent_window.show()
 
