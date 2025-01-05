@@ -481,7 +481,7 @@
      </rect>
     </property>
     <property name="maxLength">
-     <number>30</number>
+     <number>10</number>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>

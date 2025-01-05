@@ -157,7 +157,7 @@ class Ui_ToDoLayout(object):
         self.points_label.setObjectName("points_label")
         self.newProject_lineEdit = QtWidgets.QLineEdit(self.centralwidget)
         self.newProject_lineEdit.setGeometry(QtCore.QRect(10, 10, 331, 31))
-        self.newProject_lineEdit.setMaxLength(30)
+        self.newProject_lineEdit.setMaxLength(10)
         self.newProject_lineEdit.setAlignment(QtCore.Qt.AlignCenter)
         self.newProject_lineEdit.setObjectName("newProject_lineEdit")
         self.addNewProject_pushButton = QtWidgets.QPushButton(self.centralwidget)

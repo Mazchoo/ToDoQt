@@ -6,6 +6,19 @@ import Models.GlobalParams as GlobalParams
 from Models.FileHelpers import get_date_tuple_now
 
 
+class TaskIdProvider:
+    max_id = 0
+
+    @staticmethod
+    def get_new_id():
+        TaskIdProvider.max_id += 1
+        return TaskIdProvider.max_id
+
+    @staticmethod
+    def update_max_id(new_id):
+        TaskIdProvider.max_id = max(new_id, TaskIdProvider.max_id)
+
+
 class TaskEntry(BaseModel):
     version: int
     id_number: int
@@ -41,7 +54,7 @@ def update_0_to_1(data):
 def update_1_to_2(data):
     date_now_tuple = get_date_tuple_now()
     data['date_moved'] = date_now_tuple
-    data['id_number'] = GlobalParams.TaskIdProvider.get_new_id()
+    data['id_number'] = TaskIdProvider.get_new_id()
 
 
 def update_2_to_3(data):
@@ -83,7 +96,7 @@ def create_new_note(item_name: str, project_id: int):
         'time_spent_seconds': 0,
         'estimated_time_seconds': 0,
         'points': 0,
-        'id_number': GlobalParams.TaskIdProvider.get_new_id()
+        'id_number': TaskIdProvider.get_new_id()
     }
 
 

@@ -5,6 +5,18 @@ from pydantic import BaseModel, field_validator
 import Models.GlobalParams as GlobalParams
 from Models.FileHelpers import get_date_tuple_now
 
+class ProjectIdProvider:
+    max_id = 0
+
+    @staticmethod
+    def get_new_id():
+        ProjectIdProvider.max_id += 1
+        return ProjectIdProvider.max_id
+
+    @staticmethod
+    def update_max_id(new_id):
+        ProjectIdProvider.max_id = max(new_id, ProjectIdProvider.max_id)
+
 
 class Project(BaseModel):
     version: int
@@ -19,7 +31,7 @@ class Project(BaseModel):
 
     @field_validator('title')
     def title_must_be_right_length(cls, value):
-        assert len(value) <= GlobalParams.MAX_TITLE_LENGTH, 'Title too long'
+        assert len(value) <= GlobalParams.MAX_PROJECT_TITLE_LENGTH, 'Title too long'
         return value
 
     @property
@@ -31,7 +43,7 @@ def create_new_project(name: str):
     date_now_tuple = get_date_tuple_now()
     return {
         'title': name,
-        'id_number': GlobalParams.ProjectIdProvider.get_new_id(),
+        'id_number': ProjectIdProvider.get_new_id(),
         'version': GlobalParams.LATEST_VERSION,
         'description': '',
         'date_created': date_now_tuple,
