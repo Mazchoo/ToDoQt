@@ -29,7 +29,6 @@ class Project(BaseModel):
     last_update: Tuple[int, int, int, int, int, int, int]
     hr_spent: int
     hr_remain: int
-    perc_complete: float
     points_gained: int
 
     @field_validator('title')
@@ -69,7 +68,6 @@ def create_new_project(name: str):
         'last_update': date_now_tuple,
         'hr_spent': 0,
         'hr_remain': 0,
-        'perc_complete': 0.,
         'points_gained': 0,
     }
 

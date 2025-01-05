@@ -1,14 +1,8 @@
 import sys
 from typing import Optional, List
 
-import pandas as pd
-
 from PyQt5.QtWidgets import QApplication, QTableView, QMainWindow
 from Models.PandasTable import PandasModel
-
-df = pd.DataFrame({'a': ['Mary', 'Jim', 'John'],
-                   'b': [100, 200, 300],
-                   'c': ['a', 'b', 'c']})
 
 
 class PandasTableView(QTableView):
@@ -61,12 +55,11 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
 
     parent_window = QMainWindow()
-    model = PandasModel(df)
+    model = PandasModel()
 
     view = PandasTableView(parent_window, 500)
     view.setModel(model)
 
-    model = model.add_row({'a': 'Bob', 'b': 400, 'c': 'd'})
     view.setModel(model)
     view.adjust_size(model.rowCount(), 50, [100, 100, 100, 100, 25])
 

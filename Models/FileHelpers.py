@@ -15,8 +15,12 @@ def get_date_tuple_now():
     return eval(repr(datetime.now())[17:])
 
 
-def get_hash_file_from_note_data(note_data: dict):
-    return f"task_{note_data['id_number']}.hash_brown"
+def get_hash_file_from_task_data(task_data: dict):
+    return f"task_{task_data['id_number']}.hash_brown"
+
+
+def get_hash_file_from_project_data(project_data: dict):
+    return f"project_{project_data['id_number']}.hash_brown"
 
 
 def delete_old_hash_browns(output_index: pd.Index, path: Path):
@@ -27,7 +31,7 @@ def delete_old_hash_browns(output_index: pd.Index, path: Path):
         hash_path.unlink()
 
 
-def convert_list_to_note_data(model_list: QStandardItemModel):
+def convert_list_to_task_data(model_list: QStandardItemModel):
     return [model_list.item(i).data() for i in range(model_list.rowCount())]
 
 
@@ -41,8 +45,8 @@ def try_decrypting_note(note_data: dict, file_name: Path, encrypt_fields: set, e
         return decrypted_note
 
 
-def load_content_from_csv(content_path: Path, encrypt_fields: set,
-                          eval_fields: set) -> Dict[str, dict]:
+def load_content_from_csv(content_path: Path, encrypt_fields: List[str],
+                          eval_fields: List[str]) -> Dict[str, dict]:
     if content_path.exists():
         loaded_dicts = pd.read_csv(content_path, index_col=0).to_dict(orient='index')
     else:
@@ -55,10 +59,6 @@ def load_content_from_csv(content_path: Path, encrypt_fields: set,
             decrypted_notes[file_name] = decrypted_note
 
     return decrypted_notes
-
-
-def load_projects_from_csv(path: Path) -> Dict[str, dict]:
-    return {}
 
 
 def add_new_item_to_model_list(model_list: QStandardItemModel, note_data: dict):

@@ -11,7 +11,7 @@ LIST_VIEW_TO_STATUS_TYPE = {
 
 TASK_FIELDS_APPLY_EVAL = ['date_created', 'date_edited', 'date_moved', 'project_id',
                           'time_spent_seconds', 'estimated_time_seconds', 'points']
-TASK_FIELDS_TO_ENCRYPT = ['title', 'description', 'project_id', 'project_id',
+TASK_FIELDS_TO_ENCRYPT = ['title', 'description', 'project_id',
                           'time_spent_seconds', 'estimated_time_seconds', 'points',
                           'date_created', 'date_edited', 'date_moved']
 
@@ -21,6 +21,12 @@ PROJECT_FIELDS_TO_DISPLAY = {'title': "Title",
                              'hr_spent': 'Spent',
                              'perc_complete': 'Time %',
                              'points_gained': 'Points'}
+
+PROJECT_FIELDS_APPLY_EVAL = ['date_created', 'last_update', 'hr_spent',
+                             'hr_remain', 'points_gained']
+PROJECT_FIELDS_TO_ENCRYPT = ['title', 'description', 'date_created',
+                             'last_update', 'hr_spent', 'hr_remain', 'points_gained']
+
 
 SAVED_TASKS_FILENAME = 'saved_tasks.csv'
 SAVED_PROJECTS_FILENAME = 'saved_projects.csv'

@@ -1,21 +1,22 @@
-from typing import Self
+from typing import Self, Optional, List
 
 import pandas as pd
-
 from PyQt5.QtCore import QAbstractTableModel, Qt
+
 from Models.GlobalParams import PROJECT_FIELDS_TO_DISPLAY
+from Models.ProjectEntry import Project
 from UI.DisplayParameters import (PROJECT_TABLE_LEFT_ALGIN_COLUMNS,
                                   PROJECT_TABLE_EDITABLE_COLUMNS)
 
 
 class PandasModel(QAbstractTableModel):
 
-    def __init__(self, data=None):
+    def __init__(self, data: Optional[List[Project]] = None):
         QAbstractTableModel.__init__(self)
-        if data is not None:
-            self._df = data
-        else:
-            self._df = pd.DataFrame([], columns=PROJECT_FIELDS_TO_DISPLAY.values())
+        self._data = data or []
+
+        display_data = [project.display_dict for project in self._data]
+        self._df = pd.DataFrame(display_data, columns=PROJECT_FIELDS_TO_DISPLAY.values())
 
     def rowCount(self, _parent=None):
         return self._df.shape[0]
@@ -40,9 +41,8 @@ class PandasModel(QAbstractTableModel):
             self._df.iloc[ind.row(), ind.column() - 1] = value
             return True
 
-    def add_row(self, row: dict) -> Self:
-        self._df.loc[self.rowCount()] = pd.Series(row)
-        return PandasModel(self._df)
+    def add_project(self, project: Project) -> Self:
+        return PandasModel(self._data + [project])
 
     def headerData(self, col, orientation, role):
         if orientation == Qt.Horizontal and role == Qt.DisplayRole:
@@ -57,5 +57,5 @@ class PandasModel(QAbstractTableModel):
         return Qt.ItemIsSelectable | Qt.ItemIsEnabled
 
     @property
-    def df(self) -> pd.DataFrame:
-        return self._df.copy()
+    def save_dump(self) -> List[dict]:
+        return [project.model_dump() for project in self._data]

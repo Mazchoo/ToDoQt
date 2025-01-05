@@ -46,9 +46,8 @@ def add_new_task_to_pending(self, _click: bool):
 @QtControlFunction(True)
 def add_new_project(self, _click: bool):
     if project_name := self.layout.newProject_lineEdit.text():
-        new_project_dict = Project(**create_new_project(project_name)).display_dict
-
-        self.model.project_list = self.model.project_list.add_row(new_project_dict)
+        new_project = Project(**create_new_project(project_name))
+        self.model.project_list = self.model.project_list.add_project(new_project)
         update_pandas_table_in_layout(self.layout.project_tableView, self.model.project_list)
 
 
