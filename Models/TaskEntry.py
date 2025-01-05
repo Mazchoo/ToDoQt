@@ -71,7 +71,7 @@ note_update_version = [
 ]
 
 
-def update_note_data(note_data: dict):
+def update_task_data(note_data: dict):
     if 'version' not in note_data:
         note_data['version'] = 0
 

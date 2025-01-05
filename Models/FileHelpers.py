@@ -16,16 +16,17 @@ def get_date_tuple_now():
 
 
 def get_hash_file_from_note_data(note_data: dict):
-    return f"note_{note_data['id_number']}.hash_brown"
+    return f"task_{note_data['id_number']}.hash_brown"
 
 
 def get_full_hash_path(save_folder: Path, file_name: str):
     return save_folder / 'Hashbrowns' / file_name
 
 
-def delete_old_hash_browns(output_df: pd.DataFrame, path: Path):
-    hash_brown_files = [get_full_hash_path(path, f) for f in listdir(path) if Path(f).suffix == '.hash_brown']
-    delete_hash_paths = [f for f in hash_brown_files if f.stem + f.suffix not in output_df.index]
+def delete_old_hash_browns(output_index: pd.Index, path: Path):
+    hash_brown_files = [get_full_hash_path(path, f) for f in listdir(path / 'Hashbrowns') \
+                        if Path(f).suffix == '.hash_brown']
+    delete_hash_paths = [f for f in hash_brown_files if f.stem + f.suffix not in output_index]
     for hash_path in delete_hash_paths:
         hash_path.unlink()
 

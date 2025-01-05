@@ -55,3 +55,7 @@ class PandasModel(QAbstractTableModel):
         if ind.column() in PROJECT_TABLE_EDITABLE_COLUMNS:
             return Qt.ItemIsSelectable | Qt.ItemIsEnabled | Qt.ItemIsEditable
         return Qt.ItemIsSelectable | Qt.ItemIsEnabled
+
+    @property
+    def df(self) -> pd.DataFrame:
+        return self._df.copy()
