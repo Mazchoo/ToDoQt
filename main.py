@@ -7,10 +7,10 @@ from UI.ToDoLayout import Ui_ToDoLayout
 from Models.ToDoModel import ToDoModel
 from Controller.ControlFunctions import ToDoListController
 
-# ToDo - Add the ability to save and load projects
+# ToDo - Update GUI logic for when a project changes text, content etc
 # ToDo - Allow field to be loaded if it is unexpectedly not encrypted
-# ToDo - Allow editing of time and points on notes
-# ToDo - Add time recorder for notes
+# ToDo - Allow editing of time and points on tasks
+# ToDo - Add time recorder for tasks
 # ToDo - Add linking of task to selected project
 # ToDo - Calculate totals for each project
 # ToDo - Add ability to delete projects
