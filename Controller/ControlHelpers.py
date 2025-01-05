@@ -117,9 +117,9 @@ def replace_table_view_in_layout(layout, model, parent):
     else:
         projects_view = PandasTableView(parent, placeholder.geometry().height())
 
-    update_pandas_table_in_layout(projects_view, projects_model)
     projects_view.setGeometry(placeholder.geometry())
     parent.layout().replaceWidget(layout.project_tableView, projects_view)
+    update_pandas_table_in_layout(projects_view, projects_model)
     placeholder.deleteLater()
     layout.project_tableView = projects_view
 

@@ -9,7 +9,7 @@ from Models.GlobalParams import (TASK_FIELDS_APPLY_EVAL, TASK_FIELDS_TO_ENCRYPT,
                                  PROJECT_FIELDS_APPLY_EVAL, PROJECT_FIELDS_TO_ENCRYPT,
                                  STATUS_TYPES, SAVED_TASKS_FILENAME, SAVED_PROJECTS_FILENAME)
 from Models.TaskEntry import TaskEntry, update_task_data, TaskIdProvider
-from Models.ProjectEntry import Project
+from Models.ProjectEntry import Project, ProjectIdProvider
 from Models.FileHelpers import (
     delete_old_hash_browns, get_hash_file_from_task_data, get_hash_file_from_project_data,
     convert_list_to_task_data, load_content_from_csv, add_new_item_to_model_list,
@@ -74,26 +74,42 @@ class ToDoModel(QtStaticModel):
 
         delete_old_hash_browns(task_save_df.index.append(project_save_df.index), path)
 
-    def save_json_dict_into_model(self, task_data: dict):
+    def load_task_json_dict_into_model(self, task_data: dict):
         try:
             task_data = update_task_data(task_data)
             task_data = TaskEntry(**task_data).model_dump()
             model_list = self.__getattribute__(task_data['status'])
         except Exception:
             print(f'json dict {task_data} cannot be read.')
-            return
+        else:
+            TaskIdProvider.update_max_id(task_data['id_number'])
+            add_new_item_to_model_list(model_list, task_data)
 
-        TaskIdProvider.update_max_id(task_data['id_number'])
-        add_new_item_to_model_list(model_list, task_data)
+
+    def load_project_json_dict_into_model(self, project_data: dict):
+        try:
+            project = Project(**project_data)
+        except Exception:
+            print(f'json dict {project_data} cannot be read.')
+            return None
+        else:
+            ProjectIdProvider.update_max_id(project_data['id_number'])
+            return project
+
 
     def load_from_folder(self, rel_path: str):
         path = self.check_folder_path(rel_path)
 
         decrypted_note_data = load_content_from_csv(path / SAVED_TASKS_FILENAME,
                                                     self.encrypt_task_fields, self.eval_task_fields)
-        for key in sorted(decrypted_note_data.keys()):
-            self.save_json_dict_into_model(decrypted_note_data[key])
+        for data in decrypted_note_data.values():
+            self.load_task_json_dict_into_model(data)
 
         decrypted_project_data = load_content_from_csv(path / SAVED_PROJECTS_FILENAME,
                                                        self.encrypt_project_fields, self.eval_project_fields)
-        print()
+        all_projects = []
+        for data in decrypted_project_data.values():
+            if project := self.load_project_json_dict_into_model(data):
+                all_projects.append(project)
+
+        self.project_list = PandasModel(all_projects)
