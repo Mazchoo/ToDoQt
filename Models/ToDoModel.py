@@ -10,10 +10,9 @@ from Models.GlobalParams import (TASK_FIELDS_APPLY_EVAL, TASK_FIELDS_TO_ENCRYPT,
 from Models.TaskEntry import TaskEntry, update_task_data, TaskIdProvider
 from Models.FileHelpers import (
     delete_old_hash_browns, get_hash_file_from_note_data,
-    convert_list_to_note_data, load_tasks_from_csv, add_new_item_to_model_list,
-    load_projects_from_csv
+    convert_list_to_note_data, load_content_from_csv, add_new_item_to_model_list,
+    load_projects_from_csv, save_data_frame
 )
-from Models.CsvGeneration import create_updated_df
 from Models.PandasTable import PandasModel
 
 CWD = os.getcwd()
@@ -45,19 +44,13 @@ class ToDoModel(QtStaticModel):
     def save_to_folder(self, rel_path: str):
         path = self.check_folder_path(rel_path)
 
+        task_save_path = path / SAVED_TASKS_FILENAME
         all_task_data = self.get_all_task_data()
-        original_task_data = load_tasks_from_csv(path, self.encrypt_fields, self.eval_fields)
+        original_task_data = load_content_from_csv(task_save_path,
+                                                   self.encrypt_fields, self.eval_fields)
 
-        saved_tasks_path = path / SAVED_TASKS_FILENAME
-        if saved_tasks_path.exists():
-            original_df = pd.read_csv(saved_tasks_path, index_col=0)
-        else:
-            columns = list(TaskEntry.model_fields.keys())
-            original_df = pd.DataFrame(columns=columns)
-
-        save_df = create_updated_df(original_df, all_task_data, original_task_data,
-                                          path, self.encrypt_fields)
-        save_df.to_csv(saved_tasks_path)
+        save_df = save_data_frame(task_save_path, list(TaskEntry.model_fields.keys()),
+                                  self.encrypt_fields, all_task_data, original_task_data)
 
         delete_old_hash_browns(save_df.index, path)
 
@@ -76,7 +69,8 @@ class ToDoModel(QtStaticModel):
     def load_from_folder(self, rel_path: str):
         path = self.check_folder_path(rel_path)
 
-        decrypted_note_data = load_tasks_from_csv(path, self.encrypt_fields, self.eval_fields)
+        decrypted_note_data = load_content_from_csv(path / SAVED_TASKS_FILENAME,
+                                                    self.encrypt_fields, self.eval_fields)
         for key in sorted(decrypted_note_data.keys()):
             self.save_json_dict_into_model(decrypted_note_data[key])
 

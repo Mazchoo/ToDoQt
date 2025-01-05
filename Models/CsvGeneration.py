@@ -2,7 +2,27 @@
 import pandas as pd
 from pathlib import Path
 
-from Models.FileHelpers import turn_loaded_dict_into_df
+from Common.GenerateEncryption import encrypt_dictionary_and_save_key
+
+
+def get_full_hash_path(save_folder: Path, file_name: str):
+    return save_folder / 'Hashbrowns' / file_name
+
+
+def turn_loaded_dict_into_df(note_data_dict: dict, path: Path, encrypt_fields: set):
+    encrypted_notes = {}
+    for file_name, note_data in note_data_dict.items():
+        file_path = get_full_hash_path(path, file_name)
+
+        try:
+            encrypted_note = encrypt_dictionary_and_save_key(note_data, file_path, encrypt_fields)
+        except Exception as e:
+            print(f"Error! Encryption failed {file_name}")
+            print(e)
+        else:
+            encrypted_notes[file_name] = encrypted_note
+
+    return pd.DataFrame.from_dict(encrypted_notes, orient='index')
 
 
 def get_all_new_notes(all_note_data: dict, initial_data: dict):
@@ -58,17 +78,17 @@ def check_for_duplicate_index(df):
     df.drop(columns="_index", inplace=True)
 
 
-def create_updated_df(original_df: pd.DataFrame, all_note_data: dict, initial_data: dict,
+def create_updated_df(original_df: pd.DataFrame, new_data: dict, initial_data: dict,
                       path: Path, encrypt_fields: set):
     final_df = original_df.copy()
 
-    edited_rows = get_all_edited_notes(all_note_data, initial_data)
-    new_row_set = get_all_new_notes(all_note_data, initial_data)
-    deleted_row_set = get_all_delete_notes(all_note_data, initial_data)
+    edited_rows = get_all_edited_notes(new_data, initial_data)
+    new_row_set = get_all_new_notes(new_data, initial_data)
+    deleted_row_set = get_all_delete_notes(new_data, initial_data)
 
-    new_columns = get_new_columns(all_note_data, final_df.columns)
-    deleted_columns = get_deleted_columns(all_note_data, final_df.columns)
-    new_rows = get_new_rows_from_keys(all_note_data, new_row_set)
+    new_columns = get_new_columns(new_data, final_df.columns)
+    deleted_columns = get_deleted_columns(new_data, final_df.columns)
+    new_rows = get_new_rows_from_keys(new_data, new_row_set)
 
     edited_rows_df = turn_loaded_dict_into_df(edited_rows, path, encrypt_fields)
     new_rows_df = turn_loaded_dict_into_df(new_rows, path, encrypt_fields)
