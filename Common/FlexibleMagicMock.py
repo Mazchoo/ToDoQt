@@ -14,3 +14,7 @@ class FlexibleMagicMock(MagicMock):
         self.__setattr__('__lt__', compareAlwaysTrue)
         self.__setattr__('__ge__', compareAlwaysTrue)
         self.__setattr__('__le__', compareAlwaysTrue)
+
+
+    def text(self):
+        return 'mock text'

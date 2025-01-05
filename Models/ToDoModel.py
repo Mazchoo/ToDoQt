@@ -6,8 +6,8 @@ from PyQt5.QtGui import QStandardItemModel
 
 from Common.QtModel import QtStaticModel
 from Models.GlobalParams import (TASK_FIELDS_APPLY_EVAL, TASK_FIELDS_TO_ENCRYPT,
-                                 STATUS_TYPES, TaskIdProvider, SAVED_TASKS_FILENAME)
-from Models.TaskEntry import TaskEntry, update_note_data
+                                 STATUS_TYPES, SAVED_TASKS_FILENAME)
+from Models.TaskEntry import TaskEntry, update_note_data, TaskIdProvider
 from Models.FileHelpers import (
     delete_old_hash_browns, get_hash_file_from_note_data,
     convert_list_to_note_data, load_tasks_from_csv, add_new_item_to_model_list,

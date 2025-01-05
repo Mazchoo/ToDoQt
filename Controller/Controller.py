@@ -6,9 +6,9 @@ from PyQt5.Qt import Qt
 
 from Common.QtHelpers import setWindowIcon
 from Common.ModelViewController import CreateQtController
-from Common.PandasTableLayout import PandasTableView
+from Controller.ControlHelpers import replace_table_view_in_layout
+
 from DragEvents.DragEvents import enter_task_list_box, drag_move_event, move_task_list_item
-from Common.FlexibleMagicMock import FlexibleMagicMock
 
 
 @CreateQtController  # initialise with window, model, layout
@@ -88,16 +88,6 @@ class ToDoListController(QWidget):
         self.loader_animation.start()
         self.layout.loaderAnimation_label.setVisible(False)
 
-        placeholder = self.layout.project_tableView
-        projects_model = self.model.project_list
-        if isinstance(self.parent, FlexibleMagicMock):
-            projects_view = FlexibleMagicMock()
-        else:
-            projects_view = PandasTableView(self.parent)
-        projects_view.setGeometry(placeholder.geometry())
-        projects_view.setModel(projects_model)
-        projects_view.adjust_size(projects_model.rowCount(), 50, [100, 220, 100, 75, 75, 75, 75, 6])
-        self.parent.layout().replaceWidget(self.layout.project_tableView, projects_view)
-        placeholder.deleteLater()
+        replace_table_view_in_layout(self.layout, self.model, self.parent)
 
         self.enable_upload_if_uncomitted_changes(self)

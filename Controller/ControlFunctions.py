@@ -10,9 +10,12 @@ from Controller.Controller import ToDoListController
 from Controller.UploadGitThread import UPLOAD_THREAD_SINGLETON
 from Controller.ControlHelpers import (
     get_selected_item_from_list, append_item_to_list_view, get_selected_task,
-    delete_selected_task, update_standard_item_fields, unuploaded_changes_present
+    delete_selected_task, update_standard_item_fields, unuploaded_changes_present,
+    update_pandas_table_in_layout
 )
+
 from Models.TaskEntry import create_new_note, get_date_tuple_now
+from Models.ProjectEntry import Project, create_new_project
 
 
 @ClassMethod(ToDoListController)
@@ -43,13 +46,10 @@ def add_new_task_to_pending(self, _click: bool):
 @QtControlFunction(True)
 def add_new_project(self, _click: bool):
     if project_name := self.layout.newProject_lineEdit.text():
-        standard_item = QStandardItem(project_name)
-        standard_item.setData(create_new_note(project_name, 0))
+        new_project_dict = Project(**create_new_project(project_name)).display_dict
 
-        append_item_to_list_view(self.model.pending_list, self.layout.pending_listView, standard_item)
-        self.layout.newProject_lineEdit.setText("")
-        self.layout.addNewProject_pushButton.setEnabled(False)
-        self.layout.backup_pushButton.setEnabled(True)
+        self.model.project_list = self.model.project_list.add_row(new_project_dict)
+        update_pandas_table_in_layout(self.layout.project_tableView, self.model.project_list)
 
 
 @ClassMethod(ToDoListController)

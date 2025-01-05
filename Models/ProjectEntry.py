@@ -1,5 +1,7 @@
 
-from typing import Tuple, Optional
+from typing import Tuple
+import math
+
 from pydantic import BaseModel, field_validator
 
 import Models.GlobalParams as GlobalParams
@@ -25,9 +27,10 @@ class Project(BaseModel):
     description: str
     date_created: Tuple[int, int, int, int, int, int, int]
     last_update: Tuple[int, int, int, int, int, int, int]
-    hr_spent: Optional[int] = 0
-    perc_complete: Optional[float] = 0.
-    points_gained: Optional[int] = 0
+    hr_spent: int
+    hr_remain: int
+    perc_complete: float
+    points_gained: int
 
     @field_validator('title')
     def title_must_be_right_length(cls, value):
@@ -35,8 +38,24 @@ class Project(BaseModel):
         return value
 
     @property
+    def perc_complete(self) -> float:
+        total_hr = self.hr_spent + self.hr_remain
+        if total_hr == 0.:
+            return 0.
+        else:
+            math.round(self.hr_spent / total_hr * 100, 3)
+
+    @property
+    def data_formatted(self) -> str:
+        year, month, day, _, _, _, _ = self.last_update
+        day, month = f"0{day}"[-2:], f"0{month}"[-2:]
+        return f"{day}/{month}/{year}"
+
+
+    @property
     def display_dict(self) -> dict:
-        return {k: v for k, v in self.model_fields.items() if k in GlobalParams.PROJECT_FIELDS_TO_DISPLAY}
+        field_map = GlobalParams.PROJECT_FIELDS_TO_DISPLAY
+        return {field_map[k]: self.__getattribute__(k) for k in field_map}
 
 
 def create_new_project(name: str):
@@ -48,6 +67,10 @@ def create_new_project(name: str):
         'description': '',
         'date_created': date_now_tuple,
         'last_update': date_now_tuple,
+        'hr_spent': 0,
+        'hr_remain': 0,
+        'perc_complete': 0.,
+        'points_gained': 0,
     }
 
 

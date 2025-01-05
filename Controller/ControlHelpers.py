@@ -3,9 +3,14 @@ from PyQt5.QtWidgets import QListView
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 
 from Models.GlobalParams import LIST_VIEW_TO_STATUS_TYPE
+from Models.PandasTable import PandasModel
 
 from Common.GitCommands import (get_all_uncomitted_files_in_folder,
                                 get_all_unpushed_commits_in_folder)
+from Common.PandasTableLayout import PandasTableView
+from Common.FlexibleMagicMock import FlexibleMagicMock
+
+import Resources.DisplayParameters as DisplayParameters 
 from Controller.UploadGitThread import CURRENT_REPO
 
 
@@ -89,6 +94,34 @@ def clear_all_selections(layout):
     layout.description_textEdit.setText("")
     layout.delete_pushButton.setEnabled(False)
     layout.saveChanges_pushButton.setEnabled(False)
+
+
+def update_pandas_table_in_layout(view: PandasTableView, new_model: PandasModel):
+    view.setModel(new_model)
+    view.adjust_size(new_model.rowCount(),
+                     DisplayParameters.PROJECT_TABLE_ROW_HEIGHT,
+                     DisplayParameters.PROJECT_TABLE_COLUMN_SPACING)
+
+
+def replace_table_view_in_layout(layout, model, parent):
+    '''
+        Take the existing table view component on the UI layout and
+        replace it with specialised Pandas Table Layout.
+        Mutates layout of app on the fly, geometry from TableView in UI is inherited new view.
+    '''
+    placeholder = layout.project_tableView
+    projects_model = model.project_list
+
+    if isinstance(parent, FlexibleMagicMock):
+        projects_view = FlexibleMagicMock()
+    else:
+        projects_view = PandasTableView(parent)
+
+    update_pandas_table_in_layout(projects_view, projects_model)
+    projects_view.setGeometry(placeholder.geometry())
+    parent.layout().replaceWidget(layout.project_tableView, projects_view)
+    placeholder.deleteLater()
+    layout.project_tableView = projects_view
 
 
 def unuploaded_changes_present():
