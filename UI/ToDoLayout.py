@@ -167,6 +167,14 @@ class Ui_ToDoLayout(object):
         self.project_tableView = QtWidgets.QTableView(self.centralwidget)
         self.project_tableView.setGeometry(QtCore.QRect(30, 106, 721, 514))
         self.project_tableView.setObjectName("project_tableView")
+        self.saveProjectChanges_pushButton = QtWidgets.QPushButton(self.centralwidget)
+        self.saveProjectChanges_pushButton.setEnabled(False)
+        self.saveProjectChanges_pushButton.setGeometry(QtCore.QRect(230, 635, 150, 40))
+        self.saveProjectChanges_pushButton.setObjectName("saveProjectChanges_pushButton")
+        self.deleteProject_pushButton = QtWidgets.QPushButton(self.centralwidget)
+        self.deleteProject_pushButton.setEnabled(False)
+        self.deleteProject_pushButton.setGeometry(QtCore.QRect(390, 635, 100, 40))
+        self.deleteProject_pushButton.setObjectName("deleteProject_pushButton")
         ToDoLayout.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(ToDoLayout)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1850, 26))
@@ -198,6 +206,8 @@ class Ui_ToDoLayout(object):
         self.estimate_label.setText(_translate("ToDoLayout", "Estimate:"))
         self.points_label.setText(_translate("ToDoLayout", "Points:"))
         self.addNewProject_pushButton.setText(_translate("ToDoLayout", "Add New Project"))
+        self.saveProjectChanges_pushButton.setText(_translate("ToDoLayout", "Save Changes"))
+        self.deleteProject_pushButton.setText(_translate("ToDoLayout", "Delete"))
 
 
 if __name__ == "__main__":

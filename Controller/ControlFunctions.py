@@ -1,7 +1,8 @@
 
-from PyQt5.QtGui import QStandardItem
-
 from unittest.mock import MagicMock
+from typing import Optional
+
+from PyQt5.QtGui import QStandardItem
 
 from Common.ClassMethod import ClassMethod
 from Common.ModelViewController import QtControlFunction
@@ -50,10 +51,13 @@ def add_new_project(self, _click: bool):
         self.model.project_list = self.model.project_list.add_project(new_project)
         update_pandas_table_in_layout(self.layout.project_tableView, self.model.project_list)
 
+        self.layout.addNewProject_pushButton.setEnabled(False)
+        self.layout.backup_pushButton.setEnabled(True)
+
 
 @ClassMethod(ToDoListController)
 @QtControlFunction(MagicMock())
-def set_text_description(self, selected_item: QStandardItem):
+def set_text_description(self, selected_item: Optional[QStandardItem]):
     if selected_item is None:
         return
 
@@ -94,7 +98,7 @@ def setFocus_to_doneView(self, _click: bool):
 
 @ClassMethod(ToDoListController)
 @QtControlFunction(True)
-def save_current_item_description(self, _click: bool):
+def save_current_task_description(self, _click: bool):
     if selected_item := get_selected_task(self.model, self.layout):
         selected_item.setAccessibleDescription(self.layout.description_textEdit.toPlainText())
         update_fields = {'description': selected_item.accessibleDescription(),
@@ -170,3 +174,22 @@ def enable_add_new_project(self):
 @QtControlFunction()
 def enable_upload_if_uncomitted_changes(self):
     self.layout.upload_pushButton.setEnabled(unuploaded_changes_present())
+
+
+@ClassMethod(ToDoListController)
+@QtControlFunction(MagicMock())
+def project_row_click(self, clicked_index):
+    col = clicked_index.column()
+    row = clicked_index.row()
+    self.layout.project_tableView.selected_row = row
+
+    if col == 0:
+        model = clicked_index.model()
+        columnsTotal = model.columnCount()
+
+        for _ in range(columnsTotal):
+            self.layout.project_tableView.selectRow(row)
+
+    self.layout.deleteProject_pushButton.setEnabled(True)
+    text_descrition = self.model.project_list.get_description_at_ind(row)
+    self.layout.projectDescription_textEdit.setText(text_descrition)

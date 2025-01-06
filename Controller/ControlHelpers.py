@@ -103,25 +103,27 @@ def update_pandas_table_in_layout(view: PandasTableView, new_model: PandasModel)
                      DisplayParameters.PROJECT_TABLE_COLUMN_SPACING)
 
 
-def replace_table_view_in_layout(layout, model, parent):
+def replace_table_view_in_layout(controller):
     '''
         Take the existing table view component on the UI layout and
         replace it with specialised Pandas Table Layout.
         Mutates layout of app on the fly, geometry from TableView in UI is inherited new view.
     '''
-    placeholder = layout.project_tableView
-    projects_model = model.project_list
+    placeholder = controller.layout.project_tableView
+    projects_model = controller.model.project_list
 
-    if isinstance(parent, FlexibleMagicMock):
+    if isinstance(controller.parent, FlexibleMagicMock):
         projects_view = FlexibleMagicMock()
     else:
-        projects_view = PandasTableView(parent, placeholder.geometry().height())
+        projects_view = PandasTableView(controller.parent, placeholder.geometry().height())
 
     projects_view.setGeometry(placeholder.geometry())
-    parent.layout().replaceWidget(layout.project_tableView, projects_view)
+    controller.parent.layout().replaceWidget(controller.layout.project_tableView, projects_view)
     update_pandas_table_in_layout(projects_view, projects_model)
     placeholder.deleteLater()
-    layout.project_tableView = projects_view
+
+    controller.layout.project_tableView = projects_view
+    projects_view.clicked.connect(lambda x: controller.project_row_click(controller, x))
 
 
 def unuploaded_changes_present():

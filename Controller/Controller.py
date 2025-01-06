@@ -35,7 +35,7 @@ class ToDoListController(QWidget):
         done_list.clicked.connect(lambda x: self.setFocus_to_doneView(self, x))
 
         self.layout.saveChanges_pushButton.clicked.connect(
-            lambda x: self.save_current_item_description(self, x))
+            lambda x: self.save_current_task_description(self, x))
         self.layout.backup_pushButton.clicked.connect(lambda x: self.save_backups(self, x))
         self.layout.upload_pushButton.clicked.connect(lambda x: self.git_push_backups(x))
 
@@ -88,6 +88,6 @@ class ToDoListController(QWidget):
         self.loader_animation.start()
         self.layout.loaderAnimation_label.setVisible(False)
 
-        replace_table_view_in_layout(self.layout, self.model, self.parent)
+        replace_table_view_in_layout(self)
 
         self.enable_upload_if_uncomitted_changes(self)
