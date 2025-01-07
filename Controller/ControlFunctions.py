@@ -193,3 +193,11 @@ def project_row_click(self, clicked_index):
     self.layout.deleteProject_pushButton.setEnabled(True)
     text_descrition = self.model.project_list.get_description_at_ind(row)
     self.layout.projectDescription_textEdit.setText(text_descrition)
+
+
+@ClassMethod(ToDoListController)
+@QtControlFunction(MagicMock())
+def project_header_click(self, _clicked_index):
+    self.layout.project_tableView.selected_row = None
+    self.layout.deleteProject_pushButton.setEnabled(False)
+    self.layout.projectDescription_textEdit.setText("")

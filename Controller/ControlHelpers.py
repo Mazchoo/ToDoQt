@@ -124,6 +124,9 @@ def replace_table_view_in_layout(controller):
 
     controller.layout.project_tableView = projects_view
     projects_view.clicked.connect(lambda x: controller.project_row_click(controller, x))
+    projects_view.horizontalHeader().sectionClicked.connect(
+        lambda x: controller.project_header_click(controller, x)
+    )
 
 
 def unuploaded_changes_present():
