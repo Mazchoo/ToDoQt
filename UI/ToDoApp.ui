@@ -77,7 +77,7 @@
      <bool>false</bool>
     </property>
    </widget>
-   <widget class="QPushButton" name="saveChanges_pushButton">
+   <widget class="QPushButton" name="saveTaskChanges_pushButton">
     <property name="enabled">
      <bool>false</bool>
     </property>

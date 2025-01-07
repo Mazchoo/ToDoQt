@@ -63,7 +63,7 @@ def set_text_description(self, selected_item: Optional[QStandardItem]):
 
     self.layout.description_textEdit.setText(selected_item.accessibleDescription())
     self.layout.delete_pushButton.setEnabled(True)
-    self.layout.saveChanges_pushButton.setEnabled(False)
+    self.layout.saveTaskChanges_pushButton.setEnabled(False)
 
 
 @ClassMethod(ToDoListController)
@@ -105,7 +105,7 @@ def save_current_task_description(self, _click: bool):
                          'date_edited': get_date_tuple_now()}
         selected_item = update_standard_item_fields(selected_item, **update_fields)
 
-        self.layout.saveChanges_pushButton.setEnabled(False)
+        self.layout.saveTaskChanges_pushButton.setEnabled(False)
         self.layout.backup_pushButton.setEnabled(True)
 
 
@@ -149,11 +149,11 @@ def git_push_backups(self, _click: bool):
 
 @ClassMethod(ToDoListController)
 @QtControlFunction()
-def enable_save_changes(self):
+def enable_task_save_changes(self):
     if selected_item := get_selected_task(self.model, self.layout):
         old_description = selected_item.accessibleDescription()
         description_changed = self.layout.description_textEdit.toPlainText() != old_description
-        self.layout.saveChanges_pushButton.setEnabled(description_changed)
+        self.layout.saveTaskChanges_pushButton.setEnabled(description_changed)
 
 
 @ClassMethod(ToDoListController)
@@ -201,3 +201,12 @@ def project_header_click(self, _clicked_index):
     self.layout.project_tableView.selected_row = None
     self.layout.deleteProject_pushButton.setEnabled(False)
     self.layout.projectDescription_textEdit.setText("")
+
+
+@ClassMethod(ToDoListController)
+@QtControlFunction()
+def enable_project_save_changes(self):
+    if selected_row := self.layout.project_tableView.selected_row:
+        old_description = self.model.project_list.get_description_at_ind(selected_row)
+        description_changed = self.layout.projectDescription_textEdit.toPlainText() != old_description
+        self.layout.saveProjectChanges_pushButton.setEnabled(description_changed)

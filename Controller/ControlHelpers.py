@@ -93,7 +93,7 @@ def clear_all_selections(layout):
 
     layout.description_textEdit.setText("")
     layout.delete_pushButton.setEnabled(False)
-    layout.saveChanges_pushButton.setEnabled(False)
+    layout.saveTaskChanges_pushButton.setEnabled(False)
 
 
 def update_pandas_table_in_layout(view: PandasTableView, new_model: PandasModel):

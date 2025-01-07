@@ -34,7 +34,7 @@ class ToDoListController(QWidget):
         in_progress_list.clicked.connect(lambda x: self.setFocus_to_in_progressView(self, x))
         done_list.clicked.connect(lambda x: self.setFocus_to_doneView(self, x))
 
-        self.layout.saveChanges_pushButton.clicked.connect(
+        self.layout.saveTaskChanges_pushButton.clicked.connect(
             lambda x: self.save_current_task_description(self, x))
         self.layout.backup_pushButton.clicked.connect(lambda x: self.save_backups(self, x))
         self.layout.upload_pushButton.clicked.connect(lambda x: self.git_push_backups(x))
@@ -54,7 +54,7 @@ class ToDoListController(QWidget):
         setattr(done_list, 'dropEvent', lambda e: move_task_list_item(self.model, self.layout,
                                                                       done_list, e))
 
-        self.layout.description_textEdit.textChanged.connect(lambda: self.enable_save_changes(self))
+        self.layout.description_textEdit.textChanged.connect(lambda: self.enable_task_save_changes(self))
         self.layout.newTask_lineEdit.textChanged.connect(lambda: self.enable_add_new_task(self))
 
         self.layout.newProject_lineEdit.textChanged.connect(lambda: self.enable_add_new_project(self))
