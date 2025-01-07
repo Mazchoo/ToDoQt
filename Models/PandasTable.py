@@ -57,9 +57,9 @@ class PandasModel(QAbstractTableModel):
         return Qt.ItemIsSelectable | Qt.ItemIsEnabled
 
     def get_description_at_ind(self, ind: int) -> str:
-        if ind >= len(self.data):
+        if ind >= len(self._data):
             return ""
-        return self.data[ind].description
+        return self._data[ind].description
 
     @property
     def save_dump(self) -> List[dict]:
