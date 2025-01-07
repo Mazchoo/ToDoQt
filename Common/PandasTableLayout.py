@@ -1,7 +1,7 @@
 import sys
 from typing import Optional, List
 
-from PyQt5.QtWidgets import QApplication, QTableView, QMainWindow
+from PyQt5.QtWidgets import QApplication, QTableView, QMainWindow, QAbstractItemView
 from Models.PandasTable import PandasModel
 
 
@@ -11,6 +11,7 @@ class PandasTableView(QTableView):
         self.parent = parent_window
         self.max_height = max_height
         super().__init__(parent_window)
+        self.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
 
         self.selected_row = None
 

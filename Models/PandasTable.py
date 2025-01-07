@@ -47,7 +47,7 @@ class PandasModel(QAbstractTableModel):
     def headerData(self, col, orientation, role):
         if orientation == Qt.Horizontal and role == Qt.DisplayRole:
             if col == 0:
-                return "Index"
+                return "Id"
             else:
                 return self._df.columns[col - 1]
 

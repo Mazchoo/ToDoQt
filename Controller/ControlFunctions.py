@@ -179,16 +179,8 @@ def enable_upload_if_uncomitted_changes(self):
 @ClassMethod(ToDoListController)
 @QtControlFunction(MagicMock())
 def project_row_click(self, clicked_index):
-    col = clicked_index.column()
     row = clicked_index.row()
     self.layout.project_tableView.selected_row = row
-
-    if col == 0:
-        model = clicked_index.model()
-        columnsTotal = model.columnCount()
-
-        for _ in range(columnsTotal):
-            self.layout.project_tableView.selectRow(row)
 
     self.layout.deleteProject_pushButton.setEnabled(True)
     text_descrition = self.model.project_list.get_description_at_ind(row)
@@ -199,6 +191,7 @@ def project_row_click(self, clicked_index):
 @QtControlFunction(MagicMock())
 def project_header_click(self, _clicked_index):
     self.layout.project_tableView.selected_row = None
+    self.layout.project_tableView.clearSelection()
     self.layout.deleteProject_pushButton.setEnabled(False)
     self.layout.projectDescription_textEdit.setText("")
 
@@ -206,7 +199,20 @@ def project_header_click(self, _clicked_index):
 @ClassMethod(ToDoListController)
 @QtControlFunction()
 def enable_project_save_changes(self):
-    if selected_row := self.layout.project_tableView.selected_row:
+    selected_row = self.layout.project_tableView.selected_row
+    if selected_row is not None:
         old_description = self.model.project_list.get_description_at_ind(selected_row)
         description_changed = self.layout.projectDescription_textEdit.toPlainText() != old_description
         self.layout.saveProjectChanges_pushButton.setEnabled(description_changed)
+
+
+@ClassMethod(ToDoListController)
+@QtControlFunction(True)
+def save_current_project_description(self, _click: bool):
+    selected_row = self.layout.project_tableView.selected_row
+    if selected_row is not None:
+        description = self.layout.projectDescription_textEdit.toPlainText()
+        self.model.project_list.set_description_at_ind(selected_row, description)
+
+        self.layout.saveProjectChanges_pushButton.setEnabled(False)
+        self.layout.backup_pushButton.setEnabled(True)

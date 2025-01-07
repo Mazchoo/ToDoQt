@@ -27,15 +27,12 @@ class ToDoListController(QWidget):
         done_list = self.layout.done_listView
 
         self.layout.delete_pushButton.clicked.connect(lambda x: self.delete_current_item(self, x))
-        self.layout.addNewTask_pushButton.clicked.connect(lambda x: self.add_new_task_to_pending(self, x))
         self.layout.close_pushButton.clicked.connect(lambda x: self.close_window(self, x))
 
         pending_list.clicked.connect(lambda x: self.setFocus_to_pendingView(self, x))
         in_progress_list.clicked.connect(lambda x: self.setFocus_to_in_progressView(self, x))
         done_list.clicked.connect(lambda x: self.setFocus_to_doneView(self, x))
 
-        self.layout.saveTaskChanges_pushButton.clicked.connect(
-            lambda x: self.save_current_task_description(self, x))
         self.layout.backup_pushButton.clicked.connect(lambda x: self.save_backups(self, x))
         self.layout.upload_pushButton.clicked.connect(lambda x: self.git_push_backups(x))
 
@@ -54,11 +51,17 @@ class ToDoListController(QWidget):
         setattr(done_list, 'dropEvent', lambda e: move_task_list_item(self.model, self.layout,
                                                                       done_list, e))
 
+        self.layout.addNewTask_pushButton.clicked.connect(lambda x: self.add_new_task_to_pending(self, x))
         self.layout.description_textEdit.textChanged.connect(lambda: self.enable_task_save_changes(self))
         self.layout.newTask_lineEdit.textChanged.connect(lambda: self.enable_add_new_task(self))
+        self.layout.saveTaskChanges_pushButton.clicked.connect(
+            lambda x: self.save_current_task_description(self, x))
 
-        self.layout.newProject_lineEdit.textChanged.connect(lambda: self.enable_add_new_project(self))
         self.layout.addNewProject_pushButton.clicked.connect(lambda x: self.add_new_project(self, x))
+        self.layout.projectDescription_textEdit.textChanged.connect(lambda: self.enable_project_save_changes(self))
+        self.layout.newProject_lineEdit.textChanged.connect(lambda: self.enable_add_new_project(self))
+        self.layout.saveProjectChanges_pushButton.clicked.connect(
+            lambda x: self.save_current_project_description(self, x))
 
     @staticmethod
     def initializeModels(self):
