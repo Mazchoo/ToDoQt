@@ -1,3 +1,4 @@
+from typing import Optional
 
 from PyQt5.QtWidgets import QListView
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
@@ -39,17 +40,18 @@ def delete_item_if_selected(model_list: QStandardItemModel, list_view: QListView
         return deleted_item
 
 
-def append_item_to_list_view(model_list: QStandardItemModel, list_view: QListView, standard_item: QStandardItem):
-    if not standard_item:
-        return
+def append_item_to_list_view(model_list: QStandardItemModel, list_view: QListView,
+                             new_item: Optional[QStandardItem]) -> Optional[QStandardItem]:
+    if not new_item:
+        return None
 
     if list_view.objectName() in LIST_VIEW_TO_STATUS_TYPE:
         update_fields = {'status': LIST_VIEW_TO_STATUS_TYPE[list_view.objectName()]}
-        standard_item = update_standard_item_fields(standard_item, **update_fields)
+        new_item = update_standard_item_fields(new_item, **update_fields)
 
-    model_list.appendRow(standard_item)
+    model_list.appendRow(new_item)
     list_view.setModel(model_list)
-    return standard_item
+    return new_item
 
 
 def get_selected_task(model, layout):
@@ -129,7 +131,18 @@ def replace_table_view_in_layout(controller):
     )
 
 
-def unuploaded_changes_present():
-    args = "SavedToDo", CURRENT_REPO
-    return any([get_all_uncomitted_files_in_folder(*args),
-                get_all_unpushed_commits_in_folder(*args)])
+def not_uploaded_changes_present() -> bool:
+    return any([get_all_uncomitted_files_in_folder("SavedToDo", CURRENT_REPO),
+                get_all_unpushed_commits_in_folder("SavedToDo", CURRENT_REPO)])
+
+
+def filter_available_tasks_for_selected_project(model, layout):
+    pass
+
+
+def recalculate_stats_for_current_project(model, layout):
+    pass
+
+
+def recalculate_stats_for_all_projects(model, layout):
+    pass

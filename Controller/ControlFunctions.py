@@ -11,7 +11,7 @@ from Controller.Controller import ToDoListController
 from Controller.UploadGitThread import UPLOAD_THREAD_SINGLETON
 from Controller.ControlHelpers import (
     get_selected_item_from_list, append_item_to_list_view, get_selected_task,
-    delete_selected_task, update_standard_item_fields, unuploaded_changes_present,
+    delete_selected_task, update_standard_item_fields, not_uploaded_changes_present,
     update_pandas_table_in_layout
 )
 
@@ -33,9 +33,12 @@ def delete_current_item(self, _click):
 @ClassMethod(ToDoListController)
 @QtControlFunction(True)
 def add_new_task_to_pending(self, _click: bool):
-    if task_name := self.layout.newTask_lineEdit.text():
+    if (task_name := self.layout.newTask_lineEdit.text()) and \
+       (selected_row := self.layout.project_tableView.selected_row) and \
+       (selected_project_id := self.model.project_list.get_project_id_at_ind(selected_row)):
+
         new_task = QStandardItem(task_name)
-        new_task.setData(create_new_note(task_name, 0))
+        new_task.setData(create_new_note(task_name, selected_project_id))
 
         append_item_to_list_view(self.model.pending_list, self.layout.pending_listView, new_task)
         self.layout.newTask_lineEdit.setText("")
@@ -128,7 +131,7 @@ def end_upload(self):
     self.layout.loaderAnimation_label.setVisible(False)
     UPLOAD_THREAD_SINGLETON.running = False
     UPLOAD_THREAD_SINGLETON.finished.disconnect()
-    self.layout.upload_pushButton.setEnabled(unuploaded_changes_present())
+    self.layout.upload_pushButton.setEnabled(not_uploaded_changes_present())
 
 
 @ClassMethod(ToDoListController)
@@ -173,7 +176,7 @@ def enable_add_new_project(self):
 @ClassMethod(ToDoListController)
 @QtControlFunction()
 def enable_upload_if_uncomitted_changes(self):
-    self.layout.upload_pushButton.setEnabled(unuploaded_changes_present())
+    self.layout.upload_pushButton.setEnabled(not_uploaded_changes_present())
 
 
 @ClassMethod(ToDoListController)
@@ -216,3 +219,21 @@ def save_current_project_description(self, _click: bool):
 
         self.layout.saveProjectChanges_pushButton.setEnabled(False)
         self.layout.backup_pushButton.setEnabled(True)
+
+
+@ClassMethod(ToDoListController)
+@QtControlFunction(0.)
+def edit_time_spent_spinner(self, value: float):
+    pass
+
+
+@ClassMethod(ToDoListController)
+@QtControlFunction(0.)
+def edit_time_estimate_spinner(self, value: float):
+    pass
+
+
+@ClassMethod(ToDoListController)
+@QtControlFunction(0.)
+def edit_points_spinner(self, value: float):
+    pass

@@ -67,6 +67,11 @@ class PandasModel(QAbstractTableModel):
         self._data[ind].description = description
         return True
 
+    def get_project_id_at_ind(self, ind: Optional[int]) -> Optional[int]:
+        if ind is None or ind >= len(self._data):
+            return None
+        return self._data[ind].id_number
+
     @property
     def save_dump(self) -> List[dict]:
         return [project.model_dump() for project in self._data]
