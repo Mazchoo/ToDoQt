@@ -5,13 +5,14 @@ from PyQt5.QtGui import QDragEnterEvent, QDragMoveEvent, QDropEvent
 
 from Controller.ControlHelpers import (
     list_view_has_selected_item, delete_item_if_selected, append_item_to_list_view,
-    get_corresponding_model, clear_all_selections
+    get_corresponding_model, clear_all_selections, clear_not_selected
 )
 
 
-def enter_task_list_box(list_view: QListView, event: QDragEnterEvent):
+def enter_task_list_box(layout, list_view: QListView, event: QDragEnterEvent):
     is_model_list_item = event.mimeData().hasFormat('application/x-qabstractitemmodeldatalist')
-    list_view_has_focus = list_view_has_selected_item(list_view)
+    if list_view_has_focus := list_view_has_selected_item(list_view):
+        clear_not_selected(layout, list_view)
 
     if is_model_list_item and not list_view_has_focus:
         event.accept()
@@ -32,18 +33,18 @@ def drag_move_event(list_view: QListView, event: QDragMoveEvent):
 
 def move_task_list_item(model, layout, target_view: QListView, event: QDropEvent):
 
-    target_model = get_corresponding_model(model, layout, target_view)
+    target_model, _ = get_corresponding_model(model, layout, target_view)
     if target_model is None:
         event.ignore()
         return
 
     source_view = event.source()
-    source_model = get_corresponding_model(model, layout, source_view)
+    source_model, source_filter = get_corresponding_model(model, layout, source_view)
     if source_model is None:
         event.ignore()
         return
 
-    move_item = delete_item_if_selected(source_model, source_view)
+    move_item = delete_item_if_selected(source_model, source_filter, source_view)
     if move_item is None:
         event.ignore()
         return

@@ -2,6 +2,7 @@ from typing import Optional
 
 from PyQt5.QtWidgets import QListView
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
+from PyQt5.QtCore import QModelIndex
 
 from Models.GlobalParams import LIST_VIEW_TO_STATUS_TYPE
 from Models.PandasTable import PandasModel
@@ -27,20 +28,25 @@ def list_view_has_selected_item(list_view: QListView):
     return True if list_view.selectedIndexes() else False
 
 
+def get_selected_model_index(selected_row: int, model_filter: CustomFilterProxyModel) -> QModelIndex:
+    filter_index = model_filter.index(selected_row, 0)
+    return model_filter.mapToSource(filter_index)
+
+
 def get_selected_item_from_list(model_list: QStandardItemModel, model_filter: CustomFilterProxyModel,
                                 list_view: QListView):
     selected_indices = list_view.selectedIndexes()
     if selected_indices:
-        selected_row = selected_indices[0].row()
-        filter_index = model_filter.index(selected_row, 0)
-        model_index = model_filter.mapToSource(filter_index)
+        model_index = get_selected_model_index(selected_indices[0].row(), model_filter)
         return model_list.itemFromIndex(model_index)
 
 
-def delete_item_if_selected(model_list: QStandardItemModel, list_view: QListView):
+def delete_item_if_selected(model_list: QStandardItemModel, model_filter: CustomFilterProxyModel,
+                            list_view: QListView):
     selected_indices = list_view.selectedIndexes()
     if selected_indices:
-        deleted_item = model_list.takeRow(selected_indices[0].row())[0]
+        model_index = get_selected_model_index(selected_indices[0].row(), model_filter).row()
+        deleted_item = model_list.takeRow(model_index)[0]
         list_view.setModel(model_list)
         return deleted_item
 
@@ -70,26 +76,25 @@ def get_selected_task(model, layout):
 
 
 def delete_selected_task(model, layout):
-    if deleted_item := delete_item_if_selected(model.pending_list, layout.pending_listView):
+    if deleted_item := delete_item_if_selected(model.pending_list, model.pending_filter, layout.pending_listView):
         return deleted_item
-    elif deleted_item := delete_item_if_selected(model.in_progress_list, layout.inProgress_listView):
+    elif deleted_item := delete_item_if_selected(model.in_progress_list, model.in_progress_filter, layout.inProgress_listView):
         return deleted_item
-    elif deleted_item := delete_item_if_selected(model.done_list, layout.done_listView):
+    elif deleted_item := delete_item_if_selected(model.done_list, model.done_filter, layout.done_listView):
         return deleted_item
     else:
         return None
 
 
 def get_corresponding_model(model, layout, list_view: QListView):
-    corresponding_model = None
     if layout.inProgress_listView == list_view:
-        corresponding_model = model.in_progress_list
-    elif layout.pending_listView == list_view:
-        corresponding_model = model.pending_list
+        return model.in_progress_list, model.in_progress_filter
+    if layout.pending_listView == list_view:
+        return model.pending_list, model.pending_filter
     elif layout.done_listView == list_view:
-        corresponding_model = model.done_list
+        return model.done_list, model.done_filter
 
-    return corresponding_model
+    return None, None
 
 
 def clear_all_selections(layout):
@@ -100,6 +105,15 @@ def clear_all_selections(layout):
     layout.description_textEdit.setText("")
     layout.delete_pushButton.setEnabled(False)
     layout.saveTaskChanges_pushButton.setEnabled(False)
+
+
+def clear_not_selected(layout, list_view: QListView):
+    if list_view != layout.pending_listView:
+        layout.pending_listView.clearSelection()
+    if list_view != layout.inProgress_listView:
+        layout.inProgress_listView.clearSelection()
+    if list_view != layout.done_listView:
+        layout.done_listView.clearSelection()
 
 
 def update_pandas_table_in_layout(view: PandasTableView, new_model: PandasModel):

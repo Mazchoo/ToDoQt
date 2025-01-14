@@ -36,17 +36,17 @@ class ToDoListController(QWidget):
         self.layout.backup_pushButton.clicked.connect(lambda x: self.save_backups(self, x))
         self.layout.upload_pushButton.clicked.connect(lambda x: self.git_push_backups(x))
 
-        setattr(pending_list, 'dragEnterEvent', lambda e: enter_task_list_box(pending_list, e))
+        setattr(pending_list, 'dragEnterEvent', lambda e: enter_task_list_box(self.layout, pending_list, e))
         setattr(pending_list, 'dragMoveEvent', lambda e: drag_move_event(pending_list, e))
         setattr(pending_list, 'dropEvent', lambda e: move_task_list_item(self.model, self.layout,
                                                                          pending_list, e))
 
-        setattr(in_progress_list, 'dragEnterEvent', lambda e: enter_task_list_box(in_progress_list, e))
+        setattr(in_progress_list, 'dragEnterEvent', lambda e: enter_task_list_box(self.layout, in_progress_list, e))
         setattr(in_progress_list, 'dragMoveEvent', lambda e: drag_move_event(in_progress_list, e))
         setattr(in_progress_list, 'dropEvent',
                 lambda e: move_task_list_item(self.model, self.layout, in_progress_list, e))
 
-        setattr(done_list, 'dragEnterEvent', lambda e: enter_task_list_box(done_list, e))
+        setattr(done_list, 'dragEnterEvent', lambda e: enter_task_list_box(self.layout, done_list, e))
         setattr(done_list, 'dragMoveEvent', lambda e: drag_move_event(done_list, e))
         setattr(done_list, 'dropEvent', lambda e: move_task_list_item(self.model, self.layout,
                                                                       done_list, e))
