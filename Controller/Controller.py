@@ -66,9 +66,9 @@ class ToDoListController(QWidget):
     @staticmethod
     def initializeModels(self):
         self.model.load_from_folder("SavedToDo")
-        self.layout.pending_listView.setModel(self.model.pending_list)
-        self.layout.inProgress_listView.setModel(self.model.in_progress_list)
-        self.layout.done_listView.setModel(self.model.done_list)
+        self.layout.pending_listView.setModel(self.model.pending_filter)
+        self.layout.inProgress_listView.setModel(self.model.in_progress_filter)
+        self.layout.done_listView.setModel(self.model.done_filter)
 
     @staticmethod
     def initializeUi(self):

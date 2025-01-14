@@ -1,10 +1,12 @@
 
 import os
 from pathlib import Path
-import pandas as pd
+
 from PyQt5.QtGui import QStandardItemModel
 
 from Common.QtModel import QtStaticModel
+from Common.CustomProxyFilter import CustomFilterProxyModel
+
 from Models.GlobalParams import (TASK_FIELDS_APPLY_EVAL, TASK_FIELDS_TO_ENCRYPT,
                                  PROJECT_FIELDS_APPLY_EVAL, PROJECT_FIELDS_TO_ENCRYPT,
                                  STATUS_TYPES, SAVED_TASKS_FILENAME, SAVED_PROJECTS_FILENAME)
@@ -22,8 +24,11 @@ CWD = os.getcwd()
 
 class ToDoModel(QtStaticModel):
     pending_list = QStandardItemModel
+    pending_filter = CustomFilterProxyModel
     in_progress_list = QStandardItemModel
+    in_progress_filter = CustomFilterProxyModel
     done_list = QStandardItemModel
+    done_filter = CustomFilterProxyModel
     project_list = PandasModel
 
     encrypt_task_fields = TASK_FIELDS_TO_ENCRYPT
@@ -78,7 +83,7 @@ class ToDoModel(QtStaticModel):
         try:
             task_data = update_task_data(task_data)
             task_data = TaskEntry(**task_data).model_dump()
-            model_list = self.__getattribute__(task_data['status'])
+            model_list = self.__getattribute__(task_data['status'])  # ToDo - use validation exception
         except Exception:
             print(f'json dict {task_data} cannot be read.')
         else:
@@ -104,6 +109,10 @@ class ToDoModel(QtStaticModel):
                                                     self.encrypt_task_fields, self.eval_task_fields)
         for data in decrypted_note_data.values():
             self.load_task_json_dict_into_model(data)
+
+        self.pending_filter = CustomFilterProxyModel(self.pending_list)
+        self.in_progress_filter = CustomFilterProxyModel(self.in_progress_list)
+        self.done_filter = CustomFilterProxyModel(self.done_list)
 
         decrypted_project_data = load_content_from_csv(path / SAVED_PROJECTS_FILENAME,
                                                        self.encrypt_project_fields, self.eval_project_fields)
