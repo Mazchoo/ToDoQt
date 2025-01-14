@@ -10,6 +10,7 @@ from Common.GitCommands import (get_all_uncomitted_files_in_folder,
                                 get_all_unpushed_commits_in_folder)
 from Common.PandasTableLayout import PandasTableView
 from Common.FlexibleMagicMock import FlexibleMagicMock
+from Common.CustomProxyFilter import CustomFilterProxyModel
 
 import UI.DisplayParameters as DisplayParameters 
 from Controller.UploadGitThread import CURRENT_REPO
@@ -26,10 +27,14 @@ def list_view_has_selected_item(list_view: QListView):
     return True if list_view.selectedIndexes() else False
 
 
-def get_selected_item_from_list(model_list: QStandardItemModel, list_view: QListView):
+def get_selected_item_from_list(model_list: QStandardItemModel, model_filter: CustomFilterProxyModel,
+                                list_view: QListView):
     selected_indices = list_view.selectedIndexes()
     if selected_indices:
-        return model_list.item(selected_indices[0].row())
+        selected_row = selected_indices[0].row()
+        filter_index = model_filter.index(selected_row, 0)
+        model_index = model_filter.mapToSource(filter_index)
+        return model_list.itemFromIndex(model_index)
 
 
 def delete_item_if_selected(model_list: QStandardItemModel, list_view: QListView):
@@ -55,14 +60,13 @@ def append_item_to_list_view(model_list: QStandardItemModel, list_view: QListVie
 
 
 def get_selected_task(model, layout):
-    if selected_item := get_selected_item_from_list(model.pending_list, layout.pending_listView):
+    if selected_item := get_selected_item_from_list(model.pending_list, model.pending_filter, layout.pending_listView):
         return selected_item
-    elif selected_item := get_selected_item_from_list(model.in_progress_list, layout.inProgress_listView):
+    if selected_item := get_selected_item_from_list(model.in_progress_list, model.in_progress_filter, layout.inProgress_listView):
         return selected_item
-    elif selected_item := get_selected_item_from_list(model.done_list, layout.done_listView):
+    if selected_item := get_selected_item_from_list(model.done_list, model.done_filter, layout.done_listView):
         return selected_item
-    else:
-        return None
+    return None
 
 
 def delete_selected_task(model, layout):
