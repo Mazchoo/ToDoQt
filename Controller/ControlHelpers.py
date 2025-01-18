@@ -5,13 +5,13 @@ from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtCore import QModelIndex
 
 from Models.GlobalParams import LIST_VIEW_TO_STATUS_TYPE
-from Models.PandasTable import PandasModel
+from Models.ProjectTable import ProjectTableModel
 
 from Common.GitCommands import (get_all_uncomitted_files_in_folder,
                                 get_all_unpushed_commits_in_folder)
-from Common.PandasTableLayout import PandasTableView
+from Common.ProjectTableLayout import ProjectTableView
 from Common.FlexibleMagicMock import FlexibleMagicMock
-from Common.CustomProxyFilter import CustomFilterProxyModel
+from Common.ProjectProxyFilter import ProjectFilterProxyModel
 
 import UI.DisplayParameters as DisplayParameters 
 from Controller.UploadGitThread import CURRENT_REPO
@@ -28,12 +28,12 @@ def list_view_has_selected_item(list_view: QListView):
     return True if list_view.selectedIndexes() else False
 
 
-def get_selected_model_index(selected_row: int, model_filter: CustomFilterProxyModel) -> QModelIndex:
+def get_selected_model_index(selected_row: int, model_filter: ProjectFilterProxyModel) -> QModelIndex:
     filter_index = model_filter.index(selected_row, 0)
     return model_filter.mapToSource(filter_index)
 
 
-def get_selected_item_from_list(model_list: QStandardItemModel, model_filter: CustomFilterProxyModel,
+def get_selected_item_from_list(model_list: QStandardItemModel, model_filter: ProjectFilterProxyModel,
                                 list_view: QListView):
     selected_indices = list_view.selectedIndexes()
     if selected_indices:
@@ -41,18 +41,18 @@ def get_selected_item_from_list(model_list: QStandardItemModel, model_filter: Cu
         return model_list.itemFromIndex(model_index)
 
 
-def delete_item_if_selected(model_list: QStandardItemModel, model_filter: CustomFilterProxyModel,
+def delete_item_if_selected(model_list: QStandardItemModel, model_filter: ProjectFilterProxyModel,
                             list_view: QListView):
     selected_indices = list_view.selectedIndexes()
     if selected_indices:
         model_index = get_selected_model_index(selected_indices[0].row(), model_filter).row()
         deleted_item = model_list.takeRow(model_index)[0]
-        list_view.setModel(model_list)
+        list_view.setModel(model_filter)
         return deleted_item
 
 
-def append_item_to_list_view(model_list: QStandardItemModel, list_view: QListView,
-                             new_item: Optional[QStandardItem]) -> Optional[QStandardItem]:
+def append_item_to_list_view(model_list: QStandardItemModel, model_filter: ProjectFilterProxyModel,
+                             list_view: QListView, new_item: Optional[QStandardItem]) -> Optional[QStandardItem]:
     if not new_item:
         return None
 
@@ -61,7 +61,7 @@ def append_item_to_list_view(model_list: QStandardItemModel, list_view: QListVie
         new_item = update_standard_item_fields(new_item, **update_fields)
 
     model_list.appendRow(new_item)
-    list_view.setModel(model_list)
+    list_view.setModel(model_filter)
     return new_item
 
 
@@ -116,7 +116,7 @@ def clear_not_selected(layout, list_view: QListView):
         layout.done_listView.clearSelection()
 
 
-def update_pandas_table_in_layout(view: PandasTableView, new_model: PandasModel):
+def update_pandas_table_in_layout(view: ProjectTableView, new_model: ProjectTableModel):
     view.setModel(new_model)
     view.adjust_size(new_model.rowCount(),
                      DisplayParameters.PROJECT_TABLE_ROW_HEIGHT,
@@ -135,7 +135,7 @@ def replace_table_view_in_layout(controller):
     if isinstance(controller.parent, FlexibleMagicMock):
         projects_view = FlexibleMagicMock()
     else:
-        projects_view = PandasTableView(controller.parent, placeholder.geometry().height())
+        projects_view = ProjectTableView(controller.parent, placeholder.geometry().height())
 
     projects_view.setGeometry(placeholder.geometry())
     controller.parent.layout().replaceWidget(controller.layout.project_tableView, projects_view)
@@ -154,8 +154,10 @@ def not_uploaded_changes_present() -> bool:
                 get_all_unpushed_commits_in_folder("SavedToDo", CURRENT_REPO)])
 
 
-def filter_available_tasks_for_selected_project(model, layout):
-    pass
+def filter_available_tasks_for_selected_project(model, project_id: Optional[int]):
+    model.pending_filter.set_filter_lambda(project_id)
+    model.in_progress_filter.set_filter_lambda(project_id)
+    model.done_filter.set_filter_lambda(project_id)
 
 
 def recalculate_stats_for_current_project(model, layout):

@@ -9,7 +9,7 @@ from UI.DisplayParameters import (PROJECT_TABLE_LEFT_ALGIN_COLUMNS,
                                   PROJECT_TABLE_EDITABLE_COLUMNS)
 
 
-class PandasModel(QAbstractTableModel):
+class ProjectTableModel(QAbstractTableModel):
 
     def __init__(self, data: Optional[List[Project]] = None):
         QAbstractTableModel.__init__(self)
@@ -17,6 +17,15 @@ class PandasModel(QAbstractTableModel):
 
         display_data = [project.display_dict for project in self._data]
         self._df = pd.DataFrame(display_data, columns=PROJECT_FIELDS_TO_DISPLAY.values())
+
+        self._selected_row = None
+
+    @property
+    def selected_row(self) -> Optional[int]:
+        return self._selected_row
+
+    def set_selected_row(self, ind: Optional[int]):
+        self._selected_row = ind
 
     def rowCount(self, _parent=None):
         return self._df.shape[0]
@@ -42,7 +51,7 @@ class PandasModel(QAbstractTableModel):
             return True
 
     def add_project(self, project: Project) -> Self:
-        return PandasModel(self._data + [project])
+        return ProjectTableModel(self._data + [project])
 
     def headerData(self, col, orientation, role):
         if orientation == Qt.Horizontal and role == Qt.DisplayRole:
@@ -56,21 +65,23 @@ class PandasModel(QAbstractTableModel):
             return Qt.ItemIsSelectable | Qt.ItemIsEnabled | Qt.ItemIsEditable
         return Qt.ItemIsSelectable | Qt.ItemIsEnabled
 
-    def get_description_at_ind(self, ind: Optional[int]) -> str:
-        if ind is None or ind >= len(self._data):
+    @property
+    def current_description(self) -> str:
+        if self._selected_row is None or self._selected_row >= len(self._data):
             return ""
-        return self._data[ind].description
+        return self._data[self._selected_row].description
 
-    def set_description_at_ind(self, ind: Optional[int], description: str) -> bool:
-        if ind is None or ind >= len(self._data):
+    def set_current_description(self, description: str) -> bool:
+        if self._selected_row is None or self._selected_row >= len(self._data):
             return False
-        self._data[ind].description = description
+        self._data[self._selected_row].description = description
         return True
 
-    def get_project_id_at_ind(self, ind: Optional[int]) -> Optional[int]:
-        if ind is None or ind >= len(self._data):
+    @property
+    def current_project_id(self) -> Optional[int]:
+        if self._selected_row is None or self._selected_row >= len(self._data):
             return None
-        return self._data[ind].id_number
+        return self._data[self._selected_row].id_number
 
     @property
     def save_dump(self) -> List[dict]:

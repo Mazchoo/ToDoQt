@@ -12,7 +12,7 @@ from Controller.UploadGitThread import UPLOAD_THREAD_SINGLETON
 from Controller.ControlHelpers import (
     get_selected_item_from_list, append_item_to_list_view, get_selected_task,
     delete_selected_task, update_standard_item_fields, not_uploaded_changes_present,
-    update_pandas_table_in_layout
+    update_pandas_table_in_layout, filter_available_tasks_for_selected_project
 )
 
 from Models.TaskEntry import create_new_note, get_date_tuple_now
@@ -34,13 +34,13 @@ def delete_current_item(self, _click):
 @QtControlFunction(True)
 def add_new_task_to_pending(self, _click: bool):
     if (task_name := self.layout.newTask_lineEdit.text()) and \
-       (selected_row := self.layout.project_tableView.selected_row) and \
-       (selected_project_id := self.model.project_list.get_project_id_at_ind(selected_row)):
+       (selected_project_id := self.model.project_list.current_project_id):
 
         new_task = QStandardItem(task_name)
         new_task.setData(create_new_note(task_name, selected_project_id))
 
-        append_item_to_list_view(self.model.pending_list, self.layout.pending_listView, new_task)
+        append_item_to_list_view(self.model.pending_list, self.model.pending_filter,
+                                 self.layout.pending_listView, new_task)
         self.layout.newTask_lineEdit.setText("")
         self.layout.addNewTask_pushButton.setEnabled(False)
         self.layout.backup_pushButton.setEnabled(True)
@@ -186,17 +186,20 @@ def enable_upload_if_uncomitted_changes(self):
 @QtControlFunction(MagicMock())
 def project_row_click(self, clicked_index):
     row = clicked_index.row()
-    self.layout.project_tableView.selected_row = row
+    self.model.project_list.set_selected_row(row)
+    project_id = self.model.project_list.current_project_id
+    filter_available_tasks_for_selected_project(self.model, project_id)
 
     self.layout.deleteProject_pushButton.setEnabled(True)
-    text_descrition = self.model.project_list.get_description_at_ind(row)
+    text_descrition = self.model.project_list.current_description
     self.layout.projectDescription_textEdit.setText(text_descrition)
 
 
 @ClassMethod(ToDoListController)
 @QtControlFunction(MagicMock())
 def project_header_click(self, _clicked_index):
-    self.layout.project_tableView.selected_row = None
+    self.model.project_list.set_selected_row(None)
+    filter_available_tasks_for_selected_project(self.model, None)
     self.layout.project_tableView.clearSelection()
     self.layout.deleteProject_pushButton.setEnabled(False)
     self.layout.projectDescription_textEdit.setText("")
@@ -205,9 +208,8 @@ def project_header_click(self, _clicked_index):
 @ClassMethod(ToDoListController)
 @QtControlFunction()
 def enable_project_save_changes(self):
-    selected_row = self.layout.project_tableView.selected_row
-    if selected_row is not None:
-        old_description = self.model.project_list.get_description_at_ind(selected_row)
+    if self.model.project_list.selected_row:
+        old_description = self.model.project_list.current_description
         description_changed = self.layout.projectDescription_textEdit.toPlainText() != old_description
         self.layout.saveProjectChanges_pushButton.setEnabled(description_changed)
 
@@ -215,10 +217,9 @@ def enable_project_save_changes(self):
 @ClassMethod(ToDoListController)
 @QtControlFunction(True)
 def save_current_project_description(self, _click: bool):
-    selected_row = self.layout.project_tableView.selected_row
-    if selected_row is not None:
+    if self.model.project_list.selected_row:
         description = self.layout.projectDescription_textEdit.toPlainText()
-        self.model.project_list.set_description_at_ind(selected_row, description)
+        self.model.project_list.set_current_description(description)
 
         self.layout.saveProjectChanges_pushButton.setEnabled(False)
         self.layout.backup_pushButton.setEnabled(True)

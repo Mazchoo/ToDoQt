@@ -33,7 +33,7 @@ def drag_move_event(list_view: QListView, event: QDragMoveEvent):
 
 def move_task_list_item(model, layout, target_view: QListView, event: QDropEvent):
 
-    target_model, _ = get_corresponding_model(model, layout, target_view)
+    target_model, target_filter = get_corresponding_model(model, layout, target_view)
     if target_model is None:
         event.ignore()
         return
@@ -48,7 +48,7 @@ def move_task_list_item(model, layout, target_view: QListView, event: QDropEvent
     if move_item is None:
         event.ignore()
         return
-    append_item_to_list_view(target_model, target_view, move_item)
+    append_item_to_list_view(target_model, target_filter, target_view, move_item)
 
     clear_all_selections(layout)
     layout.backup_pushButton.setEnabled(True)

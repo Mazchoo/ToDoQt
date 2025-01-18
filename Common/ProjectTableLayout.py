@@ -2,18 +2,16 @@ import sys
 from typing import Optional, List
 
 from PyQt5.QtWidgets import QApplication, QTableView, QMainWindow, QAbstractItemView
-from Models.PandasTable import PandasModel
+from Models.ProjectTable import ProjectTableModel
 
 
-class PandasTableView(QTableView):
+class ProjectTableView(QTableView):
 
     def __init__(self, parent_window, max_height: int):
         self.parent = parent_window
         self.max_height = max_height
         super().__init__(parent_window)
         self.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
-
-        self.selected_row = None
 
     def adjust_size(self, nr_rows, row_height, col_widths):
         self.set_column_widths(col_widths)
@@ -34,9 +32,9 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
 
     parent_window = QMainWindow()
-    model = PandasModel()
+    model = ProjectTableModel()
 
-    view = PandasTableView(parent_window, 500)
+    view = ProjectTableView(parent_window, 500)
     view.setModel(model)
 
     view.setModel(model)
