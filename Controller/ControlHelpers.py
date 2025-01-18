@@ -1,8 +1,9 @@
 from typing import Optional
+from contextlib import contextmanager
 
 from PyQt5.QtWidgets import QListView
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
-from PyQt5.QtCore import QModelIndex
+from PyQt5.QtCore import QModelIndex, QTime
 
 from Models.GlobalParams import LIST_VIEW_TO_STATUS_TYPE
 from Models.ProjectTable import ProjectTableModel
@@ -167,3 +168,23 @@ def recalculate_stats_for_current_project(model, layout):
 
 def recalculate_stats_for_all_projects(model, layout):
     pass
+
+
+def get_seconds_from_qt_time(time: QTime) -> int:
+    return QTime(0, 0, 0).secsTo(time)
+
+
+def get_qt_time_from_seconds(total_seconds: int) -> QTime:
+    hours = total_seconds // 3600
+    minutes = (total_seconds % 3600) // 60
+    seconds = total_seconds % 60
+    return QTime(hours, minutes, seconds)
+
+
+@contextmanager
+def block_signals(obj):
+    was_blocked = obj.blockSignals(True)  # Block signals and remember previous state
+    try:
+        yield obj
+    finally:
+        obj.blockSignals(was_blocked)  # Restore the previous signal state

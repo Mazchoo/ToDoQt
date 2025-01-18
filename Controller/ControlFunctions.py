@@ -13,7 +13,8 @@ from Controller.UploadGitThread import UPLOAD_THREAD_SINGLETON
 from Controller.ControlHelpers import (
     get_selected_item_from_list, append_item_to_list_view, get_selected_task,
     delete_selected_task, update_standard_item_fields, not_uploaded_changes_present,
-    update_pandas_table_in_layout, filter_available_tasks_for_selected_project
+    update_pandas_table_in_layout, filter_available_tasks_for_selected_project,
+    get_seconds_from_qt_time, get_qt_time_from_seconds, block_signals
 )
 
 from Models.TaskEntry import create_new_note, get_date_tuple_now
@@ -61,13 +62,18 @@ def add_new_project(self, _click: bool):
 
 @ClassMethod(ToDoListController)
 @QtControlFunction(MagicMock())
-def set_text_description(self, selected_item: Optional[QStandardItem]):
+def select_current_task(self, selected_item: Optional[QStandardItem]):
     if selected_item is None:
         return
 
     self.layout.taskDescription_textEdit.setText(selected_item.accessibleDescription())
     self.layout.deleteTask_pushButton.setEnabled(True)
     self.layout.saveTaskChanges_pushButton.setEnabled(False)
+
+    with block_signals(self.layout.timeSpent_timeEdit) as time_spent_spinner:
+        time_spent_spinner.setTime(get_qt_time_from_seconds(selected_item.data()['time_spent_seconds']))
+    with block_signals(self.layout.estimatedTime_timeEdit) as estimate_spinner:
+        estimate_spinner.setTime(get_qt_time_from_seconds(selected_item.data()['estimated_time_seconds']))
 
 
 @ClassMethod(ToDoListController)
@@ -78,7 +84,7 @@ def setFocus_to_pendingView(self, _click: bool):
 
     selected_item = get_selected_item_from_list(self.model.pending_list, self.model.pending_filter,
                                                 self.layout.pending_listView)
-    set_text_description(self, selected_item)
+    select_current_task(self, selected_item)
 
 
 @ClassMethod(ToDoListController)
@@ -89,7 +95,7 @@ def setFocus_to_in_progressView(self, _click: bool):
 
     selected_item = get_selected_item_from_list(self.model.in_progress_list, self.model.in_progress_filter,
                                                 self.layout.inProgress_listView)
-    set_text_description(self, selected_item)
+    select_current_task(self, selected_item)
 
 
 @ClassMethod(ToDoListController)
@@ -100,7 +106,7 @@ def setFocus_to_doneView(self, _click: bool):
 
     selected_item = get_selected_item_from_list(self.model.done_list, self.model.done_filter,
                                                 self.layout.done_listView)
-    set_text_description(self, selected_item)
+    select_current_task(self, selected_item)
 
 
 @ClassMethod(ToDoListController)
@@ -250,15 +256,18 @@ def save_current_project_description(self, _click: bool):
 @QtControlFunction(0.)
 def edit_time_spent_spinner(self, time: QTime):
     if selected_item := get_selected_task(self.model, self.layout):
-        total_seconds = time.hour() * 3600 + time.minute() * 60 + time.second()
+        total_seconds = get_seconds_from_qt_time(time)
         update_standard_item_fields(selected_item, time_spent_seconds=total_seconds)
         self.layout.backup_pushButton.setEnabled(True)
 
 
 @ClassMethod(ToDoListController)
 @QtControlFunction(0.)
-def edit_time_estimate_spinner(self, value: float):
-    pass
+def edit_time_estimate_spinner(self, time: QTime):
+    if selected_item := get_selected_task(self.model, self.layout):
+        total_seconds = get_seconds_from_qt_time(time)
+        update_standard_item_fields(selected_item, estimated_time_seconds=total_seconds)
+        self.layout.backup_pushButton.setEnabled(True)
 
 
 @ClassMethod(ToDoListController)

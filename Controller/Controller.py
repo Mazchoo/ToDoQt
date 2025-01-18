@@ -64,6 +64,7 @@ class ToDoListController(QWidget):
             lambda x: self.save_current_project_description(self, x))
 
         self.layout.timeSpent_timeEdit.timeChanged.connect(lambda x: self.edit_time_spent_spinner(self, x))
+        self.layout.estimatedTime_timeEdit.timeChanged.connect(lambda x: self.edit_time_estimate_spinner(self, x))
 
     @staticmethod
     def initializeModels(self):
