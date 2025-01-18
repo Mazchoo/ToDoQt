@@ -194,6 +194,7 @@ def project_row_click(self, clicked_index):
         filter_available_tasks_for_selected_project(self.model, project_id)
 
         self.layout.saveTaskChanges_pushButton.setEnabled(False)
+        self.layout.delete_pushButton.setEnabled(False)
         self.layout.description_textEdit.setText("")
 
         self.layout.deleteProject_pushButton.setEnabled(True)
