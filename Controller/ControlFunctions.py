@@ -185,14 +185,20 @@ def enable_upload_if_uncomitted_changes(self):
 @ClassMethod(ToDoListController)
 @QtControlFunction(MagicMock())
 def project_row_click(self, clicked_index):
+    prev_project_id = self.model.project_list.current_project_id
     row = clicked_index.row()
     self.model.project_list.set_selected_row(row)
     project_id = self.model.project_list.current_project_id
-    filter_available_tasks_for_selected_project(self.model, project_id)
 
-    self.layout.deleteProject_pushButton.setEnabled(True)
-    text_descrition = self.model.project_list.current_description
-    self.layout.projectDescription_textEdit.setText(text_descrition)
+    if project_id != prev_project_id:
+        filter_available_tasks_for_selected_project(self.model, project_id)
+
+        self.layout.saveTaskChanges_pushButton.setEnabled(False)
+        self.layout.description_textEdit.setText("")
+
+        self.layout.deleteProject_pushButton.setEnabled(True)
+        text_descrition = self.model.project_list.current_description
+        self.layout.projectDescription_textEdit.setText(text_descrition)
 
 
 @ClassMethod(ToDoListController)
