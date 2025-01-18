@@ -48,9 +48,8 @@ class ProjectTableModel(QAbstractTableModel):
                     return Qt.AlignCenter
 
     def setData(self, ind, value, role):
-        if role == Qt.EditRole:
+        if role == Qt.EditRole and self._df.iloc[ind.row(), ind.column() - 1] != value:
             self._df.iloc[ind.row(), ind.column() - 1] = value
-            # ToDo - consider making helper struct
             # Assume deterministic dictionary order
             field_name = list(PROJECT_FIELDS_TO_DISPLAY.keys())[ind.column() - 1]
             self._data[ind.row()].__setattr__(field_name, value)
