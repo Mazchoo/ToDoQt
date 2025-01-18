@@ -3,6 +3,7 @@ from unittest.mock import MagicMock
 from typing import Optional
 
 from PyQt5.QtGui import QStandardItem
+from PyQt5.QtCore import Qt
 
 from Common.ClassMethod import ClassMethod
 from Common.ModelViewController import QtControlFunction
@@ -23,11 +24,11 @@ from Models.ProjectEntry import Project, create_new_project
 @QtControlFunction(True)
 def delete_current_item(self, _click):
     if delete_selected_task(self.model, self.layout):
-        self.layout.description_textEdit.setText("")
+        self.layout.taskDescription_textEdit.setText("")
         self.layout.backup_pushButton.setEnabled(True)
 
         if not get_selected_task(self.model, self.layout):
-            self.layout.delete_pushButton.setEnabled(False)
+            self.layout.deleteTask_pushButton.setEnabled(False)
 
 
 @ClassMethod(ToDoListController)
@@ -64,8 +65,8 @@ def set_text_description(self, selected_item: Optional[QStandardItem]):
     if selected_item is None:
         return
 
-    self.layout.description_textEdit.setText(selected_item.accessibleDescription())
-    self.layout.delete_pushButton.setEnabled(True)
+    self.layout.taskDescription_textEdit.setText(selected_item.accessibleDescription())
+    self.layout.deleteTask_pushButton.setEnabled(True)
     self.layout.saveTaskChanges_pushButton.setEnabled(False)
 
 
@@ -106,7 +107,7 @@ def setFocus_to_doneView(self, _click: bool):
 @QtControlFunction(True)
 def save_current_task_description(self, _click: bool):
     if selected_item := get_selected_task(self.model, self.layout):
-        selected_item.setAccessibleDescription(self.layout.description_textEdit.toPlainText())
+        selected_item.setAccessibleDescription(self.layout.taskDescription_textEdit.toPlainText())
         update_fields = {'description': selected_item.accessibleDescription(),
                          'date_edited': get_date_tuple_now()}
         selected_item = update_standard_item_fields(selected_item, **update_fields)
@@ -158,7 +159,7 @@ def git_push_backups(self, _click: bool):
 def enable_task_save_changes(self):
     if selected_item := get_selected_task(self.model, self.layout):
         old_description = selected_item.accessibleDescription()
-        description_changed = self.layout.description_textEdit.toPlainText() != old_description
+        description_changed = self.layout.taskDescription_textEdit.toPlainText() != old_description
         self.layout.saveTaskChanges_pushButton.setEnabled(description_changed)
 
 
@@ -194,12 +195,19 @@ def project_row_click(self, clicked_index):
         filter_available_tasks_for_selected_project(self.model, project_id)
 
         self.layout.saveTaskChanges_pushButton.setEnabled(False)
-        self.layout.delete_pushButton.setEnabled(False)
-        self.layout.description_textEdit.setText("")
+        self.layout.deleteTask_pushButton.setEnabled(False)
+        self.layout.taskDescription_textEdit.setText("")
 
         self.layout.deleteProject_pushButton.setEnabled(True)
         text_descrition = self.model.project_list.current_description
         self.layout.projectDescription_textEdit.setText(text_descrition)
+
+
+@ClassMethod(ToDoListController)
+@QtControlFunction(MagicMock(), MagicMock(), MagicMock())
+def project_row_edit(self, row, col, roles):
+    if roles and Qt.EditRole in roles:
+        print()
 
 
 @ClassMethod(ToDoListController)

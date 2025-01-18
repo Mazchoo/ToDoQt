@@ -61,7 +61,7 @@
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QTextEdit" name="description_textEdit">
+   <widget class="QTextEdit" name="taskDescription_textEdit">
     <property name="enabled">
      <bool>true</bool>
     </property>
@@ -93,7 +93,7 @@
      <string>Save Changes</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="delete_pushButton">
+   <widget class="QPushButton" name="deleteTask_pushButton">
     <property name="enabled">
      <bool>false</bool>
     </property>

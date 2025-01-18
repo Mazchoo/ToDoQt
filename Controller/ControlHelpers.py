@@ -102,8 +102,8 @@ def clear_all_selections(layout):
     layout.inProgress_listView.clearSelection()
     layout.done_listView.clearSelection()
 
-    layout.description_textEdit.setText("")
-    layout.delete_pushButton.setEnabled(False)
+    layout.taskDescription_textEdit.setText("")
+    layout.deleteTask_pushButton.setEnabled(False)
     layout.saveTaskChanges_pushButton.setEnabled(False)
 
 

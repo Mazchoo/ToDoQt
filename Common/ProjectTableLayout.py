@@ -1,5 +1,5 @@
 import sys
-from typing import Optional, List
+from typing import List
 
 from PyQt5.QtWidgets import QApplication, QTableView, QMainWindow, QAbstractItemView
 from Models.ProjectTable import ProjectTableModel

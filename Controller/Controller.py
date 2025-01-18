@@ -26,7 +26,7 @@ class ToDoListController(QWidget):
         in_progress_list = self.layout.inProgress_listView
         done_list = self.layout.done_listView
 
-        self.layout.delete_pushButton.clicked.connect(lambda x: self.delete_current_item(self, x))
+        self.layout.deleteTask_pushButton.clicked.connect(lambda x: self.delete_current_item(self, x))
         self.layout.close_pushButton.clicked.connect(lambda x: self.close_window(self, x))
 
         pending_list.clicked.connect(lambda x: self.setFocus_to_pendingView(self, x))
@@ -52,7 +52,7 @@ class ToDoListController(QWidget):
                                                                       done_list, e))
 
         self.layout.addNewTask_pushButton.clicked.connect(lambda x: self.add_new_task_to_pending(self, x))
-        self.layout.description_textEdit.textChanged.connect(lambda: self.enable_task_save_changes(self))
+        self.layout.taskDescription_textEdit.textChanged.connect(lambda: self.enable_task_save_changes(self))
         self.layout.newTask_lineEdit.textChanged.connect(lambda: self.enable_add_new_task(self))
         self.layout.saveTaskChanges_pushButton.clicked.connect(
             lambda x: self.save_current_task_description(self, x))
