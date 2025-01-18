@@ -58,7 +58,7 @@ class ToDoListController(QWidget):
             lambda x: self.save_current_task_description(self, x))
 
         self.layout.addNewProject_pushButton.clicked.connect(lambda x: self.add_new_project(self, x))
-        self.layout.projectDescription_textEdit.textChanged.connect(lambda: self.enable_project_save_changes(self))
+        self.layout.projectDescription_textEdit.textChanged.connect(lambda: self.enable_project_save_if_text_changed(self))
         self.layout.newProject_lineEdit.textChanged.connect(lambda: self.enable_add_new_project(self))
         self.layout.saveProjectChanges_pushButton.clicked.connect(
             lambda x: self.save_current_project_description(self, x))
@@ -91,6 +91,7 @@ class ToDoListController(QWidget):
         self.loader_animation.start()
         self.layout.loaderAnimation_label.setVisible(False)
 
+        # Not an elegant solution, but replaces component with custom sub class
         replace_table_view_in_layout(self)
 
         self.enable_upload_if_uncomitted_changes(self)

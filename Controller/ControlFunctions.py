@@ -222,11 +222,17 @@ def project_header_click(self, _clicked_index):
 
 @ClassMethod(ToDoListController)
 @QtControlFunction()
-def enable_project_save_changes(self):
+def enable_project_save_if_text_changed(self):
     if self.model.project_list.selected_row:
         old_description = self.model.project_list.current_description
         description_changed = self.layout.projectDescription_textEdit.toPlainText() != old_description
         self.layout.saveProjectChanges_pushButton.setEnabled(description_changed)
+
+
+@ClassMethod(ToDoListController)
+@QtControlFunction()
+def enable_project_save(self):
+    self.layout.backup_pushButton.setEnabled(True)
 
 
 @ClassMethod(ToDoListController)

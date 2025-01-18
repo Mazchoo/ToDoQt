@@ -147,6 +147,7 @@ def replace_table_view_in_layout(controller):
     projects_view.horizontalHeader().sectionClicked.connect(
         lambda x: controller.project_header_click(controller, x)
     )
+    projects_model.dataUpdated.connect(lambda: controller.enable_project_save(controller))
 
 
 def not_uploaded_changes_present() -> bool:

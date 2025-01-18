@@ -1,7 +1,7 @@
 from typing import Self, Optional, List
 
 import pandas as pd
-from PyQt5.QtCore import QAbstractTableModel, Qt
+from PyQt5.QtCore import QAbstractTableModel, Qt, pyqtSignal
 
 from Models.GlobalParams import PROJECT_FIELDS_TO_DISPLAY
 from Models.ProjectEntry import Project
@@ -11,10 +11,12 @@ from UI.DisplayParameters import (PROJECT_TABLE_LEFT_ALGIN_COLUMNS,
 
 class ProjectTableModel(QAbstractTableModel):
 
+    dataUpdated = pyqtSignal() 
+
     def __init__(self, data: Optional[List[Project]] = None):
         QAbstractTableModel.__init__(self)
-        self._data = data or []
 
+        self._data = data or []
         display_data = [project.display_dict for project in self._data]
         self._df = pd.DataFrame(display_data, columns=PROJECT_FIELDS_TO_DISPLAY.values())
 
@@ -52,7 +54,9 @@ class ProjectTableModel(QAbstractTableModel):
             # Assume deterministic dictionary order
             field_name = list(PROJECT_FIELDS_TO_DISPLAY.keys())[ind.column() - 1]
             self._data[ind.row()].__setattr__(field_name, value)
+            self.dataUpdated.emit()
             return True
+        return False
 
     def add_project(self, project: Project) -> Self:
         return ProjectTableModel(self._data + [project])
