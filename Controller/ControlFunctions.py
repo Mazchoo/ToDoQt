@@ -3,7 +3,7 @@ from unittest.mock import MagicMock
 from typing import Optional
 
 from PyQt5.QtGui import QStandardItem
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QTime
 
 from Common.ClassMethod import ClassMethod
 from Common.ModelViewController import QtControlFunction
@@ -110,7 +110,7 @@ def save_current_task_description(self, _click: bool):
         selected_item.setAccessibleDescription(self.layout.taskDescription_textEdit.toPlainText())
         update_fields = {'description': selected_item.accessibleDescription(),
                          'date_edited': get_date_tuple_now()}
-        selected_item = update_standard_item_fields(selected_item, **update_fields)
+        update_standard_item_fields(selected_item, **update_fields)
 
         self.layout.saveTaskChanges_pushButton.setEnabled(False)
         self.layout.backup_pushButton.setEnabled(True)
@@ -248,8 +248,11 @@ def save_current_project_description(self, _click: bool):
 
 @ClassMethod(ToDoListController)
 @QtControlFunction(0.)
-def edit_time_spent_spinner(self, value: float):
-    pass
+def edit_time_spent_spinner(self, time: QTime):
+    if selected_item := get_selected_task(self.model, self.layout):
+        total_seconds = time.hour() * 3600 + time.minute() * 60 + time.second()
+        update_standard_item_fields(selected_item, time_spent_seconds=total_seconds)
+        self.layout.backup_pushButton.setEnabled(True)
 
 
 @ClassMethod(ToDoListController)
