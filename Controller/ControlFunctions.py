@@ -74,6 +74,8 @@ def select_current_task(self, selected_item: Optional[QStandardItem]):
         time_spent_spinner.setTime(get_qt_time_from_seconds(selected_item.data()['time_spent_seconds']))
     with block_signals(self.layout.estimatedTime_timeEdit) as estimate_spinner:
         estimate_spinner.setTime(get_qt_time_from_seconds(selected_item.data()['estimated_time_seconds']))
+    with block_signals(self.layout.points_spinBox) as points_spinner:
+        points_spinner.setValue(selected_item.data()['points'])
 
 
 @ClassMethod(ToDoListController)
@@ -272,5 +274,7 @@ def edit_time_estimate_spinner(self, time: QTime):
 
 @ClassMethod(ToDoListController)
 @QtControlFunction(0.)
-def edit_points_spinner(self, value: float):
-    pass
+def edit_points_spinner(self, value: int):
+    if selected_item := get_selected_task(self.model, self.layout):
+        update_standard_item_fields(selected_item, points=value)
+        self.layout.backup_pushButton.setEnabled(True)
