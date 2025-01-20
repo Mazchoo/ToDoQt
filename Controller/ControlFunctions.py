@@ -3,7 +3,7 @@ from unittest.mock import MagicMock
 from typing import Optional
 
 from PyQt5.QtGui import QStandardItem
-from PyQt5.QtCore import Qt, QTime
+from PyQt5.QtCore import QTime
 
 from Common.ClassMethod import ClassMethod
 from Common.ModelViewController import QtControlFunction
@@ -212,13 +212,6 @@ def project_row_click(self, clicked_index):
 
 
 @ClassMethod(ToDoListController)
-@QtControlFunction(MagicMock(), MagicMock(), MagicMock())
-def project_row_edit(self, row, col, roles):
-    if roles and Qt.EditRole in roles:
-        print()
-
-
-@ClassMethod(ToDoListController)
 @QtControlFunction(MagicMock())
 def project_header_click(self, _clicked_index):
     self.model.project_list.set_selected_row(None)
@@ -255,21 +248,23 @@ def save_current_project_description(self, _click: bool):
 
 
 @ClassMethod(ToDoListController)
-@QtControlFunction(0.)
+@QtControlFunction(MagicMock())
 def edit_time_spent_spinner(self, time: QTime):
     if selected_item := get_selected_task(self.model, self.layout):
         total_seconds = get_seconds_from_qt_time(time)
         update_standard_item_fields(selected_item, time_spent_seconds=total_seconds)
         self.layout.backup_pushButton.setEnabled(True)
+        recalculate_current_project(self)
 
 
 @ClassMethod(ToDoListController)
-@QtControlFunction(0.)
+@QtControlFunction(MagicMock())
 def edit_time_estimate_spinner(self, time: QTime):
     if selected_item := get_selected_task(self.model, self.layout):
         total_seconds = get_seconds_from_qt_time(time)
         update_standard_item_fields(selected_item, estimated_time_seconds=total_seconds)
         self.layout.backup_pushButton.setEnabled(True)
+        recalculate_current_project(self)
 
 
 @ClassMethod(ToDoListController)
@@ -278,3 +273,52 @@ def edit_points_spinner(self, value: int):
     if selected_item := get_selected_task(self.model, self.layout):
         update_standard_item_fields(selected_item, points=value)
         self.layout.backup_pushButton.setEnabled(True)
+        recalculate_current_project(self)
+
+
+@ClassMethod(ToDoListController)
+@QtControlFunction(0.)
+def recalculate_current_project(self):
+    if project_id := self.model.project_list.current_project_id:
+        hr_spent = 0.
+        for i in range(self.model.pending_list.rowCount()):
+            task_data = self.model.pending_list.item(i, 0).data()
+            if task_data["project_id"] == project_id:
+                hr_spent += task_data["time_spent_seconds"] / 3600
+
+        for i in range(self.model.in_progress_list.rowCount()):
+            task_data = self.model.in_progress_list.item(i, 0).data()
+            if task_data["project_id"] == project_id:
+                hr_spent += task_data["time_spent_seconds"] / 3600
+
+        for i in range(self.model.done_list.rowCount()):
+            task_data = self.model.done_list.item(i, 0).data()
+            if task_data["project_id"] == project_id:
+                hr_spent += task_data["time_spent_seconds"] / 3600
+
+        hr_remain = 0.
+        for i in range(self.model.pending_list.rowCount()):
+            task_data = self.model.pending_list.item(i, 0).data()
+            if task_data["project_id"] == project_id:
+                task_remain = task_data["estimated_time_seconds"] / 3600
+                task_spent = task_data["time_spent_seconds"] / 3600
+                task_diff = task_remain - task_spent
+                remain = task_diff if task_diff > 0 else task_spent * 0.25
+                hr_remain += remain
+
+        for i in range(self.model.in_progress_list.rowCount()):
+            task_data = self.model.in_progress_list.item(i, 0).data()
+            if task_data["project_id"] == project_id:
+                task_remain = task_data["estimated_time_seconds"] / 3600
+                task_spent = task_data["time_spent_seconds"] / 3600
+                task_diff = task_remain - task_spent
+                remain = task_diff if task_diff > 0 else task_spent * 0.25
+                hr_remain += remain
+
+        total_points = 0
+        for i in range(self.model.done_list.rowCount()):
+            task_data = self.model.done_list.item(i, 0).data()
+            if task_data["project_id"] == project_id:
+                total_points += task_data["points"]
+
+        print()

@@ -1,4 +1,4 @@
-from typing import Self, Optional, List
+from typing import Self, Optional, List, Tuple
 
 import pandas as pd
 from PyQt5.QtCore import QAbstractTableModel, Qt, pyqtSignal
@@ -16,6 +16,7 @@ class ProjectTableModel(QAbstractTableModel):
     def __init__(self, data: Optional[List[Project]] = None):
         QAbstractTableModel.__init__(self)
 
+        # These data containers intended to be private and immutable (changing underling data is okay)
         self._data = data or []
         display_data = [project.display_dict for project in self._data]
         self._df = pd.DataFrame(display_data, columns=PROJECT_FIELDS_TO_DISPLAY.values())
@@ -60,6 +61,9 @@ class ProjectTableModel(QAbstractTableModel):
     def add_project(self, project: Project) -> Self:
         return ProjectTableModel(self._data + [project])
 
+    def remove_project(self, project_id: int) -> Self:
+        pass
+
     def headerData(self, col, orientation, role):
         if orientation == Qt.Horizontal and role == Qt.DisplayRole:
             if col == 0:
@@ -93,3 +97,16 @@ class ProjectTableModel(QAbstractTableModel):
     @property
     def save_dump(self) -> List[dict]:
         return [project.model_dump() for project in self._data]
+
+    def _update_data_with_id(self, project_id: Project, **kwargs) -> Optional[Tuple[int, Project]]:
+        for i, project in enumerate(self._data):
+            if project.id_number == project_id:
+                for key, value in kwargs.items():
+                    setattr(project, key, value)
+                return (i, project)
+        return None
+
+    def update_project_data(self, project_id: int, **kwargs):
+        if update_pair := self._update_data_with_id(project_id, **kwargs):
+            i, project = update_pair
+            self._df.iloc[i] = project.display_data

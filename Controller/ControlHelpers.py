@@ -48,7 +48,7 @@ def delete_item_if_selected(model_list: QStandardItemModel, model_filter: Projec
     if selected_indices:
         model_index = get_selected_model_index(selected_indices[0].row(), model_filter).row()
         deleted_item = model_list.takeRow(model_index)[0]
-        list_view.setModel(model_filter)
+        model_filter.invalidateFilter()
         return deleted_item
 
 
@@ -62,7 +62,7 @@ def append_item_to_list_view(model_list: QStandardItemModel, model_filter: Proje
         new_item = update_standard_item_fields(new_item, **update_fields)
 
     model_list.appendRow(new_item)
-    list_view.setModel(model_filter)
+    model_filter.invalidateFilter()
     return new_item
 
 

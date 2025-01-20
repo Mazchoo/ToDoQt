@@ -1,6 +1,5 @@
 
 from typing import Tuple
-import math
 
 from pydantic import BaseModel, field_validator
 
@@ -27,8 +26,8 @@ class Project(BaseModel):
     description: str
     date_created: Tuple[int, int, int, int, int, int, int]
     last_update: Tuple[int, int, int, int, int, int, int]
-    hr_spent: int
-    hr_remain: int
+    hr_spent: float
+    hr_remain: float
     points_gained: int
 
     @field_validator('title')
@@ -42,7 +41,7 @@ class Project(BaseModel):
         if total_hr == 0.:
             return 0.
         else:
-            math.round(self.hr_spent / total_hr * 100, 3)
+            round(self.hr_spent / total_hr * 100, 3)
 
     @property
     def data_formatted(self) -> str:
