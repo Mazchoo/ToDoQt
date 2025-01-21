@@ -107,6 +107,6 @@ class ProjectTableModel(QAbstractTableModel):
         return None
 
     def update_project_data(self, project_id: int, **kwargs):
-        if update_pair := self._update_data_with_id(project_id, **kwargs):
-            i, project = update_pair
-            self._df.iloc[i] = project.display_data
+        if row_id_project := self._update_data_with_id(project_id, **kwargs):
+            i, project = row_id_project
+            self._df.iloc[i] = project.display_dict

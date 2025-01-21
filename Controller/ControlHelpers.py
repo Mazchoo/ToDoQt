@@ -162,12 +162,57 @@ def filter_available_tasks_for_selected_project(model, project_id: Optional[int]
     model.done_filter.set_filter_lambda(project_id)
 
 
-def recalculate_stats_for_current_project(model, layout):
-    pass
+def recalculate_hours_spent(model, project_id):
+    hr_spent = 0.
+    for i in range(model.pending_list.rowCount()):
+        task_data = model.pending_list.item(i, 0).data()
+        if task_data["project_id"] == project_id:
+            hr_spent += task_data["time_spent_seconds"] / 3600
+
+    for i in range(model.in_progress_list.rowCount()):
+        task_data = model.in_progress_list.item(i, 0).data()
+        if task_data["project_id"] == project_id:
+            hr_spent += task_data["time_spent_seconds"] / 3600
+
+    for i in range(model.done_list.rowCount()):
+        task_data = model.done_list.item(i, 0).data()
+        if task_data["project_id"] == project_id:
+            hr_spent += task_data["time_spent_seconds"] / 3600
+
+    return hr_spent
 
 
-def recalculate_stats_for_all_projects(model, layout):
-    pass
+def recalculate_hours_remain(model, project_id):
+    hr_remain = 0.
+    for i in range(model.pending_list.rowCount()):
+        task_data = model.pending_list.item(i, 0).data()
+        if task_data["project_id"] == project_id:
+            task_remain = task_data["estimated_time_seconds"] / 3600
+            task_spent = task_data["time_spent_seconds"] / 3600
+            task_diff = task_remain - task_spent
+            remain = task_diff if task_diff > 0 else task_spent * 0.25
+            hr_remain += remain
+
+    for i in range(model.in_progress_list.rowCount()):
+        task_data = model.in_progress_list.item(i, 0).data()
+        if task_data["project_id"] == project_id:
+            task_remain = task_data["estimated_time_seconds"] / 3600
+            task_spent = task_data["time_spent_seconds"] / 3600
+            task_diff = task_remain - task_spent
+            remain = task_diff if task_diff > 0 else task_spent * 0.25
+            hr_remain += remain
+
+    return hr_remain
+
+
+def recalculate_total_points(model, project_id):
+    total_points = 0
+    for i in range(model.done_list.rowCount()):
+        task_data = model.done_list.item(i, 0).data()
+        if task_data["project_id"] == project_id:
+            total_points += task_data["points"]
+
+    return total_points
 
 
 def get_seconds_from_qt_time(time: QTime) -> int:

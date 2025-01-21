@@ -14,7 +14,8 @@ from Controller.ControlHelpers import (
     get_selected_item_from_list, append_item_to_list_view, get_selected_task,
     delete_selected_task, update_standard_item_fields, not_uploaded_changes_present,
     update_pandas_table_in_layout, filter_available_tasks_for_selected_project,
-    get_seconds_from_qt_time, get_qt_time_from_seconds, block_signals
+    get_seconds_from_qt_time, get_qt_time_from_seconds, block_signals,
+    recalculate_hours_spent, recalculate_hours_remain, recalculate_total_points
 )
 
 from Models.TaskEntry import create_new_note, get_date_tuple_now
@@ -280,45 +281,12 @@ def edit_points_spinner(self, value: int):
 @QtControlFunction(0.)
 def recalculate_current_project(self):
     if project_id := self.model.project_list.current_project_id:
-        hr_spent = 0.
-        for i in range(self.model.pending_list.rowCount()):
-            task_data = self.model.pending_list.item(i, 0).data()
-            if task_data["project_id"] == project_id:
-                hr_spent += task_data["time_spent_seconds"] / 3600
+        self.model.project_list.layoutAboutToBeChanged.emit()
 
-        for i in range(self.model.in_progress_list.rowCount()):
-            task_data = self.model.in_progress_list.item(i, 0).data()
-            if task_data["project_id"] == project_id:
-                hr_spent += task_data["time_spent_seconds"] / 3600
-
-        for i in range(self.model.done_list.rowCount()):
-            task_data = self.model.done_list.item(i, 0).data()
-            if task_data["project_id"] == project_id:
-                hr_spent += task_data["time_spent_seconds"] / 3600
-
-        hr_remain = 0.
-        for i in range(self.model.pending_list.rowCount()):
-            task_data = self.model.pending_list.item(i, 0).data()
-            if task_data["project_id"] == project_id:
-                task_remain = task_data["estimated_time_seconds"] / 3600
-                task_spent = task_data["time_spent_seconds"] / 3600
-                task_diff = task_remain - task_spent
-                remain = task_diff if task_diff > 0 else task_spent * 0.25
-                hr_remain += remain
-
-        for i in range(self.model.in_progress_list.rowCount()):
-            task_data = self.model.in_progress_list.item(i, 0).data()
-            if task_data["project_id"] == project_id:
-                task_remain = task_data["estimated_time_seconds"] / 3600
-                task_spent = task_data["time_spent_seconds"] / 3600
-                task_diff = task_remain - task_spent
-                remain = task_diff if task_diff > 0 else task_spent * 0.25
-                hr_remain += remain
-
-        total_points = 0
-        for i in range(self.model.done_list.rowCount()):
-            task_data = self.model.done_list.item(i, 0).data()
-            if task_data["project_id"] == project_id:
-                total_points += task_data["points"]
-
-        print()
+        update_dict = {
+            "hr_spent": round(recalculate_hours_spent(self.model, project_id), 1),
+            "hr_remain": round(recalculate_hours_remain(self.model, project_id), 1),
+            "points_gained": recalculate_total_points(self.model, project_id)
+        }
+        self.model.project_list.update_project_data(project_id, **update_dict)
+        self.model.project_list.layoutChanged.emit()

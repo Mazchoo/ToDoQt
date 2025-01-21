@@ -41,7 +41,7 @@ class Project(BaseModel):
         if total_hr == 0.:
             return 0.
         else:
-            round(self.hr_spent / total_hr * 100, 3)
+            return round(self.hr_spent / total_hr * 100, 1)
 
     @property
     def data_formatted(self) -> str:
