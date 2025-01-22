@@ -63,6 +63,8 @@ class ToDoListController(QWidget):
         self.layout.estimatedTime_timeEdit.timeChanged.connect(lambda x: self.edit_time_estimate_spinner(self, x))
         self.layout.points_spinBox.valueChanged.connect(lambda x: self.edit_points_spinner(self, x))
 
+        self.model.pending_list.dataChanged.connect(lambda: self.task_title_changed(self))
+
     @staticmethod
     def initializeModels(self):
         self.model.load_from_folder("SavedToDo")

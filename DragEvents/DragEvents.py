@@ -53,5 +53,4 @@ def move_task_list_item(self, target_view: QListView, event: QDropEvent):
     clear_all_selections(self.layout)
     self.layout.backup_pushButton.setEnabled(True)
     self.recalculate_current_project(self)
-    self.update_current_project_date(self)
     event.accept()

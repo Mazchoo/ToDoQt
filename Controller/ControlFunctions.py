@@ -258,6 +258,7 @@ def edit_time_spent_spinner(self, time: QTime):
         total_seconds = get_seconds_from_qt_time(time)
         update_standard_item_fields(selected_item, time_spent_seconds=total_seconds)
         self.layout.backup_pushButton.setEnabled(True)
+        update_current_project_date(self)
         recalculate_current_project(self)
 
 
@@ -313,3 +314,14 @@ def delete_current_project(self, _click: bool):
 
         self.layout.backup_pushButton.setEnabled(True)
         self.layout.deleteProject_pushButton.setEnabled(False)
+
+
+@ClassMethod(ToDoListController)
+@QtControlFunction()
+def task_title_changed(self):
+    if selected_item := get_selected_task(self.model, self.layout):
+        new_title = selected_item.text()
+        if new_title != selected_item.data()["title"]:
+            update_fields = {"title": selected_item.text()}
+            update_standard_item_fields(selected_item, **update_fields)
+            self.layout.backup_pushButton.setEnabled(True)
