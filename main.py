@@ -7,7 +7,6 @@ from UI.ToDoLayout import Ui_ToDoLayout
 from Models.ToDoModel import ToDoModel
 from Controller.ControlFunctions import ToDoListController
 
-# ToDo - Update time on performing action
 # ToDo - Allow editing of task title to persist in saved data
 # ToDo - Allow field to be loaded if it is unexpectedly not encrypted
 # ToDo - Add time recorder for tasks
