@@ -126,9 +126,9 @@ def update_pandas_table_in_layout(view: ProjectTableView, new_model: ProjectTabl
 
 def replace_table_view_in_layout(controller):
     '''
+        Mutates layout of app on the fly, geometry from TableView in UI is inherited new view.
         Take the existing table view component on the UI layout and
         replace it with specialised Pandas Table Layout.
-        Mutates layout of app on the fly, geometry from TableView in UI is inherited new view.
     '''
     placeholder = controller.layout.project_tableView
     projects_model = controller.model.project_list

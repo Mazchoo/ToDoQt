@@ -252,7 +252,7 @@ def save_current_project_description(self, _click: bool):
 
 
 @ClassMethod(ToDoListController)
-@QtControlFunction(MagicMock())
+@QtControlFunction(QTime(0, 0, 0))
 def edit_time_spent_spinner(self, time: QTime):
     if selected_item := get_selected_task(self.model, self.layout):
         total_seconds = get_seconds_from_qt_time(time)
@@ -263,7 +263,7 @@ def edit_time_spent_spinner(self, time: QTime):
 
 
 @ClassMethod(ToDoListController)
-@QtControlFunction(MagicMock())
+@QtControlFunction(QTime(0, 0, 0))
 def edit_time_estimate_spinner(self, time: QTime):
     if selected_item := get_selected_task(self.model, self.layout):
         total_seconds = get_seconds_from_qt_time(time)
@@ -306,7 +306,7 @@ def update_current_project_date(self):
 
 
 @ClassMethod(ToDoListController)
-@QtControlFunction()
+@QtControlFunction(True)
 def delete_current_project(self, _click: bool):
     if new_project_list := self.model.project_list.delete_selected_project():
         self.model.project_list = new_project_list
