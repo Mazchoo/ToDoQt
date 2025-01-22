@@ -31,15 +31,15 @@ def drag_move_event(list_view: QListView, event: QDragMoveEvent):
         event.ignore()
 
 
-def move_task_list_item(model, layout, target_view: QListView, event: QDropEvent):
+def move_task_list_item(self, target_view: QListView, event: QDropEvent):
 
-    target_model, target_filter = get_corresponding_model(model, layout, target_view)
+    target_model, target_filter = get_corresponding_model(self.model, self.layout, target_view)
     if target_model is None:
         event.ignore()
         return
 
     source_view = event.source()
-    source_model, source_filter = get_corresponding_model(model, layout, source_view)
+    source_model, source_filter = get_corresponding_model(self.model, self.layout, source_view)
     if source_model is None:
         event.ignore()
         return
@@ -50,6 +50,7 @@ def move_task_list_item(model, layout, target_view: QListView, event: QDropEvent
         return
     append_item_to_list_view(target_model, target_filter, target_view, move_item)
 
-    clear_all_selections(layout)
-    layout.backup_pushButton.setEnabled(True)
+    clear_all_selections(self.layout)
+    self.layout.backup_pushButton.setEnabled(True)
+    self.recalculate_current_project(self)
     event.accept()

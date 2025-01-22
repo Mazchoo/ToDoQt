@@ -8,7 +8,6 @@ from Models.ToDoModel import ToDoModel
 from Controller.ControlFunctions import ToDoListController
 
 # ToDo - Add delete functionality for projects
-# ToDo - Recalculate stats on moving task
 # ToDo - Udate time on performing action
 # ToDo - Allow editing of task title to persist in saved data
 # ToDo - Allow field to be loaded if it is unexpectedly not encrypted

@@ -38,18 +38,15 @@ class ToDoListController(QWidget):
 
         setattr(pending_list, 'dragEnterEvent', lambda e: enter_task_list_box(self.layout, pending_list, e))
         setattr(pending_list, 'dragMoveEvent', lambda e: drag_move_event(pending_list, e))
-        setattr(pending_list, 'dropEvent', lambda e: move_task_list_item(self.model, self.layout,
-                                                                         pending_list, e))
+        setattr(pending_list, 'dropEvent', lambda e: move_task_list_item(self, pending_list, e))
 
         setattr(in_progress_list, 'dragEnterEvent', lambda e: enter_task_list_box(self.layout, in_progress_list, e))
         setattr(in_progress_list, 'dragMoveEvent', lambda e: drag_move_event(in_progress_list, e))
-        setattr(in_progress_list, 'dropEvent',
-                lambda e: move_task_list_item(self.model, self.layout, in_progress_list, e))
+        setattr(in_progress_list, 'dropEvent', lambda e: move_task_list_item(self, in_progress_list, e))
 
         setattr(done_list, 'dragEnterEvent', lambda e: enter_task_list_box(self.layout, done_list, e))
         setattr(done_list, 'dragMoveEvent', lambda e: drag_move_event(done_list, e))
-        setattr(done_list, 'dropEvent', lambda e: move_task_list_item(self.model, self.layout,
-                                                                      done_list, e))
+        setattr(done_list, 'dropEvent', lambda e: move_task_list_item(self, done_list, e))
 
         self.layout.addNewTask_pushButton.clicked.connect(lambda x: self.add_new_task_to_pending(self, x))
         self.layout.taskDescription_textEdit.textChanged.connect(lambda: self.enable_task_save_changes(self))
