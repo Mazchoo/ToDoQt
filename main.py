@@ -7,10 +7,12 @@ from UI.ToDoLayout import Ui_ToDoLayout
 from Models.ToDoModel import ToDoModel
 from Controller.ControlFunctions import ToDoListController
 
+# ToDo - Add delete functionality for projects
+# ToDo - Recalculate stats on moving task
+# ToDo - Udate time on performing action
 # ToDo - Allow editing of task title to persist in saved data
 # ToDo - Allow field to be loaded if it is unexpectedly not encrypted
 # ToDo - Add time recorder for tasks
-# ToDo - Calculate totals for each project
 # ToDo - Try using markdown for showing and allow editing using text
 # ToDo - Made it so unicode emojis can be saved and loaded in titles
 # ToDo - Disallow editing of an empty note
