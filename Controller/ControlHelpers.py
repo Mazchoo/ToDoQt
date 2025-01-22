@@ -233,3 +233,29 @@ def block_signals(obj):
         yield obj
     finally:
         obj.blockSignals(was_blocked)  # Restore the previous signal state
+
+
+def enable_time_edits(self, selected_item):
+    self.layout.timeSpent_timeEdit.setEnabled(True)
+    self.layout.estimatedTime_timeEdit.setEnabled(True)
+    self.layout.points_spinBox.setEnabled(True)
+
+    with block_signals(self.layout.timeSpent_timeEdit) as time_spent_spinner:
+        time_spent_spinner.setTime(get_qt_time_from_seconds(selected_item.data()['time_spent_seconds']))
+    with block_signals(self.layout.estimatedTime_timeEdit) as estimate_spinner:
+        estimate_spinner.setTime(get_qt_time_from_seconds(selected_item.data()['estimated_time_seconds']))
+    with block_signals(self.layout.points_spinBox) as points_spinner:
+        points_spinner.setValue(selected_item.data()['points'])
+
+
+def disable_time_edits(self):
+    self.layout.timeSpent_timeEdit.setEnabled(False)
+    self.layout.estimatedTime_timeEdit.setEnabled(False)
+    self.layout.points_spinBox.setEnabled(False)
+
+    with block_signals(self.layout.timeSpent_timeEdit) as time_spent_spinner:
+        time_spent_spinner.setTime(QTime(0, 0, 0))
+    with block_signals(self.layout.estimatedTime_timeEdit) as estimate_spinner:
+        estimate_spinner.setTime(QTime(0, 0, 0))
+    with block_signals(self.layout.points_spinBox) as points_spinner:
+        points_spinner.setValue(0)

@@ -385,7 +385,7 @@
    </widget>
    <widget class="QTimeEdit" name="timeSpent_timeEdit">
     <property name="enabled">
-     <bool>true</bool>
+     <bool>false</bool>
     </property>
     <property name="geometry">
      <rect>
@@ -421,7 +421,7 @@
    </widget>
    <widget class="QTimeEdit" name="estimatedTime_timeEdit">
     <property name="enabled">
-     <bool>true</bool>
+     <bool>false</bool>
     </property>
     <property name="geometry">
      <rect>
@@ -443,6 +443,9 @@
     </property>
    </widget>
    <widget class="QSpinBox" name="points_spinBox">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>1750</x>

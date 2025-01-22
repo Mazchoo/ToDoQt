@@ -14,8 +14,8 @@ from Controller.ControlHelpers import (
     get_selected_item_from_list, append_item_to_list_view, get_selected_task,
     delete_selected_task, update_standard_item_fields, not_uploaded_changes_present,
     update_pandas_table_in_layout, filter_available_tasks_for_selected_project,
-    get_seconds_from_qt_time, get_qt_time_from_seconds, block_signals,
-    recalculate_hours_spent, recalculate_hours_remain, recalculate_total_points
+    get_seconds_from_qt_time, enable_time_edits, disable_time_edits,
+    recalculate_hours_spent, recalculate_hours_remain, recalculate_total_points,
 )
 
 from Models.TaskEntry import create_new_note, get_date_tuple_now
@@ -71,12 +71,7 @@ def select_current_task(self, selected_item: Optional[QStandardItem]):
     self.layout.deleteTask_pushButton.setEnabled(True)
     self.layout.saveTaskChanges_pushButton.setEnabled(False)
 
-    with block_signals(self.layout.timeSpent_timeEdit) as time_spent_spinner:
-        time_spent_spinner.setTime(get_qt_time_from_seconds(selected_item.data()['time_spent_seconds']))
-    with block_signals(self.layout.estimatedTime_timeEdit) as estimate_spinner:
-        estimate_spinner.setTime(get_qt_time_from_seconds(selected_item.data()['estimated_time_seconds']))
-    with block_signals(self.layout.points_spinBox) as points_spinner:
-        points_spinner.setValue(selected_item.data()['points'])
+    enable_time_edits(self, selected_item)
 
 
 @ClassMethod(ToDoListController)
@@ -206,6 +201,7 @@ def project_row_click(self, clicked_index):
         self.layout.saveTaskChanges_pushButton.setEnabled(False)
         self.layout.deleteTask_pushButton.setEnabled(False)
         self.layout.taskDescription_textEdit.setText("")
+        disable_time_edits(self)
 
         self.layout.deleteProject_pushButton.setEnabled(True)
         text_descrition = self.model.project_list.current_description
@@ -217,6 +213,12 @@ def project_row_click(self, clicked_index):
 def project_header_click(self, _clicked_index):
     self.model.project_list.set_selected_row(None)
     filter_available_tasks_for_selected_project(self.model, None)
+
+    self.layout.saveTaskChanges_pushButton.setEnabled(False)
+    self.layout.deleteTask_pushButton.setEnabled(False)
+    self.layout.taskDescription_textEdit.setText("")
+    disable_time_edits(self)
+
     self.layout.project_tableView.clearSelection()
     self.layout.deleteProject_pushButton.setEnabled(False)
     self.layout.projectDescription_textEdit.setText("")

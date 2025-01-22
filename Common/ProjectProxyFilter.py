@@ -12,7 +12,7 @@ class ProjectFilterProxyModel(QSortFilterProxyModel):
         if project_id is not None:
             self.filter_lambda = lambda x: x.data()['project_id'] == project_id
         else:
-            project_id = None
+            self.filter_lambda = None
         self.invalidateFilter()
 
     def filterAcceptsRow(self, source_row, source_parent):
