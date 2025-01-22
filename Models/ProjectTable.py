@@ -61,8 +61,13 @@ class ProjectTableModel(QAbstractTableModel):
     def add_project(self, project: Project) -> Self:
         return ProjectTableModel(self._data + [project])
 
-    def remove_project(self, project_id: int) -> Self:
-        pass
+    def delete_selected_project(self) -> Optional[Self]:
+        if self._selected_row is None or self._selected_row >= len(self._data):
+            return None
+
+        new_data = self._data.copy()
+        new_data.pop(self._selected_row)
+        return ProjectTableModel(new_data)
 
     def headerData(self, col, orientation, role):
         if orientation == Qt.Horizontal and role == Qt.DisplayRole:

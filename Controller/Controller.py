@@ -51,14 +51,13 @@ class ToDoListController(QWidget):
         self.layout.addNewTask_pushButton.clicked.connect(lambda x: self.add_new_task_to_pending(self, x))
         self.layout.taskDescription_textEdit.textChanged.connect(lambda: self.enable_task_save_changes(self))
         self.layout.newTask_lineEdit.textChanged.connect(lambda: self.enable_add_new_task(self))
-        self.layout.saveTaskChanges_pushButton.clicked.connect(
-            lambda x: self.save_current_task_description(self, x))
+        self.layout.saveTaskChanges_pushButton.clicked.connect(lambda x: self.save_current_task_description(self, x))
 
         self.layout.addNewProject_pushButton.clicked.connect(lambda x: self.add_new_project(self, x))
         self.layout.projectDescription_textEdit.textChanged.connect(lambda: self.enable_project_save_if_text_changed(self))
         self.layout.newProject_lineEdit.textChanged.connect(lambda: self.enable_add_new_project(self))
-        self.layout.saveProjectChanges_pushButton.clicked.connect(
-            lambda x: self.save_current_project_description(self, x))
+        self.layout.saveProjectChanges_pushButton.clicked.connect(lambda x: self.save_current_project_description(self, x))
+        self.layout.deleteProject_pushButton.clicked.connect(lambda x: self.delete_current_project(self, x))
 
         self.layout.timeSpent_timeEdit.timeChanged.connect(lambda x: self.edit_time_spent_spinner(self, x))
         self.layout.estimatedTime_timeEdit.timeChanged.connect(lambda x: self.edit_time_estimate_spinner(self, x))

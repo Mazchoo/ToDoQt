@@ -278,7 +278,7 @@ def edit_points_spinner(self, value: int):
 
 
 @ClassMethod(ToDoListController)
-@QtControlFunction(0.)
+@QtControlFunction()
 def recalculate_current_project(self):
     if project_id := self.model.project_list.current_project_id:
         self.model.project_list.layoutAboutToBeChanged.emit()
@@ -290,3 +290,14 @@ def recalculate_current_project(self):
         }
         self.model.project_list.update_project_data(project_id, **update_dict)
         self.model.project_list.layoutChanged.emit()
+
+
+@ClassMethod(ToDoListController)
+@QtControlFunction()
+def delete_current_project(self, _click: bool):
+    if new_project_list := self.model.project_list.delete_selected_project():
+        self.model.project_list = new_project_list
+        update_pandas_table_in_layout(self.layout.project_tableView, self.model.project_list)
+
+        self.layout.backup_pushButton.setEnabled(True)
+        self.layout.deleteProject_pushButton.setEnabled(False)
