@@ -228,11 +228,20 @@ def get_qt_time_from_seconds(total_seconds: int) -> QTime:
 
 @contextmanager
 def block_signals(obj):
-    was_blocked = obj.blockSignals(True)  # Block signals and remember previous state
+    was_blocked = obj.blockSignals(True)
     try:
         yield obj
     finally:
-        obj.blockSignals(was_blocked)  # Restore the previous signal state
+        obj.blockSignals(was_blocked)
+
+
+@contextmanager
+def execute_layout_change(obj):
+    obj.layoutAboutToBeChanged.emit()
+    try:
+        yield
+    finally:
+        obj.layoutChanged.emit()
 
 
 def enable_time_edits(self, selected_item):

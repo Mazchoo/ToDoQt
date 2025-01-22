@@ -16,6 +16,7 @@ from Controller.ControlHelpers import (
     update_pandas_table_in_layout, filter_available_tasks_for_selected_project,
     get_seconds_from_qt_time, enable_time_edits, disable_time_edits,
     recalculate_hours_spent, recalculate_hours_remain, recalculate_total_points,
+    execute_layout_change
 )
 
 from Models.TaskEntry import create_new_note, get_date_tuple_now
@@ -283,15 +284,24 @@ def edit_points_spinner(self, value: int):
 @QtControlFunction()
 def recalculate_current_project(self):
     if project_id := self.model.project_list.current_project_id:
-        self.model.project_list.layoutAboutToBeChanged.emit()
+        with execute_layout_change(self.model.project_list):
+            update_dict = {
+                "hr_spent": round(recalculate_hours_spent(self.model, project_id), 1),
+                "hr_remain": round(recalculate_hours_remain(self.model, project_id), 1),
+                "points_gained": recalculate_total_points(self.model, project_id)
+            }
+            self.model.project_list.update_project_data(project_id, **update_dict)
 
-        update_dict = {
-            "hr_spent": round(recalculate_hours_spent(self.model, project_id), 1),
-            "hr_remain": round(recalculate_hours_remain(self.model, project_id), 1),
-            "points_gained": recalculate_total_points(self.model, project_id)
-        }
-        self.model.project_list.update_project_data(project_id, **update_dict)
-        self.model.project_list.layoutChanged.emit()
+
+@ClassMethod(ToDoListController)
+@QtControlFunction()
+def update_current_project_date(self):
+    if project_id := self.model.project_list.current_project_id:
+        with execute_layout_change(self.model.project_list):
+            update_dict = {
+                "last_update": get_date_tuple_now(),
+            }
+            self.model.project_list.update_project_data(project_id, **update_dict)
 
 
 @ClassMethod(ToDoListController)
