@@ -199,6 +199,7 @@ def project_row_click(self, clicked_index):
     if project_id != prev_project_id:
         filter_available_tasks_for_selected_project(self.model, project_id)
 
+        self.layout.newTask_lineEdit.setEnabled(True)
         self.layout.saveTaskChanges_pushButton.setEnabled(False)
         self.layout.deleteTask_pushButton.setEnabled(False)
         self.layout.taskDescription_textEdit.setText("")
@@ -215,6 +216,7 @@ def project_header_click(self, _clicked_index):
     self.model.project_list.set_selected_row(None)
     filter_available_tasks_for_selected_project(self.model, None)
 
+    self.layout.newTask_lineEdit.setEnabled(False)
     self.layout.saveTaskChanges_pushButton.setEnabled(False)
     self.layout.deleteTask_pushButton.setEnabled(False)
     self.layout.taskDescription_textEdit.setText("")

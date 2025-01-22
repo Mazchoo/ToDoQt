@@ -25,6 +25,7 @@ class Ui_ToDoLayout(object):
         self.addNewTask_pushButton.setGeometry(QtCore.QRect(1150, 5, 151, 41))
         self.addNewTask_pushButton.setObjectName("addNewTask_pushButton")
         self.newTask_lineEdit = QtWidgets.QLineEdit(self.centralwidget)
+        self.newTask_lineEdit.setEnabled(False)
         self.newTask_lineEdit.setGeometry(QtCore.QRect(810, 10, 331, 31))
         self.newTask_lineEdit.setMaxLength(30)
         self.newTask_lineEdit.setAlignment(QtCore.Qt.AlignCenter)

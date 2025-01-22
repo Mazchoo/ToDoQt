@@ -46,6 +46,9 @@
     </property>
    </widget>
    <widget class="QLineEdit" name="newTask_lineEdit">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>810</x>
