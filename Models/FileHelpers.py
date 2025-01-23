@@ -38,8 +38,8 @@ def convert_list_to_task_data(model_list: QStandardItemModel):
 def try_decrypting_note(note_data: dict, file_name: Path, encrypt_fields: set, eval_fields: set):
     try:
         decrypted_note = decrypt_json_dict(note_data, file_name, encrypt_fields, eval_fields)
-    except Exception:
-        print("Error! Decryption failed")
+    except Exception as e:
+        print(f"Error! Decryption failed {e}")
         return None
     else:
         return decrypted_note

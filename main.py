@@ -7,9 +7,8 @@ from UI.ToDoLayout import Ui_ToDoLayout
 from Models.ToDoModel import ToDoModel
 from Controller.ControlFunctions import ToDoListController
 
-# ToDo - Allow field to be loaded if it is unexpectedly not encrypted
-# ToDo - Add time recorder for tasks
 # ToDo - Try using markdown for showing and allow editing using text
+# ToDo - Add time recorder for tasks
 # ToDo - Made it so unicode emojis can be saved and loaded in titles
 # ToDo - Disallow editing of an empty note
 

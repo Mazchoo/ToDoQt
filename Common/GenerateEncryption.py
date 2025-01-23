@@ -1,6 +1,8 @@
-from cryptography.fernet import Fernet
+from typing import Any
 from pathlib import Path
 from os import mkdir
+
+from cryptography.fernet import Fernet
 
 
 def save_encryption_key_to_disk(key_file_name: Path, key: bytes):
@@ -67,10 +69,15 @@ def format_decrypted_string(decrypted_string: str):
     return decrypted_string.replace('\\n', '\n').replace('\\t', '\t')
 
 
-def fernet_decrypt_string(fernet: Fernet, cipher_text: str):
+def fernet_decrypt_string(fernet: Fernet, cipher_text: Any):
+    if not isinstance(cipher_text, str):
+        print("Non encrypted field trying to be decrypted")
+        return cipher_text
+
     byte_cipher = eval(cipher_text)
     if not isinstance(byte_cipher, bytes):
-        raise AttributeError(f"Object is not bytes {cipher_text}")
+        print("String that is not byte string trying to be decrypted")
+        return byte_cipher
 
     decrypted_string = str(fernet.decrypt(byte_cipher))
     return format_decrypted_string(decrypted_string)
