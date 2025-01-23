@@ -33,7 +33,7 @@ class MarkdownFocusHandler(QObject):
                 self.text_edit.setPlainText(self.raw_markdown)
                 self._is_being_edited = True
             elif event.type() == QEvent.FocusOut:
-                self.render_markdown()
                 self._is_being_edited = False
+                self.render_markdown()
 
         return super().eventFilter(obj, event)

@@ -66,7 +66,7 @@
    </widget>
    <widget class="QTextEdit" name="taskDescription_textEdit">
     <property name="enabled">
-     <bool>true</bool>
+     <bool>false</bool>
     </property>
     <property name="geometry">
      <rect>
@@ -343,7 +343,7 @@
    </widget>
    <widget class="QTextEdit" name="projectDescription_textEdit">
     <property name="enabled">
-     <bool>true</bool>
+     <bool>false</bool>
     </property>
     <property name="geometry">
      <rect>
