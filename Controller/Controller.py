@@ -8,7 +8,8 @@ from Common.QtHelpers import setWindowIcon
 from Common.ModelViewController import CreateQtController
 from Controller.ControlHelpers import replace_table_view_in_layout
 
-from DragEvents.DragEvents import enter_task_list_box, drag_move_event, move_task_list_item
+from Events.DragEvents import enter_task_list_box, drag_move_event, move_task_list_item
+from Events.MarkdownEvents import MarkdownFocusHandler
 
 
 @CreateQtController  # initialise with window, model, layout
@@ -49,7 +50,7 @@ class ToDoListController(QWidget):
         setattr(done_list, 'dropEvent', lambda e: move_task_list_item(self, done_list, e))
 
         self.layout.addNewTask_pushButton.clicked.connect(lambda x: self.add_new_task_to_pending(self, x))
-        self.layout.taskDescription_textEdit.textChanged.connect(lambda: self.enable_task_save_changes(self))
+        self.layout.taskDescription_textEdit.textChanged.connect(lambda: self.enable_task_save_changes_if_text_changed(self))
         self.layout.newTask_lineEdit.textChanged.connect(lambda: self.enable_add_new_task(self))
         self.layout.saveTaskChanges_pushButton.clicked.connect(lambda x: self.save_current_task_description(self, x))
 
@@ -64,6 +65,9 @@ class ToDoListController(QWidget):
         self.layout.points_spinBox.valueChanged.connect(lambda x: self.edit_points_spinner(self, x))
 
         self.model.pending_list.dataChanged.connect(lambda: self.task_title_changed(self))
+
+        self.task_description_handler = MarkdownFocusHandler(self.layout.taskDescription_textEdit)
+        self.project_description_handler = MarkdownFocusHandler(self.layout.projectDescription_textEdit)
 
     @staticmethod
     def initializeModels(self):

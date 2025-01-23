@@ -69,6 +69,7 @@ def select_current_task(self, selected_item: Optional[QStandardItem]):
         return
 
     self.layout.taskDescription_textEdit.setText(selected_item.accessibleDescription())
+    self.task_description_handler.render_markdown()
     self.layout.deleteTask_pushButton.setEnabled(True)
     self.layout.saveTaskChanges_pushButton.setEnabled(False)
 
@@ -161,10 +162,10 @@ def git_push_backups(self, _click: bool):
 
 @ClassMethod(ToDoListController)
 @QtControlFunction()
-def enable_task_save_changes(self):
-    if selected_item := get_selected_task(self.model, self.layout):
+def enable_task_save_changes_if_text_changed(self):
+    if (selected_item := get_selected_task(self.model, self.layout)) and self.task_description_handler.is_editing:
         old_description = selected_item.accessibleDescription()
-        description_changed = self.layout.taskDescription_textEdit.toPlainText() != old_description
+        description_changed = self.task_description_handler.raw_markdown != old_description
         self.layout.saveTaskChanges_pushButton.setEnabled(description_changed)
 
 
@@ -205,9 +206,13 @@ def project_row_click(self, clicked_index):
         self.layout.taskDescription_textEdit.setText("")
         disable_time_edits(self)
 
+        self.layout.saveProjectChanges_pushButton.setEnabled(False)
+        self.project_description_handler.stop_editing()
+
         self.layout.deleteProject_pushButton.setEnabled(True)
         text_descrition = self.model.project_list.current_description
         self.layout.projectDescription_textEdit.setText(text_descrition)
+        self.project_description_handler.render_markdown()
 
 
 @ClassMethod(ToDoListController)
@@ -230,7 +235,7 @@ def project_header_click(self, _clicked_index):
 @ClassMethod(ToDoListController)
 @QtControlFunction()
 def enable_project_save_if_text_changed(self):
-    if self.model.project_list.selected_row:
+    if self.model.project_list.selected_row is not None and self.project_description_handler.is_editing:
         old_description = self.model.project_list.current_description
         description_changed = self.layout.projectDescription_textEdit.toPlainText() != old_description
         self.layout.saveProjectChanges_pushButton.setEnabled(description_changed)
@@ -245,8 +250,8 @@ def enable_project_save(self):
 @ClassMethod(ToDoListController)
 @QtControlFunction(True)
 def save_current_project_description(self, _click: bool):
-    if self.model.project_list.selected_row:
-        description = self.layout.projectDescription_textEdit.toPlainText()
+    if self.model.project_list.selected_row is not None:
+        description = self.project_description_handler.raw_markdown
         self.model.project_list.set_current_description(description)
 
         self.layout.saveProjectChanges_pushButton.setEnabled(False)
