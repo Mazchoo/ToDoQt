@@ -10,6 +10,7 @@ from Controller.ControlHelpers import replace_table_view_in_layout
 
 from Events.DragEvents import enter_task_list_box, drag_move_event, move_task_list_item
 from Events.MarkdownEvents import MarkdownFocusHandler
+from Events.TimerEvents import TimerEvents
 
 
 @CreateQtController  # initialise with window, model, layout
@@ -68,6 +69,9 @@ class ToDoListController(QWidget):
 
         self.task_description_handler = MarkdownFocusHandler(self.layout.taskDescription_textEdit)
         self.project_description_handler = MarkdownFocusHandler(self.layout.projectDescription_textEdit)
+
+        self.timer = TimerEvents(self.layout.timeSpent_timeEdit)
+        self.layout.recordingTime_pushButton.clicked.connect(lambda x: self.toggle_record_time(self, x))
 
     @staticmethod
     def initializeModels(self):

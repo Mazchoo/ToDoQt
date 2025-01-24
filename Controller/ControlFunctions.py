@@ -22,6 +22,8 @@ from Controller.ControlHelpers import (
 from Models.TaskEntry import create_new_note, get_date_tuple_now
 from Models.ProjectEntry import Project, create_new_project
 
+from Common.QtHelpers import loadQss
+
 
 @ClassMethod(ToDoListController)
 @QtControlFunction(True)
@@ -338,3 +340,13 @@ def task_title_changed(self):
             update_fields = {"title": selected_item.text()}
             update_standard_item_fields(selected_item, **update_fields)
             self.layout.backup_pushButton.setEnabled(True)
+
+
+@ClassMethod(ToDoListController)
+@QtControlFunction(True)
+def toggle_record_time(self, _click: bool):
+    is_recording = self.timer.toggle_recording()
+    if is_recording:
+        loadQss(self.layout.recordingTime_pushButton, "Resources/QSS/RecordingButton.qss")
+    else:
+        loadQss(self.layout.recordingTime_pushButton, "Resources/QSS/NormalButton.qss")

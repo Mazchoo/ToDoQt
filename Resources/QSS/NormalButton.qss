@@ -1,0 +1,30 @@
+QPushButton
+{
+	background-color: #5c55e9;
+	color: #fff;
+	font-size: 16px;
+	font-weight: bold;
+	border-top-right-radius: 15px;
+	border-top-left-radius: 0px;
+	border-bottom-right-radius: 0px;
+	border-bottom-left-radius: 15px;
+	padding: 10px;
+	font-family:'Consolas';
+}
+
+QPushButton::disabled
+{
+	background-color: #5c5c5c;
+}
+
+
+QPushButton::hover
+{
+	background-color: #5564f2;
+}
+
+
+QPushButton::pressed
+{
+	background-color: #3d4ef2;
+}

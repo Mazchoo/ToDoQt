@@ -4,12 +4,17 @@ from PyQt5.QtGui import QIcon
 from pyqss import Qss as QssEditor
 
 CWD = os.getcwd()
+QSS_CACHE = {}
 
 
-def loadQss(app, file_name):
-    with open(f"{CWD}/{file_name}", 'r') as f:
-        qss = f.read()
-        app.setStyleSheet(qss)
+def loadQss(component, file_name):
+    path = f"{CWD}/{file_name}"
+
+    if path not in QSS_CACHE:
+        with open(path, 'r') as f:
+            QSS_CACHE[path] = f.read()
+
+    component.setStyleSheet(QSS_CACHE[path])
 
 
 def setWindowIcon(widget, file_name):

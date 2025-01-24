@@ -5,7 +5,7 @@ from pathlib import Path
 from PyQt5.QtGui import QStandardItemModel
 
 from Common.QtModel import QtStaticModel
-from Common.ProjectProxyFilter import ProjectFilterProxyModel
+from Models.ProjectProxyFilter import ProjectFilterProxyModel
 
 from Models.GlobalParams import (TASK_FIELDS_APPLY_EVAL, TASK_FIELDS_TO_ENCRYPT,
                                  PROJECT_FIELDS_APPLY_EVAL, PROJECT_FIELDS_TO_ENCRYPT,

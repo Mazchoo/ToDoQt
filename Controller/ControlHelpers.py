@@ -7,12 +7,13 @@ from PyQt5.QtCore import QModelIndex, QTime
 
 from Models.GlobalParams import LIST_VIEW_TO_STATUS_TYPE
 from Models.ProjectTable import ProjectTableModel
+from Models.ProjectProxyFilter import ProjectFilterProxyModel
 
 from Common.GitCommands import (get_all_uncomitted_files_in_folder,
                                 get_all_unpushed_commits_in_folder)
 from Common.ProjectTableLayout import ProjectTableView
 from Common.FlexibleMagicMock import FlexibleMagicMock
-from Common.ProjectProxyFilter import ProjectFilterProxyModel
+from Common.QtHelpers import loadQss
 
 import UI.DisplayParameters as DisplayParameters 
 from Controller.UploadGitThread import CURRENT_REPO
@@ -239,7 +240,7 @@ def block_signals(obj):
 def execute_layout_change(obj):
     obj.layoutAboutToBeChanged.emit()
     try:
-        yield
+        yield obj
     finally:
         obj.layoutChanged.emit()
 
@@ -248,6 +249,9 @@ def enable_time_edits(self, selected_item):
     self.layout.timeSpent_timeEdit.setEnabled(True)
     self.layout.estimatedTime_timeEdit.setEnabled(True)
     self.layout.points_spinBox.setEnabled(True)
+    self.layout.recordingTime_pushButton.setEnabled(True)
+    self.timer.stop_recording()
+    loadQss(self.layout.recordingTime_pushButton, "Resources/QSS/NormalButton.qss")
 
     with block_signals(self.layout.timeSpent_timeEdit) as time_spent_spinner:
         time_spent_spinner.setTime(get_qt_time_from_seconds(selected_item.data()['time_spent_seconds']))
@@ -261,6 +265,9 @@ def disable_time_edits(self):
     self.layout.timeSpent_timeEdit.setEnabled(False)
     self.layout.estimatedTime_timeEdit.setEnabled(False)
     self.layout.points_spinBox.setEnabled(False)
+    self.layout.recordingTime_pushButton.setEnabled(False)
+    self.timer.stop_recording()
+    loadQss(self.layout.recordingTime_pushButton, "Resources/QSS/NormalButton.qss")
 
     with block_signals(self.layout.timeSpent_timeEdit) as time_spent_spinner:
         time_spent_spinner.setTime(QTime(0, 0, 0))

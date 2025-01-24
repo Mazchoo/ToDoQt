@@ -7,8 +7,6 @@ from UI.ToDoLayout import Ui_ToDoLayout
 from Models.ToDoModel import ToDoModel
 from Controller.ControlFunctions import ToDoListController
 
-# ToDo - Add time recorder for tasks
-
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
