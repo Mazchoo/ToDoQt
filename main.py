@@ -7,7 +7,6 @@ from UI.ToDoLayout import Ui_ToDoLayout
 from Models.ToDoModel import ToDoModel
 from Controller.ControlFunctions import ToDoListController
 
-# ToDo - Made it so unicode emojis can be saved and loaded in titles
 # ToDo - Add time recorder for tasks
 
 

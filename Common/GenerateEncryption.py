@@ -83,6 +83,13 @@ def fernet_decrypt_string(fernet: Fernet, cipher_text: Any):
     return format_decrypted_string(decrypted_string)
 
 
+def parse_field(decrpyted_value: str, key: str, eval_fields: set):
+    output = eval(decrpyted_value) if key in eval_fields else decrpyted_value
+    if isinstance(output, str):
+        output = bytes(output, 'utf-8').decode('unicode-escape').encode("latin1").decode("utf-8")
+    return output
+
+
 def decrypt_json_dict(json_dict: dict, key_file_name: Path, fields: set = (), eval_fields: set = ()):
 
     if not key_file_name.exists():
@@ -93,6 +100,6 @@ def decrypt_json_dict(json_dict: dict, key_file_name: Path, fields: set = (), ev
     output_dict = {}
     for key, value in json_dict.items():
         decrpyted_value = fernet_decrypt_string(fernet, value) if key in fields else value
-        output_dict[key] = eval(decrpyted_value) if key in eval_fields else decrpyted_value
+        output_dict[key] = parse_field(decrpyted_value, key, eval_fields)
 
     return output_dict
