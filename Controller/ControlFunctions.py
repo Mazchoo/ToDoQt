@@ -35,6 +35,8 @@ def delete_current_item(self, _click: bool):
         if not get_selected_task(self.model, self.layout):
             self.layout.deleteTask_pushButton.setEnabled(False)
 
+        recalculate_current_project(self)
+
 
 @ClassMethod(ToDoListController)
 @QtControlFunction(True)
