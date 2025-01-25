@@ -36,6 +36,7 @@ def delete_current_item(self, _click: bool):
             self.layout.deleteTask_pushButton.setEnabled(False)
 
         recalculate_current_project(self)
+        disable_time_edits(self)
 
 
 @ClassMethod(ToDoListController)
