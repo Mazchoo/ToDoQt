@@ -1,3 +1,3 @@
 @echo off
 cmd /c powershell -Nop -NonI -Nologo -WindowStyle Hidden "Write-Host"
-"venv/Scripts/pythonw.exe" "BasicToDoList.py"
+"venv/Scripts/pythonw.exe" "main.py"
