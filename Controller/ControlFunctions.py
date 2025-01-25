@@ -60,6 +60,7 @@ def add_new_task_to_pending(self, _click: bool):
 @QtControlFunction(True)
 def add_new_project(self, _click: bool):
     if project_name := self.layout.newProject_lineEdit.text():
+        # ToDo - Handle pydantic schema check failure
         new_project = Project(**create_new_project(project_name))
         self.model.project_list = self.model.project_list.add_project(new_project)
         update_pandas_table_in_layout(self.layout.project_tableView, self.model.project_list)
