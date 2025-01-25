@@ -88,6 +88,21 @@ def delete_selected_task(model, layout):
         return None
 
 
+def delete_items_with_project_id(model_list: QStandardItemModel, model_filter: ProjectFilterProxyModel,
+                                 project_id: int):
+    for row in range(model_list.rowCount() - 1, -1, -1):
+        if (item := model_list.item(row, 0)) and item.data()["project_id"] == project_id:
+            model_list.removeRow(row)
+
+    model_filter.invalidateFilter()
+
+
+def delete_all_items_with_project_id(model, project_id):
+    delete_items_with_project_id(model.pending_list, model.pending_filter, project_id)
+    delete_items_with_project_id(model.in_progress_list, model.in_progress_filter, project_id)
+    delete_items_with_project_id(model.done_list, model.done_filter, project_id)
+
+
 def get_corresponding_model(model, layout, list_view: QListView):
     if layout.inProgress_listView == list_view:
         return model.in_progress_list, model.in_progress_filter

@@ -16,7 +16,7 @@ from Controller.ControlHelpers import (
     update_pandas_table_in_layout, filter_available_tasks_for_selected_project,
     get_seconds_from_qt_time, enable_time_edits, disable_time_edits,
     recalculate_hours_spent, recalculate_hours_remain, recalculate_total_points,
-    execute_layout_change
+    execute_layout_change, delete_all_items_with_project_id
 )
 
 from Models.TaskEntry import create_new_note, get_date_tuple_now
@@ -323,12 +323,27 @@ def update_current_project_date(self):
 @ClassMethod(ToDoListController)
 @QtControlFunction(True)
 def delete_current_project(self, _click: bool):
-    if new_project_list := self.model.project_list.delete_selected_project():
+    if (project_id := self.model.project_list.current_project_id) and \
+       (new_project_list := self.model.project_list.delete_selected_project()):
+
         self.model.project_list = new_project_list
         update_pandas_table_in_layout(self.layout.project_tableView, self.model.project_list)
 
-        self.layout.backup_pushButton.setEnabled(True)
+        self.layout.project_tableView.clearSelection()
+        self.layout.newTask_lineEdit.setEnabled(False)
+        self.layout.saveTaskChanges_pushButton.setEnabled(False)
+        self.layout.deleteTask_pushButton.setEnabled(False)
+        self.layout.taskDescription_textEdit.setText("")
+        self.layout.taskDescription_textEdit.setEnabled(False)
+        disable_time_edits(self)
+
+        delete_all_items_with_project_id(self.model, project_id)
+
         self.layout.deleteProject_pushButton.setEnabled(False)
+        self.layout.projectDescription_textEdit.setText("")
+        self.layout.projectDescription_textEdit.setEnabled(False)
+
+        self.layout.backup_pushButton.setEnabled(True)
 
 
 @ClassMethod(ToDoListController)
