@@ -27,7 +27,7 @@ from Common.QtHelpers import loadQss
 
 @ClassMethod(ToDoListController)
 @QtControlFunction(True)
-def delete_current_item(self, _click):
+def delete_current_item(self, _click: bool):
     if delete_selected_task(self.model, self.layout):
         self.layout.taskDescription_textEdit.setText("")
         self.layout.backup_pushButton.setEnabled(True)
