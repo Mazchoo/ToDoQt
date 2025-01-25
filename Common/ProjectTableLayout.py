@@ -35,7 +35,6 @@ if __name__ == '__main__':
     model = ProjectTableModel()
 
     view = ProjectTableView(parent_window, 500)
-    view.setModel(model)
 
     view.setModel(model)
     view.adjust_size(model.rowCount(), 50, [100, 100, 100, 100, 25])
