@@ -64,6 +64,7 @@ def add_new_project(self, _click: bool):
         self.model.project_list = self.model.project_list.add_project(new_project)
         update_pandas_table_in_layout(self.layout.project_tableView, self.model.project_list)
 
+        self.layout.newProject_lineEdit.setText("")
         self.layout.addNewProject_pushButton.setEnabled(False)
         self.layout.backup_pushButton.setEnabled(True)
 
