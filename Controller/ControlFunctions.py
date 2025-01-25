@@ -46,6 +46,7 @@ def add_new_task_to_pending(self, _click: bool):
 
         new_task = QStandardItem(task_name)
         new_task.setData(create_new_note(task_name, selected_project_id))
+        new_task.setAccessibleDescription(new_task.data()["description"])
 
         append_item_to_list_view(self.model.pending_list, self.model.pending_filter,
                                  self.layout.pending_listView, new_task)

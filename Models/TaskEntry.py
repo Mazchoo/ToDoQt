@@ -88,7 +88,7 @@ def create_new_note(item_name: str, project_id: int):
         'title': item_name,
         'version': GlobalParams.LATEST_VERSION,
         'status': 'pending_list',
-        'description': '',
+        'description': '### Summary\n\n',
         'date_created': date_now_tuple,
         'date_edited': date_now_tuple,
         'date_moved': date_now_tuple,
