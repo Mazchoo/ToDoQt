@@ -62,7 +62,7 @@ def create_new_project(name: str):
         'title': name,
         'id_number': ProjectIdProvider.get_new_id(),
         'version': GlobalParams.LATEST_VERSION,
-        'description': '',
+        'description': '### Summary\n\n',
         'date_created': date_now_tuple,
         'last_update': date_now_tuple,
         'hr_spent': 0,
