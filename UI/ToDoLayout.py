@@ -114,7 +114,7 @@ class Ui_ToDoLayout(object):
         self.done_label.setObjectName("done_label")
         self.statusTitle_layout.addWidget(self.done_label)
         self.loaderAnimation_label = QtWidgets.QLabel(self.centralwidget)
-        self.loaderAnimation_label.setGeometry(QtCore.QRect(1400, 880, 40, 40))
+        self.loaderAnimation_label.setGeometry(QtCore.QRect(1400, 910, 40, 40))
         self.loaderAnimation_label.setText("")
         self.loaderAnimation_label.setObjectName("loaderAnimation_label")
         self.recordingTime_pushButton = QtWidgets.QPushButton(self.centralwidget)
