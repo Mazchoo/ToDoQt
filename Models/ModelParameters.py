@@ -1,3 +1,4 @@
+''' Parameters for loading and changing model data '''
 
 LATEST_VERSION = 3
 MAX_TITLE_LENGTH = 30

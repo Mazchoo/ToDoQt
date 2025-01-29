@@ -3,7 +3,7 @@ from typing import Self, Optional, List, Tuple
 import pandas as pd
 from PyQt5.QtCore import QAbstractTableModel, Qt, pyqtSignal
 
-from Models.GlobalParams import PROJECT_FIELDS_TO_DISPLAY
+from Models.ModelParameters import PROJECT_FIELDS_TO_DISPLAY
 from Models.ProjectEntry import Project
 from UI.DisplayParameters import (PROJECT_TABLE_LEFT_ALGIN_COLUMNS,
                                   PROJECT_TABLE_EDITABLE_COLUMNS)

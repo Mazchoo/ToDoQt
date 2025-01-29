@@ -1,9 +1,10 @@
-
-import pandas as pd
+''' Loading and saving file helper functions '''
 from pathlib import Path
 from os import listdir
 from datetime import datetime
-from typing import Dict, List
+from typing import Dict, List, Tuple
+
+import pandas as pd
 
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 
@@ -11,7 +12,8 @@ from Common.GenerateEncryption import decrypt_json_dict
 from Models.CsvGeneration import create_updated_df, get_full_hash_path
 
 
-def get_date_tuple_now():
+def get_date_tuple_now() -> Tuple[int, int, int, int, int, int, int]:
+    ''' Get timestamp of right now according to local time year, month, day, hour, minute, second, ms '''
     return eval(repr(datetime.now())[17:])
 
 

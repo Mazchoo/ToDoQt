@@ -3,7 +3,7 @@ from typing import Tuple
 
 from pydantic import BaseModel, field_validator
 
-import Models.GlobalParams as GlobalParams
+import Models.ModelParameters as ModelParameters
 from Models.FileHelpers import get_date_tuple_now
 
 
@@ -33,7 +33,7 @@ class Project(BaseModel):
 
     @field_validator('title')
     def title_must_be_right_length(cls, value):
-        assert len(value) <= GlobalParams.MAX_PROJECT_TITLE_LENGTH, 'Title too long'
+        assert len(value) <= ModelParameters.MAX_PROJECT_TITLE_LENGTH, 'Title too long'
         return value
 
     @property
@@ -52,7 +52,7 @@ class Project(BaseModel):
 
     @property
     def display_dict(self) -> dict:
-        field_map = GlobalParams.PROJECT_FIELDS_TO_DISPLAY
+        field_map = ModelParameters.PROJECT_FIELDS_TO_DISPLAY
         return {field_map[k]: self.__getattribute__(k) for k in field_map}
 
 
@@ -61,7 +61,7 @@ def create_new_project(name: str):
     return {
         'title': name,
         'id_number': ProjectIdProvider.get_new_id(),
-        'version': GlobalParams.LATEST_VERSION,
+        'version': ModelParameters.LATEST_VERSION,
         'description': '### Summary\n\n',
         'date_created': date_now_tuple,
         'last_update': date_now_tuple,

@@ -2,7 +2,7 @@
 from typing import Tuple
 from pydantic import BaseModel, field_validator
 
-import Models.GlobalParams as GlobalParams
+import Models.ModelParameters as ModelParameters
 from Models.FileHelpers import get_date_tuple_now
 
 
@@ -35,12 +35,12 @@ class TaskEntry(BaseModel):
 
     @field_validator('title')
     def title_must_be_right_length(cls, value):
-        assert len(value) <= GlobalParams.MAX_TITLE_LENGTH, 'Title too long'
+        assert len(value) <= ModelParameters.MAX_TITLE_LENGTH, 'Title too long'
         return value
 
     @field_validator('status')
     def status_must_be_recognised(cls, value):
-        status_types = GlobalParams.STATUS_TYPES
+        status_types = ModelParameters.STATUS_TYPES
         assert value in status_types, f'Status must be one of {status_types}'
         return value
 
@@ -75,7 +75,7 @@ def update_task_data(note_data: dict):
     if 'version' not in note_data:
         note_data['version'] = 0
 
-    while note_data['version'] < GlobalParams.LATEST_VERSION:
+    while note_data['version'] < ModelParameters.LATEST_VERSION:
         note_update_version[note_data['version']](note_data)
         note_data['version'] += 1
 
@@ -86,7 +86,7 @@ def create_new_note(item_name: str, project_id: int):
     date_now_tuple = get_date_tuple_now()
     return {
         'title': item_name,
-        'version': GlobalParams.LATEST_VERSION,
+        'version': ModelParameters.LATEST_VERSION,
         'status': 'pending_list',
         'description': '### Summary\n\n',
         'date_created': date_now_tuple,

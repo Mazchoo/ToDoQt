@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import QListView
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtCore import QModelIndex, QTime
 
-from Models.GlobalParams import LIST_VIEW_TO_STATUS_TYPE, DEFAULT_HOUR_TO_POINT_CONVERSION
+from Models.ModelParameters import LIST_VIEW_TO_STATUS_TYPE, DEFAULT_HOUR_TO_POINT_CONVERSION
 from Models.ProjectTable import ProjectTableModel
 from Models.ProjectProxyFilter import ProjectFilterProxyModel
 
