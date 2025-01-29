@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import QListView
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtCore import QModelIndex, QTime
 
-from Models.GlobalParams import LIST_VIEW_TO_STATUS_TYPE
+from Models.GlobalParams import LIST_VIEW_TO_STATUS_TYPE, DEFAULT_HOUR_TO_POINT_CONVERSION
 from Models.ProjectTable import ProjectTableModel
 from Models.ProjectProxyFilter import ProjectFilterProxyModel
 
@@ -290,3 +290,14 @@ def disable_time_edits(self):
         estimate_spinner.setTime(QTime(0, 0, 0))
     with block_signals(self.layout.points_spinBox) as points_spinner:
         points_spinner.setValue(0)
+
+
+def get_default_hour_to_points_valuation(self, task, total_seconds: int) -> int:
+    points = task.data()["points"]
+    if points == 0:
+        points = (total_seconds // 3600) * DEFAULT_HOUR_TO_POINT_CONVERSION
+
+    with block_signals(self.layout.points_spinBox) as points_spinner:
+        points_spinner.setValue(points)
+
+    return points

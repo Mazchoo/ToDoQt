@@ -16,7 +16,8 @@ from Controller.ControlHelpers import (
     update_pandas_table_in_layout, filter_available_tasks_for_selected_project,
     get_seconds_from_qt_time, enable_time_edits, disable_time_edits,
     recalculate_hours_spent, recalculate_hours_remain, recalculate_total_points,
-    execute_layout_change, delete_all_items_with_project_id
+    execute_layout_change, delete_all_items_with_project_id,
+    get_default_hour_to_points_valuation
 )
 
 from Models.TaskEntry import create_new_note, get_date_tuple_now
@@ -289,7 +290,9 @@ def edit_time_spent_spinner(self, time: QTime):
 def edit_time_estimate_spinner(self, time: QTime):
     if selected_item := get_selected_task(self.model, self.layout):
         total_seconds = get_seconds_from_qt_time(time)
-        update_standard_item_fields(selected_item, estimated_time_seconds=total_seconds)
+        points = get_default_hour_to_points_valuation(self, selected_item, total_seconds)
+
+        update_standard_item_fields(selected_item, estimated_time_seconds=total_seconds, points=points)
         self.layout.backup_pushButton.setEnabled(True)
         recalculate_current_project(self)
 

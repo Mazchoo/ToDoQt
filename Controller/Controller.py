@@ -1,7 +1,7 @@
 
 from PyQt5.QtWidgets import QWidget, QListView
 from PyQt5.QtGui import QMovie
-from PyQt5.QtCore import QSize
+from PyQt5.QtCore import QSize, QTime
 from PyQt5.Qt import Qt
 
 from Common.QtHelpers import setWindowIcon

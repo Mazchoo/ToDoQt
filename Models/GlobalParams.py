@@ -2,6 +2,8 @@
 LATEST_VERSION = 3
 MAX_TITLE_LENGTH = 30
 MAX_PROJECT_TITLE_LENGTH = 30
+DEFAULT_HOUR_TO_POINT_CONVERSION = 1
+
 STATUS_TYPES = ['pending_list', 'in_progress_list', 'done_list']
 LIST_VIEW_TO_STATUS_TYPE = {
     'inProgress_listView': 'in_progress_list',
