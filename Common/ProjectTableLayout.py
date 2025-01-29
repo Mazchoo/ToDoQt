@@ -23,7 +23,7 @@ class ProjectTableView(QTableView):
             self.setColumnWidth(i, width)
 
     def set_row_heights(self, nr_rows: int, height: int):
-        self.horizontalHeader().setFixedHeight(height) 
+        self.horizontalHeader().setFixedHeight(height)
         for i in range(nr_rows):
             self.setRowHeight(i, height)
 

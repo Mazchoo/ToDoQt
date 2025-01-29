@@ -6,6 +6,7 @@ from pydantic import BaseModel, field_validator
 import Models.GlobalParams as GlobalParams
 from Models.FileHelpers import get_date_tuple_now
 
+
 class ProjectIdProvider:
     max_id = 0
 
@@ -48,7 +49,6 @@ class Project(BaseModel):
         year, month, day, _, _, _, _ = self.last_update
         day, month = f"0{day}"[-2:], f"0{month}"[-2:]
         return f"{day}/{month}/{year}"
-
 
     @property
     def display_dict(self) -> dict:

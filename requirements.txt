@@ -9,7 +9,6 @@ numpy==1.26.3
 pandas==2.1.4
 pycparser==2.21
 pydantic==2.10.4
-pyqss==1.4.1
 PyQt5==5.15.7
 PyQt5-Qt5==5.15.2
 PyQt5-sip==12.11.0

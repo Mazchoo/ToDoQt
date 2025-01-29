@@ -67,7 +67,6 @@ class ToDoModel(QtStaticModel):
         task_save_df = save_data_frame(task_save_path, list(TaskEntry.model_fields.keys()),
                                        self.encrypt_task_fields, all_task_data, original_task_data)
 
-
         project_save_path = path / SAVED_PROJECTS_FILENAME
         all_project_data = self.get_all_project_data()
         original_project_data = load_content_from_csv(project_save_path,
@@ -90,7 +89,6 @@ class ToDoModel(QtStaticModel):
             TaskIdProvider.update_max_id(task_data['id_number'])
             add_new_item_to_model_list(model_list, task_data)
 
-
     def load_project_json_dict_into_model(self, project_data: dict):
         try:
             project = Project(**project_data)
@@ -100,7 +98,6 @@ class ToDoModel(QtStaticModel):
         else:
             ProjectIdProvider.update_max_id(project_data['id_number'])
             return project
-
 
     def load_from_folder(self, rel_path: str):
         path = self.check_folder_path(rel_path)

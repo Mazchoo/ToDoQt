@@ -1,10 +1,11 @@
 from PyQt5.QtWidgets import QTimeEdit
-from PyQt5.QtCore import QTimer, QTime
+from PyQt5.QtCore import QTimer
+
 
 class TimerEvents(QTimer):
     def __init__(self, time_display: QTimeEdit):
         super().__init__()
-        self.setInterval(60_000) # Trigger once per minute
+        self.setInterval(60_000)  # Trigger once per minute
         self.timeout.connect(self.update_time)
         self.time_display = time_display
         self._recording = False

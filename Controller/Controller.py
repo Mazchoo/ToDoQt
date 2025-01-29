@@ -1,7 +1,7 @@
 
 from PyQt5.QtWidgets import QWidget, QListView
 from PyQt5.QtGui import QMovie
-from PyQt5.QtCore import QSize, QTime
+from PyQt5.QtCore import QSize
 from PyQt5.Qt import Qt
 
 from Common.QtHelpers import setWindowIcon
@@ -28,14 +28,14 @@ class ToDoListController(QWidget):
         in_progress_list = self.layout.inProgress_listView
         done_list = self.layout.done_listView
 
-        self.layout.deleteTask_pushButton.clicked.connect(lambda x: self.delete_current_item(self, x))
-        self.layout.close_pushButton.clicked.connect(lambda x: self.close_window(self, x))
+        self.layout.deleteTask_pushButton.clicked.connect(lambda x: self.delete_current_item(x))
+        self.layout.close_pushButton.clicked.connect(lambda x: self.close_window(x))
 
-        pending_list.clicked.connect(lambda x: self.setFocus_to_pendingView(self, x))
-        in_progress_list.clicked.connect(lambda x: self.setFocus_to_in_progressView(self, x))
-        done_list.clicked.connect(lambda x: self.setFocus_to_doneView(self, x))
+        pending_list.clicked.connect(lambda x: self.setFocus_to_pendingView(x))
+        in_progress_list.clicked.connect(lambda x: self.setFocus_to_in_progressView(x))
+        done_list.clicked.connect(lambda x: self.setFocus_to_doneView(x))
 
-        self.layout.backup_pushButton.clicked.connect(lambda x: self.save_backups(self, x))
+        self.layout.backup_pushButton.clicked.connect(lambda x: self.save_backups(x))
         self.layout.upload_pushButton.clicked.connect(lambda x: self.git_push_backups(x))
 
         setattr(pending_list, 'dragEnterEvent', lambda e: enter_task_list_box(self.layout, pending_list, e))
@@ -50,28 +50,28 @@ class ToDoListController(QWidget):
         setattr(done_list, 'dragMoveEvent', lambda e: drag_move_event(done_list, e))
         setattr(done_list, 'dropEvent', lambda e: move_task_list_item(self, done_list, e))
 
-        self.layout.addNewTask_pushButton.clicked.connect(lambda x: self.add_new_task_to_pending(self, x))
-        self.layout.taskDescription_textEdit.textChanged.connect(lambda: self.enable_task_save_changes_if_text_changed(self))
-        self.layout.newTask_lineEdit.textChanged.connect(lambda: self.enable_add_new_task(self))
-        self.layout.saveTaskChanges_pushButton.clicked.connect(lambda x: self.save_current_task_description(self, x))
+        self.layout.addNewTask_pushButton.clicked.connect(lambda x: self.add_new_task_to_pending(x))
+        self.layout.taskDescription_textEdit.textChanged.connect(lambda: self.check_enable_task_save_changes())
+        self.layout.newTask_lineEdit.textChanged.connect(lambda: self.enable_add_new_task())
+        self.layout.saveTaskChanges_pushButton.clicked.connect(lambda x: self.save_current_task_description(x))
 
-        self.layout.addNewProject_pushButton.clicked.connect(lambda x: self.add_new_project(self, x))
-        self.layout.projectDescription_textEdit.textChanged.connect(lambda: self.enable_project_save_if_text_changed(self))
-        self.layout.newProject_lineEdit.textChanged.connect(lambda: self.enable_add_new_project(self))
-        self.layout.saveProjectChanges_pushButton.clicked.connect(lambda x: self.save_current_project_description(self, x))
-        self.layout.deleteProject_pushButton.clicked.connect(lambda x: self.delete_current_project(self, x))
+        self.layout.addNewProject_pushButton.clicked.connect(lambda x: self.add_new_project(x))
+        self.layout.projectDescription_textEdit.textChanged.connect(lambda: self.check_enable_project_save())
+        self.layout.newProject_lineEdit.textChanged.connect(lambda: self.enable_add_new_project())
+        self.layout.saveProjectChanges_pushButton.clicked.connect(lambda x: self.save_current_project_description(x))
+        self.layout.deleteProject_pushButton.clicked.connect(lambda x: self.delete_current_project(x))
 
-        self.layout.timeSpent_timeEdit.timeChanged.connect(lambda x: self.edit_time_spent_spinner(self, x))
-        self.layout.estimatedTime_timeEdit.timeChanged.connect(lambda x: self.edit_time_estimate_spinner(self, x))
-        self.layout.points_spinBox.valueChanged.connect(lambda x: self.edit_points_spinner(self, x))
+        self.layout.timeSpent_timeEdit.timeChanged.connect(lambda x: self.edit_time_spent_spinner(x))
+        self.layout.estimatedTime_timeEdit.timeChanged.connect(lambda x: self.edit_time_estimate_spinner(x))
+        self.layout.points_spinBox.valueChanged.connect(lambda x: self.edit_points_spinner(x))
 
-        self.model.pending_list.dataChanged.connect(lambda: self.task_title_changed(self))
+        self.model.pending_list.dataChanged.connect(lambda: self.task_title_changed())
 
         self.task_description_handler = MarkdownFocusHandler(self.layout.taskDescription_textEdit)
         self.project_description_handler = MarkdownFocusHandler(self.layout.projectDescription_textEdit)
 
         self.timer = TimerEvents(self.layout.timeSpent_timeEdit)
-        self.layout.recordingTime_pushButton.clicked.connect(lambda x: self.toggle_record_time(self, x))
+        self.layout.recordingTime_pushButton.clicked.connect(lambda x: self.toggle_record_time(x))
 
     @staticmethod
     def initializeModels(self):
@@ -104,4 +104,4 @@ class ToDoListController(QWidget):
         # Not an elegant solution, but replaces component with custom sub class
         replace_table_view_in_layout(self)
 
-        self.enable_upload_if_uncomitted_changes(self)
+        self.enable_upload_if_uncomitted_changes()

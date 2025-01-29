@@ -2,6 +2,7 @@ from typing import Optional
 
 from PyQt5.QtCore import QSortFilterProxyModel
 
+
 class ProjectFilterProxyModel(QSortFilterProxyModel):
     def __init__(self, model=None, filter_lambda=None, parent=None):
         super().__init__(parent)

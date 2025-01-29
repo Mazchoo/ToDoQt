@@ -36,7 +36,7 @@ def delete_current_item(self, _click: bool):
         if not get_selected_task(self.model, self.layout):
             self.layout.deleteTask_pushButton.setEnabled(False)
 
-        recalculate_current_project(self)
+        self.recalculate_current_project()
         disable_time_edits(self)
 
 
@@ -173,7 +173,7 @@ def git_push_backups(self, _click: bool):
 
 @ClassMethod(ToDoListController)
 @QtControlFunction()
-def enable_task_save_changes_if_text_changed(self):
+def check_enable_task_save_changes(self):
     if (selected_item := get_selected_task(self.model, self.layout)) and self.task_description_handler.is_editing:
         old_description = selected_item.accessibleDescription()
         description_changed = self.layout.taskDescription_textEdit.toPlainText() != old_description
@@ -250,7 +250,7 @@ def project_header_click(self, _clicked_index):
 
 @ClassMethod(ToDoListController)
 @QtControlFunction()
-def enable_project_save_if_text_changed(self):
+def check_enable_project_save(self):
     if self.model.project_list.selected_row is not None and self.project_description_handler.is_editing:
         old_description = self.model.project_list.current_description
         description_changed = self.layout.projectDescription_textEdit.toPlainText() != old_description
@@ -282,7 +282,7 @@ def edit_time_spent_spinner(self, time: QTime):
         update_standard_item_fields(selected_item, time_spent_seconds=total_seconds)
         self.layout.backup_pushButton.setEnabled(True)
         update_current_project_date(self)
-        recalculate_current_project(self)
+        self.recalculate_current_project()
 
 
 @ClassMethod(ToDoListController)
@@ -294,7 +294,7 @@ def edit_time_estimate_spinner(self, time: QTime):
 
         update_standard_item_fields(selected_item, estimated_time_seconds=total_seconds, points=points)
         self.layout.backup_pushButton.setEnabled(True)
-        recalculate_current_project(self)
+        self.recalculate_current_project()
 
 
 @ClassMethod(ToDoListController)
@@ -303,7 +303,7 @@ def edit_points_spinner(self, value: int):
     if selected_item := get_selected_task(self.model, self.layout):
         update_standard_item_fields(selected_item, points=value)
         self.layout.backup_pushButton.setEnabled(True)
-        recalculate_current_project(self)
+        self.recalculate_current_project()
 
 
 @ClassMethod(ToDoListController)

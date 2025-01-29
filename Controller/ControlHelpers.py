@@ -160,11 +160,11 @@ def replace_table_view_in_layout(controller):
     placeholder.deleteLater()
 
     controller.layout.project_tableView = projects_view
-    projects_view.clicked.connect(lambda x: controller.project_row_click(controller, x))
+    projects_view.clicked.connect(lambda x: controller.project_row_click(x))
     projects_view.horizontalHeader().sectionClicked.connect(
-        lambda x: controller.project_header_click(controller, x)
+        lambda x: controller.project_header_click(x)
     )
-    projects_model.dataUpdated.connect(lambda: controller.enable_project_save(controller))
+    projects_model.dataUpdated.connect(lambda: controller.enable_project_save())
 
 
 def not_uploaded_changes_present() -> bool:

@@ -24,7 +24,7 @@ def get_hash_file_from_project_data(project_data: dict):
 
 
 def delete_old_hash_browns(output_index: pd.Index, path: Path):
-    hash_brown_files = [get_full_hash_path(path, f) for f in listdir(path / 'Hashbrowns') \
+    hash_brown_files = [get_full_hash_path(path, f) for f in listdir(path / 'Hashbrowns')
                         if Path(f).suffix == '.hash_brown']
     delete_hash_paths = [f for f in hash_brown_files if f.stem + f.suffix not in output_index]
     for hash_path in delete_hash_paths:

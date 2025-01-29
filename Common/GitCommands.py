@@ -1,9 +1,10 @@
+''' Functions that programmatically interact with git repo to provide file uploading '''
 from git import Repo, Git, GitError
 from pathlib import Path
-from shutil import rmtree
 
 
 def git_commit(message: str, git: Git):
+    ''' Attempt to execute a git commit '''
     cleaned_message = message.replace('"', '').replace("'", "")
     try:
         git.execute(f'git commit -m "{cleaned_message}"')
@@ -15,6 +16,7 @@ def git_commit(message: str, git: Git):
 
 
 def git_push(git: Git):
+    ''' Attempt to execute a git push '''
     try:
         git.execute('git push')
     except GitError as e:
@@ -25,6 +27,7 @@ def git_push(git: Git):
 
 
 def git_add(path: str, git: Git):
+    ''' Attempt to add a file to the git repo '''
     try:
         git.execute(f'git add {path}')
     except GitError as e:
@@ -35,6 +38,7 @@ def git_add(path: str, git: Git):
 
 
 def git_restore_staged(path: str, git: Git):
+    ''' Attempt to reverse a commit in order to start again '''
     try:
         git.execute(f'git restore --staged {path}')
     except GitError:
@@ -43,22 +47,8 @@ def git_restore_staged(path: str, git: Git):
         return path
 
 
-def git_reset_directory(directory: str, git: Git):
-    ''' Removes directory and checks out from repo. '''
-    # ToDo : Make a backup of the folder to a temp directory and restore it upon GitError
-    try:
-        rmtree(directory)
-        git.execute(f'git checkout -- {directory}')
-    except GitError:
-        return False
-    except OSError as e:
-        print(f"Path cannot be removed {e}")
-        return False
-    else:
-        return True
-
-
-def path_is_relative_to(path: str, base_path: str):
+def path_is_relative_to(path: str, base_path: str) -> bool:
+    ''' Returns True is path is subfolder of other path '''
     try:
         Path(path).relative_to(Path(base_path))
     except ValueError:
@@ -68,25 +58,25 @@ def path_is_relative_to(path: str, base_path: str):
 
 
 def get_all_changed_files_in_repo_folder(path: str, repo: Repo):
+    ''' For all files contained in path, find all files changed files from repo's perspective '''
     changed_files = repo.index.diff(None)
-    return [
-        f.a_path for f in changed_files if path_is_relative_to(f.a_path, path)
-    ]
+    return [f.a_path for f in changed_files if path_is_relative_to(f.a_path, path)]
 
 
 def get_all_new_files_in_repo_folder(path: str, repo: Repo):
-    return [
-        f for f in repo.untracked_files if path_is_relative_to(f, path)
-    ]
+    ''' Find all files contained in path, that are new files from the repo's perspective '''
+    return [f for f in repo.untracked_files if path_is_relative_to(f, path)]
 
 
 def get_all_uncomitted_files_in_folder(path: str, repo: Repo):
+    ''' Get all files to commit to the repo '''
     files = get_all_new_files_in_repo_folder(path, repo)
     files += get_all_changed_files_in_repo_folder(path, repo)
     return files
 
 
 def get_all_unpushed_commits_in_folder(path: str, repo: Repo):
+    ''' Find any unpushed commits in repo which have files contained in folder '''
     branch = repo.active_branch
     commits = repo.iter_commits(f'{branch}@{{u}}..{branch}')
 

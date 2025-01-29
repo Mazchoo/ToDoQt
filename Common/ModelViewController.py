@@ -43,11 +43,18 @@ def CreateQtController(cls):
             update_wrapper(self, parent_class)  # Updates doc strings
 
         def setup(self):
+            '''
+                Unconventional practice:
+                Since these are checked with a mock, they are called with a static method
+            '''
             self.setupCallbacks(self)
             self.initializeModels(self)
             self.initializeUi(self)
 
         def verifyModelAndLayoutAttributes(self):
+            '''
+                Verify that everything that is callable refers to attributes that actually exist
+            '''
             mock_controller = FlexibleMagicMock()
             self.setupCallbacks(mock_controller)
             do_all_control_method_calls(self, mock_controller)

@@ -1,7 +1,6 @@
 
 '''
-    Instead of loading the UI file directly in, we can get a .py file
-    that is no longer an intermediate form of the layout.
+    Convert a .ui from QDesigner into the equivalent Python .py layout file
 
     This file requires pyuic5 to be installed in the current environment:
         pip install pyuic5-tool
@@ -14,7 +13,8 @@ from pathlib import Path
 UI_FOLDER = f"{os.getcwd()}/UI"
 
 
-def convertUiFileToPython(input_file, output_name):
+def convertUiFileToPython(input_file: str, output_name: str):
+    ''' Convert given .ui from QDesigner into a Python ui file .py '''
     ui_path = Path(f"{UI_FOLDER}/{input_file}")
 
     if not ui_path.exists():
