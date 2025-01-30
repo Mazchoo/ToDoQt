@@ -15,7 +15,7 @@ from Models.ProjectEntry import Project, ProjectIdProvider
 from Models.FileHelpers import (
     delete_old_hash_browns, get_hash_file_from_task_data, get_hash_file_from_project_data,
     convert_list_to_task_data, load_content_from_csv, add_new_item_to_model_list,
-    save_data_frame
+    save_model_data
 )
 from Models.ProjectTable import ProjectTableModel
 
@@ -64,7 +64,7 @@ class ToDoModel(QtStaticModel):
                                                    self.encrypt_task_fields,
                                                    self.eval_task_fields)
 
-        task_save_df = save_data_frame(task_save_path, list(TaskEntry.model_fields.keys()),
+        task_save_df = save_model_data(task_save_path, list(TaskEntry.model_fields.keys()),
                                        self.encrypt_task_fields, all_task_data, original_task_data)
 
         project_save_path = path / SAVED_PROJECTS_FILENAME
@@ -73,7 +73,7 @@ class ToDoModel(QtStaticModel):
                                                       self.encrypt_project_fields,
                                                       self.eval_project_fields)
 
-        project_save_df = save_data_frame(project_save_path, list(Project.model_fields.keys()),
+        project_save_df = save_model_data(project_save_path, list(Project.model_fields.keys()),
                                           self.encrypt_project_fields, all_project_data, original_project_data)
 
         delete_old_hash_browns(task_save_df.index.append(project_save_df.index), path)

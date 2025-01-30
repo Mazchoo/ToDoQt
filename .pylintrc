@@ -99,6 +99,7 @@ disable=
     consider-alternative-union-syntax,
     invalid-name,
     consider-using-alias,
+    using-assignment-expression-in-unsupported-version,
 
 [REPORTS]
 
