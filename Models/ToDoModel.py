@@ -10,8 +10,8 @@ from Models.ProjectProxyFilter import ProjectFilterProxyModel
 from Models.ModelParameters import (TASK_FIELDS_APPLY_EVAL, TASK_FIELDS_TO_ENCRYPT,
                                     PROJECT_FIELDS_APPLY_EVAL, PROJECT_FIELDS_TO_ENCRYPT,
                                     STATUS_TYPES, SAVED_TASKS_FILENAME, SAVED_PROJECTS_FILENAME)
-from Models.TaskEntry import TaskEntry, update_task_data, TaskIdProvider
-from Models.ProjectEntry import Project, ProjectIdProvider
+from Models.TaskEntry import TaskEntry, update_task_data, TASK_ID_PROVIDER
+from Models.ProjectEntry import Project, PROJECT_ID_PROVIDER
 from Models.FileHelpers import (
     delete_old_hash_browns, get_hash_file_from_task_data, get_hash_file_from_project_data,
     convert_list_to_task_data, load_content_from_csv, add_new_item_to_model_list,
@@ -91,7 +91,7 @@ class ToDoModel(QtStaticModel):
             print(f'json dict {task_data} cannot be read {e}')
             return
 
-        TaskIdProvider.update_max_id(task_data['id_number'])
+        TASK_ID_PROVIDER.update_max_id(task_data['id_number'])
         add_new_item_to_model_list(model_list, task_data)
 
     def load_project_json_dict_into_model(self, project_data: dict) -> Optional[Project]:
@@ -101,7 +101,7 @@ class ToDoModel(QtStaticModel):
         except ValueError as e:
             print(f'json dict {project_data} cannot be read {e}')
             return None
-        ProjectIdProvider.update_max_id(project_data['id_number'])
+        PROJECT_ID_PROVIDER.update_max_id(project_data['id_number'])
         return project
 
     def load_from_folder(self, rel_path: str):

@@ -6,7 +6,7 @@ from Models import ModelParameters
 from Models.FileHelpers import get_date_tuple_now
 from Models.IdProvider import IdProvider
 
-TaskIdProvider = IdProvider()
+TASK_ID_PROVIDER = IdProvider()
 
 
 class TaskEntry(BaseModel):
@@ -25,13 +25,15 @@ class TaskEntry(BaseModel):
     date_moved: Tuple[int, int, int, int, int, int, int]
 
     @field_validator('title')
-    def title_must_be_right_length(self, value):
+    @classmethod
+    def title_must_be_right_length(cls, value) -> str:
         ''' Verify title is correct length '''
         assert len(value) <= ModelParameters.MAX_TITLE_LENGTH, 'Title too long'
         return value
 
     @field_validator('status')
-    def status_must_be_recognised(self, value):
+    @classmethod
+    def status_must_be_recognised(cls, value) -> str:
         ''' Verify status of task corresponds to model '''
         status_types = ModelParameters.STATUS_TYPES
         assert value in status_types, f'Status must be one of {status_types}'
@@ -49,7 +51,7 @@ def update_1_to_2(data):
     ''' Update from version 1 to 2 '''
     date_now_tuple = get_date_tuple_now()
     data['date_moved'] = date_now_tuple
-    data['id_number'] = TaskIdProvider.get_new_id()
+    data['id_number'] = TASK_ID_PROVIDER.get_new_id()
 
 
 def update_2_to_3(data):
@@ -94,7 +96,7 @@ def create_new_task(item_name: str, project_id: int) -> dict:
         'time_spent_seconds': 0,
         'estimated_time_seconds': 0,
         'points': 0,
-        'id_number': TaskIdProvider.get_new_id()
+        'id_number': TASK_ID_PROVIDER.get_new_id()
     }
 
 
