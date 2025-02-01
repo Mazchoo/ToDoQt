@@ -28,7 +28,7 @@ class ToDoListController(QWidget):
         in_progress_list = self.layout.inProgress_listView
         done_list = self.layout.done_listView
 
-        self.layout.deleteTask_pushButton.clicked.connect(lambda x: self.delete_current_item(x))
+        self.layout.deleteTask_pushButton.clicked.connect(lambda x: self.delete_current_task(x))
         self.layout.close_pushButton.clicked.connect(lambda x: self.close_window(x))
 
         pending_list.clicked.connect(lambda x: self.setFocus_to_pendingView(x))

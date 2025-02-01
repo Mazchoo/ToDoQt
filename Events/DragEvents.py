@@ -1,7 +1,12 @@
+''' Handler dragging and dropping events from one status list to another '''
+from typing import Self
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QListView
 from PyQt5.QtGui import QDragEnterEvent, QDragMoveEvent, QDropEvent
+
+from UI.ToDoLayout import Ui_ToDoLayout
+
 
 from Controller.ControlHelpers import (
     list_view_has_selected_item, delete_item_if_selected, append_item_to_list_view,
@@ -9,7 +14,8 @@ from Controller.ControlHelpers import (
 )
 
 
-def enter_task_list_box(layout, list_view: QListView, event: QDragEnterEvent):
+def enter_task_list_box(layout: Ui_ToDoLayout, list_view: QListView, event: QDragEnterEvent):
+    ''' Decide if item can be accepted into new list view '''
     is_model_list_item = event.mimeData().hasFormat('application/x-qabstractitemmodeldatalist')
     if list_view_has_focus := list_view_has_selected_item(list_view):
         clear_not_selected(layout, list_view)
@@ -21,6 +27,7 @@ def enter_task_list_box(layout, list_view: QListView, event: QDragEnterEvent):
 
 
 def drag_move_event(list_view: QListView, event: QDragMoveEvent):
+    ''' Decide if dragging event is accepted '''
     is_model_list_item = event.mimeData().hasFormat('application/x-qabstractitemmodeldatalist')
     list_view_has_focus = list_view_has_selected_item(list_view)
 
@@ -31,8 +38,8 @@ def drag_move_event(list_view: QListView, event: QDragMoveEvent):
         event.ignore()
 
 
-def move_task_list_item(self, target_view: QListView, event: QDropEvent):
-
+def move_task_list_item(self: Self, target_view: QListView, event: QDropEvent):
+    ''' Execute of move list item from one list to another '''
     target_model, target_filter = get_corresponding_model(self.model, self.layout, target_view)
     if target_model is None:
         event.ignore()

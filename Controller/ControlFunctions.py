@@ -1,12 +1,13 @@
-
+''' Functions that change state of the GUI '''
 from unittest.mock import MagicMock
 from typing import Optional
 
 from PyQt5.QtGui import QStandardItem
-from PyQt5.QtCore import QTime
+from PyQt5.QtCore import QTime, QModelIndex
 
 from Common.ClassMethod import ClassMethod
 from Common.ModelViewController import QtControlFunction
+from Common.QtHelpers import loadQss
 
 from Controller.Controller import ToDoListController
 from Controller.UploadGitThread import UPLOAD_THREAD_SINGLETON
@@ -23,12 +24,11 @@ from Controller.ControlHelpers import (
 from Models.TaskEntry import create_new_task, get_date_tuple_now
 from Models.ProjectEntry import Project, create_new_project
 
-from Common.QtHelpers import loadQss
-
 
 @ClassMethod(ToDoListController)
 @QtControlFunction(True)
-def delete_current_item(self, _click: bool):
+def delete_current_task(self: ToDoListController, _click: bool):
+    ''' Delete current task if selected '''
     if delete_selected_task(self.model, self.layout):
         self.layout.taskDescription_textEdit.setText("")
         self.layout.backup_pushButton.setEnabled(True)
@@ -42,7 +42,8 @@ def delete_current_item(self, _click: bool):
 
 @ClassMethod(ToDoListController)
 @QtControlFunction(True)
-def add_new_task_to_pending(self, _click: bool):
+def add_new_task_to_pending(self: ToDoListController, _click: bool):
+    ''' If task name available and project is selected, create new task in model-view '''
     if (task_name := self.layout.newTask_lineEdit.text()) and \
        (selected_project_id := self.model.project_list.current_project_id):
 
@@ -59,10 +60,15 @@ def add_new_task_to_pending(self, _click: bool):
 
 @ClassMethod(ToDoListController)
 @QtControlFunction(True)
-def add_new_project(self, _click: bool):
+def add_new_project(self: ToDoListController, _click: bool):
+    ''' Add new project if project name is available '''
     if project_name := self.layout.newProject_lineEdit.text():
-        # ToDo - Handle pydantic schema check failure
-        new_project = Project(**create_new_project(project_name))
+        try:
+            new_project = Project(**create_new_project(project_name))
+        except ValueError as e:
+            print(f"New project is invalid schema with error {e}")
+            return
+
         self.model.project_list = self.model.project_list.add_project(new_project)
         update_pandas_table_in_layout(self.layout.project_tableView, self.model.project_list)
 
@@ -73,61 +79,66 @@ def add_new_project(self, _click: bool):
 
 @ClassMethod(ToDoListController)
 @QtControlFunction(MagicMock())
-def select_current_task(self, selected_item: Optional[QStandardItem]):
-    if selected_item is None:
+def select_current_task(self: ToDoListController, selected_task: Optional[QStandardItem]):
+    ''' Set-up GUI for a selecting a task '''
+    if selected_task is None:
         return
 
-    self.layout.taskDescription_textEdit.setText(selected_item.accessibleDescription())
+    self.layout.taskDescription_textEdit.setText(selected_task.accessibleDescription())
     self.layout.taskDescription_textEdit.setEnabled(True)
     self.task_description_handler.render_markdown()
     self.layout.deleteTask_pushButton.setEnabled(True)
     self.layout.saveTaskChanges_pushButton.setEnabled(False)
 
-    enable_time_edits(self, selected_item)
+    enable_time_edits(self, selected_task)
 
 
 @ClassMethod(ToDoListController)
 @QtControlFunction(True)
-def setFocus_to_pendingView(self, _click: bool):
+def setFocus_to_pendingView(self: ToDoListController, _click: bool):
+    ''' Set-up GUI for pending view '''
     self.layout.inProgress_listView.clearSelection()
     self.layout.done_listView.clearSelection()
 
-    selected_item = get_selected_item_from_list(self.model.pending_list, self.model.pending_filter,
+    selected_task = get_selected_item_from_list(self.model.pending_list, self.model.pending_filter,
                                                 self.layout.pending_listView)
-    select_current_task(self, selected_item)
+    select_current_task(self, selected_task)
 
 
 @ClassMethod(ToDoListController)
 @QtControlFunction(True)
-def setFocus_to_in_progressView(self, _click: bool):
+def setFocus_to_in_progressView(self: ToDoListController, _click: bool):
+    ''' Set-up GUI for in progress view '''
     self.layout.pending_listView.clearSelection()
     self.layout.done_listView.clearSelection()
 
-    selected_item = get_selected_item_from_list(self.model.in_progress_list, self.model.in_progress_filter,
+    selected_task = get_selected_item_from_list(self.model.in_progress_list, self.model.in_progress_filter,
                                                 self.layout.inProgress_listView)
-    select_current_task(self, selected_item)
+    select_current_task(self, selected_task)
 
 
 @ClassMethod(ToDoListController)
 @QtControlFunction(True)
-def setFocus_to_doneView(self, _click: bool):
+def setFocus_to_doneView(self: ToDoListController, _click: bool):
+    ''' Set-up GUI for in done view '''
     self.layout.inProgress_listView.clearSelection()
     self.layout.pending_listView.clearSelection()
 
-    selected_item = get_selected_item_from_list(self.model.done_list, self.model.done_filter,
+    selected_task = get_selected_item_from_list(self.model.done_list, self.model.done_filter,
                                                 self.layout.done_listView)
-    select_current_task(self, selected_item)
+    select_current_task(self, selected_task)
 
 
 @ClassMethod(ToDoListController)
 @QtControlFunction(True)
-def save_current_task_description(self, _click: bool):
-    if selected_item := get_selected_task(self.model, self.layout):
+def save_current_task_description(self: ToDoListController, _click: bool):
+    ''' Save current description to model from task description text edit '''
+    if selected_task := get_selected_task(self.model, self.layout):
         description = self.task_description_handler.raw_markdown
-        selected_item.setAccessibleDescription(description)
-        update_fields = {'description': selected_item.accessibleDescription(),
+        selected_task.setAccessibleDescription(description)
+        update_fields = {'description': selected_task.accessibleDescription(),
                          'date_edited': get_date_tuple_now()}
-        update_standard_item_fields(selected_item, **update_fields)
+        update_standard_item_fields(selected_task, **update_fields)
 
         self.layout.saveTaskChanges_pushButton.setEnabled(False)
         self.layout.backup_pushButton.setEnabled(True)
@@ -135,7 +146,8 @@ def save_current_task_description(self, _click: bool):
 
 @ClassMethod(ToDoListController)
 @QtControlFunction(True)
-def save_backups(self, _click: bool):
+def save_backups(self: ToDoListController, _click: bool):
+    ''' Save all model data to folder '''
     self.model.save_to_folder("SavedToDo")
     self.layout.backup_pushButton.setEnabled(False)
     self.layout.upload_pushButton.setEnabled(True)
@@ -143,12 +155,14 @@ def save_backups(self, _click: bool):
 
 @ClassMethod(ToDoListController)
 @QtControlFunction(True)
-def close_window(self, _click: bool):
+def close_window(self: ToDoListController, _click: bool):
+    ''' Close window action '''
     self.parent.close()
 
 
 @ClassMethod(ToDoListController)
-def end_upload(self):
+def end_upload(self: ToDoListController):
+    ''' Set-up GUI for finishing upload '''
     self.layout.loaderAnimation_label.setVisible(False)
     UPLOAD_THREAD_SINGLETON.running = False
     UPLOAD_THREAD_SINGLETON.finished.disconnect()
@@ -156,14 +170,16 @@ def end_upload(self):
 
 
 @ClassMethod(ToDoListController)
-def start_upload(self):
+def start_upload(self: ToDoListController):
+    ''' Set-up GUI for starting upload '''
     self.layout.loaderAnimation_label.setVisible(True)
     UPLOAD_THREAD_SINGLETON.running = True
     UPLOAD_THREAD_SINGLETON.started.disconnect()
 
 
 @ClassMethod(ToDoListController)
-def git_push_backups(self, _click: bool):
+def git_push_backups(self: ToDoListController, _click: bool):
+    ''' Save backups in repo '''
     if not UPLOAD_THREAD_SINGLETON.running:
         self.layout.upload_pushButton.setEnabled(False)
         UPLOAD_THREAD_SINGLETON.finished.connect(self.end_upload)
@@ -173,36 +189,41 @@ def git_push_backups(self, _click: bool):
 
 @ClassMethod(ToDoListController)
 @QtControlFunction()
-def check_enable_task_save_changes(self):
-    if (selected_item := get_selected_task(self.model, self.layout)) and self.task_description_handler.is_editing:
-        old_description = selected_item.accessibleDescription()
+def check_enable_task_save_changes(self: ToDoListController):
+    ''' Check if task changes should be enabled if description has changed '''
+    if (selected_task := get_selected_task(self.model, self.layout)) and self.task_description_handler.is_editing:
+        old_description = selected_task.accessibleDescription()
         description_changed = self.layout.taskDescription_textEdit.toPlainText() != old_description
         self.layout.saveTaskChanges_pushButton.setEnabled(description_changed)
 
 
 @ClassMethod(ToDoListController)
 @QtControlFunction()
-def enable_add_new_task(self):
-    new_task_empty = self.layout.newTask_lineEdit.displayText() == ''
-    self.layout.addNewTask_pushButton.setEnabled(not new_task_empty)
+def enable_add_new_task(self: ToDoListController):
+    ''' If new task title not empty, enable add new task '''
+    new_task_title_empty = self.layout.newTask_lineEdit.displayText() == ''
+    self.layout.addNewTask_pushButton.setEnabled(not new_task_title_empty)
 
 
 @ClassMethod(ToDoListController)
 @QtControlFunction()
-def enable_add_new_project(self):
-    new_task_empty = self.layout.newProject_lineEdit.displayText() == ''
-    self.layout.addNewProject_pushButton.setEnabled(not new_task_empty)
+def enable_add_new_project(self: ToDoListController):
+    ''' If new project title not empty, enable add new task '''
+    new_project_title_empty = self.layout.newProject_lineEdit.displayText() == ''
+    self.layout.addNewProject_pushButton.setEnabled(not new_project_title_empty)
 
 
 @ClassMethod(ToDoListController)
 @QtControlFunction()
-def enable_upload_if_uncomitted_changes(self):
+def enable_upload_if_uncomitted_changes(self: ToDoListController):
+    ''' Enable upload if changes unuploaded changes present '''
     self.layout.upload_pushButton.setEnabled(not_uploaded_changes_present())
 
 
 @ClassMethod(ToDoListController)
 @QtControlFunction(MagicMock())
-def project_row_click(self, clicked_index):
+def project_row_click(self: ToDoListController, clicked_index: QModelIndex):
+    ''' Reset GUI for clicking on a project '''
     prev_project_id = self.model.project_list.current_project_id
     row = clicked_index.row()
     self.model.project_list.set_selected_row(row)
@@ -230,7 +251,8 @@ def project_row_click(self, clicked_index):
 
 @ClassMethod(ToDoListController)
 @QtControlFunction(MagicMock())
-def project_header_click(self, _clicked_index):
+def project_header_click(self: ToDoListController, _clicked_index: QModelIndex):
+    ''' Remove project selection '''
     self.model.project_list.set_selected_row(None)
     filter_available_tasks_for_selected_project(self.model, None)
 
@@ -250,7 +272,8 @@ def project_header_click(self, _clicked_index):
 
 @ClassMethod(ToDoListController)
 @QtControlFunction()
-def check_enable_project_save(self):
+def check_enable_project_save(self: ToDoListController):
+    ''' If project description changed, enable save project changes '''
     if self.model.project_list.selected_row is not None and self.project_description_handler.is_editing:
         old_description = self.model.project_list.current_description
         description_changed = self.layout.projectDescription_textEdit.toPlainText() != old_description
@@ -259,13 +282,15 @@ def check_enable_project_save(self):
 
 @ClassMethod(ToDoListController)
 @QtControlFunction()
-def enable_project_save(self):
+def enable_project_save(self: ToDoListController):
+    ''' Enable project save button '''
     self.layout.backup_pushButton.setEnabled(True)
 
 
 @ClassMethod(ToDoListController)
 @QtControlFunction(True)
-def save_current_project_description(self, _click: bool):
+def save_current_project_description(self: ToDoListController, _click: bool):
+    ''' Update project model with new description '''
     if self.model.project_list.selected_row is not None:
         description = self.project_description_handler.raw_markdown
         self.model.project_list.set_current_description(description)
@@ -276,10 +301,11 @@ def save_current_project_description(self, _click: bool):
 
 @ClassMethod(ToDoListController)
 @QtControlFunction(QTime(0, 0, 0))
-def edit_time_spent_spinner(self, time: QTime):
-    if selected_item := get_selected_task(self.model, self.layout):
+def edit_time_spent_spinner(self: ToDoListController, time: QTime):
+    ''' Recalculate project stats on time spent edit '''
+    if selected_task := get_selected_task(self.model, self.layout):
         total_seconds = get_seconds_from_qt_time(time)
-        update_standard_item_fields(selected_item, time_spent_seconds=total_seconds)
+        update_standard_item_fields(selected_task, time_spent_seconds=total_seconds)
         self.layout.backup_pushButton.setEnabled(True)
         update_current_project_date(self)
         self.recalculate_current_project()
@@ -287,28 +313,31 @@ def edit_time_spent_spinner(self, time: QTime):
 
 @ClassMethod(ToDoListController)
 @QtControlFunction(QTime(0, 0, 0))
-def edit_time_estimate_spinner(self, time: QTime):
-    if selected_item := get_selected_task(self.model, self.layout):
+def edit_time_estimate_spinner(self: ToDoListController, time: QTime):
+    ''' Recalculate project stats on time estimate edit '''
+    if selected_task := get_selected_task(self.model, self.layout):
         total_seconds = get_seconds_from_qt_time(time)
-        points = get_default_hour_to_points_valuation(self, selected_item, total_seconds)
+        points = get_default_hour_to_points_valuation(self, selected_task, total_seconds)
 
-        update_standard_item_fields(selected_item, estimated_time_seconds=total_seconds, points=points)
+        update_standard_item_fields(selected_task, estimated_time_seconds=total_seconds, points=points)
         self.layout.backup_pushButton.setEnabled(True)
         self.recalculate_current_project()
 
 
 @ClassMethod(ToDoListController)
 @QtControlFunction(0.)
-def edit_points_spinner(self, value: int):
-    if selected_item := get_selected_task(self.model, self.layout):
-        update_standard_item_fields(selected_item, points=value)
+def edit_points_spinner(self: ToDoListController, value: int):
+    ''' Recalculate project stats on points edit '''
+    if selected_task := get_selected_task(self.model, self.layout):
+        update_standard_item_fields(selected_task, points=value)
         self.layout.backup_pushButton.setEnabled(True)
         self.recalculate_current_project()
 
 
 @ClassMethod(ToDoListController)
 @QtControlFunction()
-def recalculate_current_project(self):
+def recalculate_current_project(self: ToDoListController):
+    ''' Recalculate all time stats for current project '''
     if project_id := self.model.project_list.current_project_id:
         with execute_layout_change(self.model.project_list):
             update_dict = {
@@ -321,7 +350,8 @@ def recalculate_current_project(self):
 
 @ClassMethod(ToDoListController)
 @QtControlFunction()
-def update_current_project_date(self):
+def update_current_project_date(self: ToDoListController):
+    ''' Update latest date for project '''
     if project_id := self.model.project_list.current_project_id:
         with execute_layout_change(self.model.project_list):
             update_dict = {
@@ -332,7 +362,8 @@ def update_current_project_date(self):
 
 @ClassMethod(ToDoListController)
 @QtControlFunction(True)
-def delete_current_project(self, _click: bool):
+def delete_current_project(self: ToDoListController, _click: bool):
+    ''' Delete project if selected '''
     if (project_id := self.model.project_list.current_project_id) and \
        (new_project_list := self.model.project_list.delete_selected_project()):
 
@@ -358,18 +389,20 @@ def delete_current_project(self, _click: bool):
 
 @ClassMethod(ToDoListController)
 @QtControlFunction()
-def task_title_changed(self):
-    if selected_item := get_selected_task(self.model, self.layout):
-        new_title = selected_item.text()
-        if new_title != selected_item.data()["title"]:
-            update_fields = {"title": selected_item.text()}
-            update_standard_item_fields(selected_item, **update_fields)
+def task_title_changed(self: ToDoListController):
+    ''' Update task model if title changed '''
+    if selected_task := get_selected_task(self.model, self.layout):
+        new_title = selected_task.text()
+        if new_title != selected_task.data()["title"]:
+            update_fields = {"title": selected_task.text()}
+            update_standard_item_fields(selected_task, **update_fields)
             self.layout.backup_pushButton.setEnabled(True)
 
 
 @ClassMethod(ToDoListController)
 @QtControlFunction(True)
-def toggle_record_time(self, _click: bool):
+def toggle_record_time(self: ToDoListController, _click: bool):
+    ''' Turn time recording time on or off '''
     is_recording = self.timer.toggle_recording()
     if is_recording:
         loadQss(self.layout.recordingTime_pushButton, "Resources/QSS/RecordingButton.qss")
