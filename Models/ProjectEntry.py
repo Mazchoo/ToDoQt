@@ -3,21 +3,12 @@ from typing import Tuple
 
 from pydantic import BaseModel, field_validator
 
-import Models.ModelParameters as ModelParameters
+from Models import ModelParameters
 from Models.FileHelpers import get_date_tuple_now
+from Models.IdProvider import IdProvider
 
 
-class ProjectIdProvider:
-    max_id = 0
-
-    @staticmethod
-    def get_new_id():
-        ProjectIdProvider.max_id += 1
-        return ProjectIdProvider.max_id
-
-    @staticmethod
-    def update_max_id(new_id):
-        ProjectIdProvider.max_id = max(new_id, ProjectIdProvider.max_id)
+ProjectIdProvider = IdProvider()
 
 
 class Project(BaseModel):

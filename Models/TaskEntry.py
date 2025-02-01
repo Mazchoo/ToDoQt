@@ -4,22 +4,9 @@ from pydantic import BaseModel, field_validator
 
 from Models import ModelParameters
 from Models.FileHelpers import get_date_tuple_now
+from Models.IdProvider import IdProvider
 
-
-class TaskIdProvider:
-    ''' Static class to update and get the latest task id '''
-    max_id = 0
-
-    @staticmethod
-    def get_new_id():
-        ''' Generate new task id '''
-        TaskIdProvider.max_id += 1
-        return TaskIdProvider.max_id
-
-    @staticmethod
-    def update_max_id(new_id):
-        ''' Update id for new id that is being read '''
-        TaskIdProvider.max_id = max(new_id, TaskIdProvider.max_id)
+TaskIdProvider = IdProvider()
 
 
 class TaskEntry(BaseModel):
