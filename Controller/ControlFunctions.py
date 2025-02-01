@@ -20,7 +20,7 @@ from Controller.ControlHelpers import (
     get_default_hour_to_points_valuation
 )
 
-from Models.TaskEntry import create_new_note, get_date_tuple_now
+from Models.TaskEntry import create_new_task, get_date_tuple_now
 from Models.ProjectEntry import Project, create_new_project
 
 from Common.QtHelpers import loadQss
@@ -47,7 +47,7 @@ def add_new_task_to_pending(self, _click: bool):
        (selected_project_id := self.model.project_list.current_project_id):
 
         new_task = QStandardItem(task_name)
-        new_task.setData(create_new_note(task_name, selected_project_id))
+        new_task.setData(create_new_task(task_name, selected_project_id))
         new_task.setAccessibleDescription(new_task.data()["description"])
 
         append_item_to_list_view(self.model.pending_list, self.model.pending_filter,

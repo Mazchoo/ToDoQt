@@ -1,6 +1,6 @@
 ''' Loading and saving file helper functions '''
 from pathlib import Path
-from os import listdir
+from os import listdir, getcwd
 from datetime import datetime
 from typing import Dict, List, Tuple
 
@@ -10,6 +10,8 @@ from PyQt5.QtGui import QStandardItemModel, QStandardItem
 
 from Common.GenerateEncryption import decrypt_json_dict
 from Models.CsvGeneration import create_updated_df, get_full_hash_path
+
+CWD = getcwd()
 
 
 def get_date_tuple_now() -> Tuple[int, int, int, int, int, int, int]:
@@ -89,3 +91,11 @@ def save_model_data(save_path: Path, save_fields: List[str], encrypt_fields: Lis
     save_df.to_csv(save_path)
 
     return save_df
+
+
+def check_folder_path(rel_path: str):
+    ''' Raise expection if path is not valid folder '''
+    path = Path(f"{CWD}/{rel_path}")
+    if not path.exists() or not path.is_dir():
+        raise FileNotFoundError(f"Invalid directory {path}")
+    return path
