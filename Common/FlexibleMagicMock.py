@@ -18,4 +18,5 @@ class FlexibleMagicMock(MagicMock):
         self.__setattr__('__le__', compareAlwaysTrue)
 
     def text(self):
+        ''' Dummy string to return when mock text requested '''
         return 'mock text'

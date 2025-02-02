@@ -2,6 +2,7 @@
 from typing import Any, Set
 from pathlib import Path
 from os import mkdir
+import ast
 
 from cryptography.fernet import Fernet
 
@@ -11,7 +12,7 @@ def save_encryption_key_to_disk(key_file_name: Path, key: bytes):
     if key_file_name.exists():
         key_file_name.unlink()
 
-    with open(str(key_file_name), 'w') as f:
+    with open(str(key_file_name), 'w', encoding='utf-8') as f:
         f.write(str(key))
 
     if not key_file_name.exists():
@@ -20,16 +21,13 @@ def save_encryption_key_to_disk(key_file_name: Path, key: bytes):
 
 def load_fernet_key_from_path(key_file_name: Path) -> Fernet:
     ''' Load a fernet key from local disk '''
-    key_file_handler = open(str(key_file_name), 'r')
 
-    try:
-        fernet_key = eval(key_file_handler.read())
-        fernet = Fernet(fernet_key)
-    except Exception:
-        key_file_handler.close()
-        raise ValueError(f"Fernet key {key_file_name} is not valid.")
-    else:
-        key_file_handler.close()
+    with open(str(key_file_name), 'r', encoding='utf-8') as f:
+        try:
+            fernet_key = ast.literal_eval(f.read())
+            fernet = Fernet(fernet_key)
+        except Exception as e:
+            raise ValueError(f"Fernet key {key_file_name} is not valid.") from e
 
     return fernet
 
@@ -82,7 +80,7 @@ def fernet_decrypt_string(fernet: Fernet, cipher_text: Any):
         print("Non encrypted field trying to be decrypted")
         return cipher_text
 
-    byte_cipher = eval(cipher_text)
+    byte_cipher = ast.literal_eval(cipher_text)
     if not isinstance(byte_cipher, bytes):
         print("String that is not byte string trying to be decrypted")
         return byte_cipher
@@ -93,7 +91,7 @@ def fernet_decrypt_string(fernet: Fernet, cipher_text: Any):
 
 def parse_field(decrpyted_value: str, key: str, eval_fields: set):
     ''' Deserialise object back into utf string or python object for eval_fields '''
-    output = eval(decrpyted_value) if key in eval_fields else decrpyted_value
+    output = ast.literal_eval(decrpyted_value) if key in eval_fields else decrpyted_value
     if isinstance(output, str):
         output = bytes(output, 'utf-8').decode('unicode-escape').encode("latin1").decode("utf-8")
     return output
