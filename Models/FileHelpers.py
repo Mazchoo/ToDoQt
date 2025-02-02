@@ -48,7 +48,7 @@ def try_decrypting_dict(note_data: dict, file_name: Path, encrypt_fields: set, e
     ''' Attempt to decrypt dictionary mapping to encrypted data '''
     try:
         decrypted_note = decrypt_json_dict(note_data, file_name, encrypt_fields, eval_fields)
-    except Exception as e:
+    except ValueError as e:
         print(f"Error! Decryption failed {e}")
         return None
     return decrypted_note

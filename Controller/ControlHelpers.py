@@ -15,7 +15,7 @@ from Common.GitCommands import (get_all_uncomitted_files_in_folder,
                                 get_all_unpushed_commits_in_folder)
 from Common.ProjectTableLayout import ProjectTableView
 from Common.FlexibleMagicMock import FlexibleMagicMock
-from Common.QtHelpers import loadQss
+from Common.QtWindowHelpers import loadQss
 
 from UI import DisplayParameters
 from UI.ToDoLayout import Ui_ToDoLayout
@@ -181,11 +181,6 @@ def replace_table_view_in_layout(controller: Self):
     placeholder.deleteLater()
 
     controller.layout.project_tableView = projects_view
-    projects_view.clicked.connect(lambda x: controller.project_row_click(x))
-    projects_view.horizontalHeader().sectionClicked.connect(
-        lambda x: controller.project_header_click(x)
-    )
-    projects_model.dataUpdated.connect(lambda: controller.enable_project_save())
 
 
 def not_uploaded_changes_present() -> bool:

@@ -4,7 +4,7 @@ from PyQt5.QtGui import QMovie
 from PyQt5.QtCore import QSize
 from PyQt5.Qt import Qt
 
-from Common.QtHelpers import setWindowIcon
+from Common.QtWindowHelpers import setWindowIcon
 from Common.ModelViewController import CreateQtController
 from Controller.ControlHelpers import replace_table_view_in_layout
 
@@ -73,6 +73,12 @@ class ToDoListController(QWidget):
 
         controller.timer = TimerEvents(controller.layout.timeSpent_timeEdit)
         controller.layout.recordingTime_pushButton.clicked.connect(lambda x: controller.toggle_record_time(x))
+
+        controller.layout.project_tableView.clicked.connect(lambda x: controller.project_row_click(x))
+        controller.layout.project_tableView.horizontalHeader().sectionClicked.connect(
+            lambda x: controller.project_header_click(x)
+        )
+        controller.model.project_list.dataUpdated.connect(lambda: controller.enable_project_save())
 
     @staticmethod
     def initializeModels(controller):

@@ -3,6 +3,7 @@ from typing import Set, Dict
 from pathlib import Path
 
 import pandas as pd
+from cryptography.fernet import InvalidToken
 
 from Common.GenerateEncryption import encrypt_dictionary_and_save_key
 
@@ -21,7 +22,7 @@ def turn_loaded_dict_into_df(note_data_dict: dict, path: Path,
 
         try:
             encrypted_note = encrypt_dictionary_and_save_key(note_data, file_path, encrypt_fields)
-        except Exception as e:
+        except InvalidToken as e:
             print(f"Error! Encryption failed {file_name} -> {e}")
         else:
             encrypted_notes[file_name] = encrypted_note

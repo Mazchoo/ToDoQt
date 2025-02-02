@@ -1,4 +1,4 @@
-
+''' "Create" use of classes to check that smoke tests a function with a magic mock  '''
 from collections.abc import Callable
 from unittest.mock import MagicMock
 from typing import Any
@@ -23,6 +23,7 @@ class TestableControlFunction:
         return self.func(*args, **kwargs)
 
     def mock_call(self, mock_controller: MagicMock):
+        ''' Smoke test function with a magic mock '''
         return self.func(mock_controller, *self.test_args, *self.test_kwargs)
 
 
@@ -43,7 +44,7 @@ def do_all_control_method_calls(cls_obj: Any, mock: MagicMock):
     '''
     for key in dir(cls_obj):
         if hasattr(cls_obj, key):
-            cls_attr = cls_obj.__getattribute__(key)
+            cls_attr = getattr(cls_obj, key)
             apply_method_to_mock(cls_attr, mock)
 
 

@@ -102,6 +102,7 @@ disable=
     using-assignment-expression-in-unsupported-version,
     unnecessary-lambda,
     too-few-public-methods,
+    protected-access
 
 [REPORTS]
 
@@ -502,7 +503,7 @@ int-import-graph=
 known-standard-library=
 
 # Force import order to recognize a module as part of a third party library.
-known-third-party=enchant
+known-third-party=
 
 # Couples of modules and preferred modules, separated by a comma.
 preferred-modules=
@@ -512,7 +513,7 @@ preferred-modules=
 
 # Exceptions that will emit a warning when being caught. Defaults to
 # "Exception"
-overgeneral-exceptions=Exception
+overgeneral-exceptions=builtins.Exception
 
 
 [TYPING]

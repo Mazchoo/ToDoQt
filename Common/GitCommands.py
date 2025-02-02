@@ -1,6 +1,7 @@
 ''' Functions that programmatically interact with git repo to provide file uploading '''
-from git import Repo, Git, GitError
 from pathlib import Path
+
+from git import Repo, Git, GitError
 
 
 def git_commit(message: str, git: Git):
@@ -77,7 +78,7 @@ def get_all_unpushed_commits_in_folder(path: str, repo: Repo):
 
     unpushed_in_folder = []
     for commit in commits:
-        if all([path_is_relative_to(f, path) for f in commit.stats.files]):
+        if all(path_is_relative_to(f, path) for f in commit.stats.files):
             unpushed_in_folder.append(commit)
 
     return unpushed_in_folder

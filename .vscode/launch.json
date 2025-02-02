@@ -28,6 +28,19 @@
             "env": {
                 "PYTHONPATH": "${workspaceRoot}"
             }
+        },
+        {
+            "name": "Python: QSS Editor",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "main.py",
+            "console": "integratedTerminal",
+            "args": ["RUN_QSS_EDITOR"],
+            "justMyCode": true,
+            "cwd": "${workspaceRoot}",
+            "env": {
+                "PYTHONPATH": "${workspaceRoot}"
+            }
         }
     ]
 }

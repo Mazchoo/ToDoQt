@@ -27,6 +27,4 @@ def convertUiFileToPython(input_file: str, output_name: str):
 
 
 if __name__ == '__main__':
-    input_file = "ToDoApp.ui"
-    output_name = "ToDoLayout.py"
-    convertUiFileToPython(input_file, output_name)
+    convertUiFileToPython("ToDoApp.ui", "ToDoLayout.py")

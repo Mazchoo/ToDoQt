@@ -7,7 +7,7 @@ from PyQt5.QtCore import QTime, QModelIndex
 
 from Common.ClassMethod import ClassMethod
 from Common.ModelViewController import QtControlFunction
-from Common.QtHelpers import loadQss
+from Common.QtWindowHelpers import loadQss
 
 from Controller.Controller import ToDoListController
 from Controller.UploadGitThread import UPLOAD_THREAD_SINGLETON

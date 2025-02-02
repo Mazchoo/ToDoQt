@@ -1,4 +1,4 @@
-
+''' A "creative" use of classes that will smoke test all function calls if MOCK_INTERFACES is set in call '''
 import sys
 from collections.abc import Callable
 from functools import update_wrapper
@@ -12,15 +12,15 @@ from Common.MVCHelperFunctions import (
 
 def CreateQtController(cls):
     '''
-        A class decorator that makes an object into a controler.
+        A class decorator that makes an object into a controller.
         The controller expects to be called with a parent window,
         a model for underlying data which is not visible or editable
-        to the user and a layout class containing the visual components
-        of the GUI.
+        to the user and a layout class containing the visual components of the GUI.
 
         If initializeUI is present, it will be checked and called.
         If initalizeModels is present, it will be checked and called.
     '''
+
     class QtController(cls):
         ''' Inner class for controller '''
 
@@ -47,25 +47,26 @@ def CreateQtController(cls):
                 Unconventional practice:
                 Since these are checked with a mock, they are called with a static method
             '''
-            self.setupCallbacks(self)
             self.initializeModels(self)
             self.initializeUi(self)
+            self.setupCallbacks(self)
 
         def verifyModelAndLayoutAttributes(self):
             '''
                 Verify that everything that is callable refers to attributes that actually exist
             '''
             mock_controller = FlexibleMagicMock()
-            self.setupCallbacks(mock_controller)
-            do_all_control_method_calls(self, mock_controller)
             self.initializeModels(mock_controller)
             self.initializeUi(mock_controller)
+            do_all_control_method_calls(self, mock_controller)
+            self.setupCallbacks(mock_controller)
 
             verify_object_field_has_mock_attributes(mock_controller, "layout", self.layout)
             verify_object_field_has_mock_attributes(mock_controller, "model", self.model)
             verify_object_field_has_mock_attributes(mock_controller, "parent", self.parent)
 
         def getControllerParentClass(self):
+            ''' Get class that decorator has constructed on '''
             return cls
 
     return QtController
