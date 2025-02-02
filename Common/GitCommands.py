@@ -11,8 +11,7 @@ def git_commit(message: str, git: Git):
     except GitError as e:
         print(f'Commit error {e}')
         return False
-    else:
-        return True
+    return True
 
 
 def git_push(git: Git):
@@ -22,8 +21,7 @@ def git_push(git: Git):
     except GitError as e:
         print(f'Push error {e}')
         return False
-    else:
-        return True
+    return True
 
 
 def git_add(path: str, git: Git):
@@ -33,8 +31,7 @@ def git_add(path: str, git: Git):
     except GitError as e:
         print(f'Git add error {e}')
         return None
-    else:
-        return path
+    return path
 
 
 def git_restore_staged(path: str, git: Git):
@@ -43,8 +40,7 @@ def git_restore_staged(path: str, git: Git):
         git.execute(f'git restore --staged {path}')
     except GitError:
         return None
-    else:
-        return path
+    return path
 
 
 def path_is_relative_to(path: str, base_path: str) -> bool:
@@ -53,8 +49,7 @@ def path_is_relative_to(path: str, base_path: str) -> bool:
         Path(path).relative_to(Path(base_path))
     except ValueError:
         return False
-    else:
-        return True
+    return True
 
 
 def get_all_changed_files_in_repo_folder(path: str, repo: Repo):

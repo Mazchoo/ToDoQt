@@ -12,7 +12,7 @@ class ProjectTableView(QTableView):
         self.parent = parent_window
         self.max_height = max_height
         super().__init__(parent_window)
-        self.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
+        self.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)  # pylint: disable=no-member
 
     def adjust_size(self, nr_rows: int, row_height: int, col_widths: List[int]):
         ''' Ajust table size '''
@@ -35,14 +35,14 @@ class ProjectTableView(QTableView):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
 
-    parent_window = QMainWindow()
+    parent = QMainWindow()
     model = ProjectTableModel()
 
-    view = ProjectTableView(parent_window, 500)
+    view = ProjectTableView(parent, 500)
 
     view.setModel(model)
     view.adjust_size(model.rowCount(), 50, [100, 100, 100, 100, 25])
 
-    parent_window.show()
+    parent.show()
 
     sys.exit(app.exec_())

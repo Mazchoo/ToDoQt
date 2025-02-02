@@ -101,6 +101,7 @@ disable=
     consider-using-alias,
     using-assignment-expression-in-unsupported-version,
     unnecessary-lambda,
+    too-few-public-methods,
 
 [REPORTS]
 
