@@ -10,7 +10,7 @@ from UI.ToDoLayout import Ui_ToDoLayout
 
 from Controller.ControlHelpers import (
     list_view_has_selected_item, delete_item_if_selected, append_item_to_list_view,
-    get_corresponding_model, clear_all_selections, clear_not_selected
+    get_corresponding_model, clear_all_task_selections, clear_not_selected
 )
 
 
@@ -57,7 +57,7 @@ def move_task_list_item(self: Self, target_view: QListView, event: QDropEvent):
         return
     append_item_to_list_view(target_model, target_filter, target_view, move_item)
 
-    clear_all_selections(self.layout)
+    clear_all_task_selections(self.layout)
     self.layout.backup_pushButton.setEnabled(True)
     self.recalculate_current_project()
     event.accept()

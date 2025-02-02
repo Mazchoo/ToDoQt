@@ -1,4 +1,4 @@
-
+''' Main controller module to create to do controller '''
 from PyQt5.QtWidgets import QWidget, QListView
 from PyQt5.QtGui import QMovie
 from PyQt5.QtCore import QSize
@@ -15,93 +15,96 @@ from Events.TimerEvents import TimerEvents
 
 @CreateQtController  # initialise with window, model, layout
 class ToDoListController(QWidget):
-    ''' Abstract Class import with ControlFunctions implementations. '''
+    ''' Sets up models, callbacks and UI for todo list implementation '''
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *_args, **_kwargs):
         super().__init__()
         self.loader_animation = QMovie('Resources/Animations/loader.gif')
         self.loader_animation.setScaledSize(QSize().scaled(40, 40, Qt.KeepAspectRatio))
 
     @staticmethod
-    def setupCallbacks(self):
-        pending_list = self.layout.pending_listView
-        in_progress_list = self.layout.inProgress_listView
-        done_list = self.layout.done_listView
+    def setupCallbacks(controller):
+        ''' Override add callbacks to layout of controller '''
+        pending_list = controller.layout.pending_listView
+        in_progress_list = controller.layout.inProgress_listView
+        done_list = controller.layout.done_listView
 
-        self.layout.deleteTask_pushButton.clicked.connect(lambda x: self.delete_current_task(x))
-        self.layout.close_pushButton.clicked.connect(lambda x: self.close_window(x))
+        controller.layout.deleteTask_pushButton.clicked.connect(lambda x: controller.delete_current_task(x))
+        controller.layout.close_pushButton.clicked.connect(lambda x: controller.close_window(x))
 
-        pending_list.clicked.connect(lambda x: self.setFocus_to_pendingView(x))
-        in_progress_list.clicked.connect(lambda x: self.setFocus_to_in_progressView(x))
-        done_list.clicked.connect(lambda x: self.setFocus_to_doneView(x))
+        pending_list.clicked.connect(lambda x: controller.setFocus_to_pendingView(x))
+        in_progress_list.clicked.connect(lambda x: controller.setFocus_to_in_progressView(x))
+        done_list.clicked.connect(lambda x: controller.setFocus_to_doneView(x))
 
-        self.layout.backup_pushButton.clicked.connect(lambda x: self.save_backups(x))
-        self.layout.upload_pushButton.clicked.connect(lambda x: self.git_push_backups(x))
+        controller.layout.backup_pushButton.clicked.connect(lambda x: controller.save_backups(x))
+        controller.layout.upload_pushButton.clicked.connect(lambda x: controller.git_push_backups(x))
 
-        setattr(pending_list, 'dragEnterEvent', lambda e: enter_task_list_box(self.layout, pending_list, e))
+        setattr(pending_list, 'dragEnterEvent', lambda e: enter_task_list_box(controller.layout, pending_list, e))
         setattr(pending_list, 'dragMoveEvent', lambda e: drag_move_event(pending_list, e))
-        setattr(pending_list, 'dropEvent', lambda e: move_task_list_item(self, pending_list, e))
+        setattr(pending_list, 'dropEvent', lambda e: move_task_list_item(controller, pending_list, e))
 
-        setattr(in_progress_list, 'dragEnterEvent', lambda e: enter_task_list_box(self.layout, in_progress_list, e))
+        setattr(in_progress_list, 'dragEnterEvent', lambda e: enter_task_list_box(controller.layout, in_progress_list, e))
         setattr(in_progress_list, 'dragMoveEvent', lambda e: drag_move_event(in_progress_list, e))
-        setattr(in_progress_list, 'dropEvent', lambda e: move_task_list_item(self, in_progress_list, e))
+        setattr(in_progress_list, 'dropEvent', lambda e: move_task_list_item(controller, in_progress_list, e))
 
-        setattr(done_list, 'dragEnterEvent', lambda e: enter_task_list_box(self.layout, done_list, e))
+        setattr(done_list, 'dragEnterEvent', lambda e: enter_task_list_box(controller.layout, done_list, e))
         setattr(done_list, 'dragMoveEvent', lambda e: drag_move_event(done_list, e))
-        setattr(done_list, 'dropEvent', lambda e: move_task_list_item(self, done_list, e))
+        setattr(done_list, 'dropEvent', lambda e: move_task_list_item(controller, done_list, e))
 
-        self.layout.addNewTask_pushButton.clicked.connect(lambda x: self.add_new_task_to_pending(x))
-        self.layout.taskDescription_textEdit.textChanged.connect(lambda: self.check_enable_task_save_changes())
-        self.layout.newTask_lineEdit.textChanged.connect(lambda: self.enable_add_new_task())
-        self.layout.saveTaskChanges_pushButton.clicked.connect(lambda x: self.save_current_task_description(x))
+        controller.layout.addNewTask_pushButton.clicked.connect(lambda x: controller.add_new_task_to_pending(x))
+        controller.layout.taskDescription_textEdit.textChanged.connect(lambda: controller.check_enable_task_save_changes())
+        controller.layout.newTask_lineEdit.textChanged.connect(lambda: controller.enable_add_new_task())
+        controller.layout.saveTaskChanges_pushButton.clicked.connect(lambda x: controller.save_current_task_description(x))
 
-        self.layout.addNewProject_pushButton.clicked.connect(lambda x: self.add_new_project(x))
-        self.layout.projectDescription_textEdit.textChanged.connect(lambda: self.check_enable_project_save())
-        self.layout.newProject_lineEdit.textChanged.connect(lambda: self.enable_add_new_project())
-        self.layout.saveProjectChanges_pushButton.clicked.connect(lambda x: self.save_current_project_description(x))
-        self.layout.deleteProject_pushButton.clicked.connect(lambda x: self.delete_current_project(x))
+        controller.layout.addNewProject_pushButton.clicked.connect(lambda x: controller.add_new_project(x))
+        controller.layout.projectDescription_textEdit.textChanged.connect(lambda: controller.check_enable_project_save())
+        controller.layout.newProject_lineEdit.textChanged.connect(lambda: controller.enable_add_new_project())
+        controller.layout.saveProjectChanges_pushButton.clicked.connect(lambda x: controller.save_project_description(x))
+        controller.layout.deleteProject_pushButton.clicked.connect(lambda x: controller.delete_current_project(x))
 
-        self.layout.timeSpent_timeEdit.timeChanged.connect(lambda x: self.edit_time_spent_spinner(x))
-        self.layout.estimatedTime_timeEdit.timeChanged.connect(lambda x: self.edit_time_estimate_spinner(x))
-        self.layout.points_spinBox.valueChanged.connect(lambda x: self.edit_points_spinner(x))
+        controller.layout.timeSpent_timeEdit.timeChanged.connect(lambda x: controller.edit_time_spent_spinner(x))
+        controller.layout.estimatedTime_timeEdit.timeChanged.connect(lambda x: controller.edit_time_estimate_spinner(x))
+        controller.layout.points_spinBox.valueChanged.connect(lambda x: controller.edit_points_spinner(x))
 
-        self.model.pending_list.dataChanged.connect(lambda: self.task_title_changed())
+        controller.model.pending_list.dataChanged.connect(lambda: controller.task_title_changed())
 
-        self.task_description_handler = MarkdownFocusHandler(self.layout.taskDescription_textEdit)
-        self.project_description_handler = MarkdownFocusHandler(self.layout.projectDescription_textEdit)
+        controller.task_description_handler = MarkdownFocusHandler(controller.layout.taskDescription_textEdit)
+        controller.project_description_handler = MarkdownFocusHandler(controller.layout.projectDescription_textEdit)
 
-        self.timer = TimerEvents(self.layout.timeSpent_timeEdit)
-        self.layout.recordingTime_pushButton.clicked.connect(lambda x: self.toggle_record_time(x))
-
-    @staticmethod
-    def initializeModels(self):
-        self.model.load_from_folder("SavedToDo")
-        self.layout.pending_listView.setModel(self.model.pending_filter)
-        self.layout.inProgress_listView.setModel(self.model.in_progress_filter)
-        self.layout.done_listView.setModel(self.model.done_filter)
+        controller.timer = TimerEvents(controller.layout.timeSpent_timeEdit)
+        controller.layout.recordingTime_pushButton.clicked.connect(lambda x: controller.toggle_record_time(x))
 
     @staticmethod
-    def initializeUi(self):
-        self.parent.setWindowTitle(" To Do List")
-        setWindowIcon(self.parent, 'Resources/Icons/WoodenBow.png')
+    def initializeModels(controller):
+        ''' Override load and set models '''
+        controller.model.load_from_folder("SavedToDo")
+        controller.layout.pending_listView.setModel(controller.model.pending_filter)
+        controller.layout.inProgress_listView.setModel(controller.model.in_progress_filter)
+        controller.layout.done_listView.setModel(controller.model.done_filter)
 
-        self.layout.pending_listView.setAcceptDrops(True)
-        self.layout.pending_listView.setDragEnabled(True)
-        self.layout.pending_listView.setMovement(QListView.Snap)
+    @staticmethod
+    def initializeUi(controller):
+        ''' Override to set properties of ui components '''
+        controller.parent.setWindowTitle(" To Do List")
+        setWindowIcon(controller.parent, 'Resources/Icons/WoodenBow.png')
 
-        self.layout.inProgress_listView.setAcceptDrops(True)
-        self.layout.inProgress_listView.setDragEnabled(True)
-        self.layout.pending_listView.setMovement(QListView.Snap)
+        controller.layout.pending_listView.setAcceptDrops(True)
+        controller.layout.pending_listView.setDragEnabled(True)
+        controller.layout.pending_listView.setMovement(QListView.Snap)
 
-        self.layout.done_listView.setAcceptDrops(True)
-        self.layout.done_listView.setDragEnabled(True)
-        self.layout.pending_listView.setMovement(QListView.Snap)
+        controller.layout.inProgress_listView.setAcceptDrops(True)
+        controller.layout.inProgress_listView.setDragEnabled(True)
+        controller.layout.pending_listView.setMovement(QListView.Snap)
 
-        self.layout.loaderAnimation_label.setMovie(self.loader_animation)
-        self.loader_animation.start()
-        self.layout.loaderAnimation_label.setVisible(False)
+        controller.layout.done_listView.setAcceptDrops(True)
+        controller.layout.done_listView.setDragEnabled(True)
+        controller.layout.pending_listView.setMovement(QListView.Snap)
+
+        controller.layout.loaderAnimation_label.setMovie(controller.loader_animation)
+        controller.loader_animation.start()
+        controller.layout.loaderAnimation_label.setVisible(False)
 
         # Not an elegant solution, but replaces component with custom sub class
-        replace_table_view_in_layout(self)
+        replace_table_view_in_layout(controller)
 
-        self.enable_upload_if_uncomitted_changes()
+        controller.enable_upload_if_uncomitted_changes()

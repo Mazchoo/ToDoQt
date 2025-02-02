@@ -14,10 +14,10 @@ from Controller.UploadGitThread import UPLOAD_THREAD_SINGLETON
 from Controller.ControlHelpers import (
     get_selected_item_from_list, append_item_to_list_view, get_selected_task,
     delete_selected_task, update_standard_item_fields, not_uploaded_changes_present,
-    update_pandas_table_in_layout, filter_available_tasks_for_selected_project,
+    update_project_table, filter_available_tasks_for_selected_project,
     get_seconds_from_qt_time, enable_time_edits, disable_time_edits,
     recalculate_hours_spent, recalculate_hours_remain, recalculate_total_points,
-    execute_layout_change, delete_all_items_with_project_id,
+    execute_layout_change, delete_all_tasks_with_project_id,
     get_default_hour_to_points_valuation
 )
 
@@ -70,7 +70,7 @@ def add_new_project(self: ToDoListController, _click: bool):
             return
 
         self.model.project_list = self.model.project_list.add_project(new_project)
-        update_pandas_table_in_layout(self.layout.project_tableView, self.model.project_list)
+        update_project_table(self.layout.project_tableView, self.model.project_list)
 
         self.layout.newProject_lineEdit.setText("")
         self.layout.addNewProject_pushButton.setEnabled(False)
@@ -289,7 +289,7 @@ def enable_project_save(self: ToDoListController):
 
 @ClassMethod(ToDoListController)
 @QtControlFunction(True)
-def save_current_project_description(self: ToDoListController, _click: bool):
+def save_project_description(self: ToDoListController, _click: bool):
     ''' Update project model with new description '''
     if self.model.project_list.selected_row is not None:
         description = self.project_description_handler.raw_markdown
@@ -368,7 +368,7 @@ def delete_current_project(self: ToDoListController, _click: bool):
        (new_project_list := self.model.project_list.delete_selected_project()):
 
         self.model.project_list = new_project_list
-        update_pandas_table_in_layout(self.layout.project_tableView, self.model.project_list)
+        update_project_table(self.layout.project_tableView, self.model.project_list)
 
         self.layout.project_tableView.clearSelection()
         self.layout.newTask_lineEdit.setEnabled(False)
@@ -378,7 +378,7 @@ def delete_current_project(self: ToDoListController, _click: bool):
         self.layout.taskDescription_textEdit.setEnabled(False)
         disable_time_edits(self)
 
-        delete_all_items_with_project_id(self.model, project_id)
+        delete_all_tasks_with_project_id(self.model, project_id)
 
         self.layout.deleteProject_pushButton.setEnabled(False)
         self.layout.projectDescription_textEdit.setText("")
