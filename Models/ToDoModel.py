@@ -123,6 +123,6 @@ class ToDoModel(QtStaticModel):
         for data in decrypted_project_data.values():
             if project := self.load_project_json_dict_into_model(data):
                 all_projects.append(project)
-        all_projects.sort(key=lambda x: x.date_created, reverse=True)
+        all_projects.sort(key=lambda x: x.last_update, reverse=True)
 
         self.project_list = ProjectTableModel(all_projects)
