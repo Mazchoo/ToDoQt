@@ -5,6 +5,8 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QListView
 from PyQt5.QtGui import QDragEnterEvent, QDragMoveEvent, QDropEvent
 
+from Common.QtWindowHelpers import loadQss
+
 from UI.ToDoLayout import Ui_ToDoLayout
 
 
@@ -57,7 +59,12 @@ def move_task_list_item(self: Self, target_view: QListView, event: QDropEvent):
         return
     append_item_to_list_view(target_model, target_filter, target_view, move_item)
 
-    clear_all_task_selections(self.layout)
+    clear_all_task_selections(self)
     self.layout.backup_pushButton.setEnabled(True)
     self.recalculate_current_project()
+
+    if self.timer.is_recording:
+        loadQss(self.layout.recordingTime_pushButton, "Resources/QSS/NormalButton.qss")
+        self.timer.stop_recording()
+
     event.accept()

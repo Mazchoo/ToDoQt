@@ -103,6 +103,7 @@ def setFocus_to_pendingView(self: ToDoListController, _click: bool):
     selected_task = get_selected_item_from_list(self.model.pending_list, self.model.pending_filter,
                                                 self.layout.pending_listView)
     select_current_task(self, selected_task)
+    self.layout.recordingTime_pushButton.setEnabled(False)
 
 
 @ClassMethod(ToDoListController)
@@ -115,6 +116,7 @@ def setFocus_to_in_progressView(self: ToDoListController, _click: bool):
     selected_task = get_selected_item_from_list(self.model.in_progress_list, self.model.in_progress_filter,
                                                 self.layout.inProgress_listView)
     select_current_task(self, selected_task)
+    self.layout.recordingTime_pushButton.setEnabled(True)
 
 
 @ClassMethod(ToDoListController)
@@ -127,6 +129,7 @@ def setFocus_to_doneView(self: ToDoListController, _click: bool):
     selected_task = get_selected_item_from_list(self.model.done_list, self.model.done_filter,
                                                 self.layout.done_listView)
     select_current_task(self, selected_task)
+    self.layout.recordingTime_pushButton.setEnabled(False)
 
 
 @ClassMethod(ToDoListController)
@@ -403,8 +406,9 @@ def task_title_changed(self: ToDoListController):
 @QtControlFunction(True)
 def toggle_record_time(self: ToDoListController, _click: bool):
     ''' Turn time recording time on or off '''
-    is_recording = self.timer.toggle_recording()
-    if is_recording:
-        loadQss(self.layout.recordingTime_pushButton, "Resources/QSS/RecordingButton.qss")
-    else:
+    if self.timer.is_recording:
         loadQss(self.layout.recordingTime_pushButton, "Resources/QSS/NormalButton.qss")
+        self.timer.stop_recording()
+    else:
+        loadQss(self.layout.recordingTime_pushButton, "Resources/QSS/RecordingButton.qss")
+        self.timer.start_recording()

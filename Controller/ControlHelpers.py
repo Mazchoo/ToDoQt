@@ -132,17 +132,6 @@ def get_corresponding_model(model: ToDoModel, layout: Ui_ToDoLayout, list_view: 
     return None, None
 
 
-def clear_all_task_selections(layout: Ui_ToDoLayout):
-    ''' Clear task selections on GUI '''
-    layout.pending_listView.clearSelection()
-    layout.inProgress_listView.clearSelection()
-    layout.done_listView.clearSelection()
-
-    layout.taskDescription_textEdit.setText("")
-    layout.deleteTask_pushButton.setEnabled(False)
-    layout.saveTaskChanges_pushButton.setEnabled(False)
-
-
 def clear_not_selected(layout: Ui_ToDoLayout, list_view: QListView):
     ''' Clear selections for what has not been selected '''
     if list_view != layout.pending_listView:
@@ -290,7 +279,6 @@ def enable_time_edits(self: Self, selected_task: QStandardItem):
     self.layout.timeSpent_timeEdit.setEnabled(True)
     self.layout.estimatedTime_timeEdit.setEnabled(True)
     self.layout.points_spinBox.setEnabled(True)
-    self.layout.recordingTime_pushButton.setEnabled(True)
     self.timer.stop_recording()
     loadQss(self.layout.recordingTime_pushButton, "Resources/QSS/NormalButton.qss")
 
@@ -329,3 +317,16 @@ def get_default_hour_to_points_valuation(self: Self, task: QStandardItem, total_
         points_spinner.setValue(points)
 
     return points
+
+
+def clear_all_task_selections(self: Self):
+    ''' Clear task selections on GUI '''
+    self.layout.pending_listView.clearSelection()
+    self.layout.inProgress_listView.clearSelection()
+    self.layout.done_listView.clearSelection()
+
+    self.layout.taskDescription_textEdit.setText("")
+    self.layout.deleteTask_pushButton.setEnabled(False)
+    self.layout.saveTaskChanges_pushButton.setEnabled(False)
+
+    disable_time_edits(self)

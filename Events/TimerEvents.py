@@ -18,16 +18,17 @@ class TimerEvents(QTimer):
         new_time = current_time.addSecs(60)
         self.time_display.setTime(new_time)
 
+    @property
+    def is_recording(self) -> bool:
+        ''' Return true if recording '''
+        return self._recording
+
+    def start_recording(self):
+        ''' Stop recording time '''
+        self._recording = True
+        self.start()
+
     def stop_recording(self):
         ''' Stop recording time '''
         self._recording = False
         self.stop()
-
-    def toggle_recording(self) -> bool:
-        ''' Turn timing on and off '''
-        self._recording = not self._recording
-        if self._recording:
-            self.start()
-        else:
-            self.stop()
-        return self._recording
