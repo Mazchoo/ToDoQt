@@ -64,6 +64,7 @@ def move_task_list_item(self: Self, target_view: QListView, event: QDropEvent):
     self.recalculate_current_project()
 
     if self.timer.is_recording:
+        self.layout.timerAnimation_label.setVisible(False)
         loadQss(self.layout.recordingTime_pushButton, "Resources/QSS/NormalButton.qss")
         self.timer.stop_recording()
 

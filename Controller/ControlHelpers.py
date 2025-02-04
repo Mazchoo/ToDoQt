@@ -279,6 +279,8 @@ def enable_time_edits(self: Self, selected_task: QStandardItem):
     self.layout.timeSpent_timeEdit.setEnabled(True)
     self.layout.estimatedTime_timeEdit.setEnabled(True)
     self.layout.points_spinBox.setEnabled(True)
+
+    self.layout.timerAnimation_label.setVisible(False)
     self.timer.stop_recording()
     loadQss(self.layout.recordingTime_pushButton, "Resources/QSS/NormalButton.qss")
 
@@ -296,6 +298,8 @@ def disable_time_edits(self: Self):
     self.layout.estimatedTime_timeEdit.setEnabled(False)
     self.layout.points_spinBox.setEnabled(False)
     self.layout.recordingTime_pushButton.setEnabled(False)
+
+    self.layout.timerAnimation_label.setVisible(False)
     self.timer.stop_recording()
     loadQss(self.layout.recordingTime_pushButton, "Resources/QSS/NormalButton.qss")
 

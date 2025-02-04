@@ -21,6 +21,9 @@ class ToDoListController(QWidget):
         super().__init__()
         self.loader_animation = QMovie('Resources/Animations/loader.gif')
         self.loader_animation.setScaledSize(QSize().scaled(40, 40, Qt.KeepAspectRatio))
+        self.timer_animation = QMovie('Resources/Animations/clock.gif')
+        self.timer_animation.setScaledSize(QSize().scaled(40, 40, Qt.KeepAspectRatio))
+        self.timer_animation.setSpeed(200)
 
     @staticmethod
     def setupCallbacks(controller):
@@ -109,6 +112,10 @@ class ToDoListController(QWidget):
         controller.layout.loaderAnimation_label.setMovie(controller.loader_animation)
         controller.loader_animation.start()
         controller.layout.loaderAnimation_label.setVisible(False)
+
+        controller.layout.timerAnimation_label.setMovie(controller.timer_animation)
+        controller.timer_animation.start()
+        controller.layout.timerAnimation_label.setVisible(False)
 
         # Not an elegant solution, but replaces component with custom sub class
         replace_table_view_in_layout(controller)

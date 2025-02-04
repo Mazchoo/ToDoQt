@@ -41,6 +41,12 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string>Create new task with title</string>
+    </property>
+    <property name="toolTipDuration">
+     <number>1500</number>
+    </property>
     <property name="text">
      <string>Add New Task</string>
     </property>
@@ -92,6 +98,12 @@
       <height>40</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string>Save task decription changes</string>
+    </property>
+    <property name="toolTipDuration">
+     <number>1500</number>
+    </property>
     <property name="text">
      <string>Save Changes</string>
     </property>
@@ -107,6 +119,12 @@
       <width>100</width>
       <height>40</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string>Delete selected task</string>
+    </property>
+    <property name="toolTipDuration">
+     <number>1500</number>
     </property>
     <property name="text">
      <string>Delete</string>
@@ -137,6 +155,12 @@
       <height>40</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string>Save current changes to disk</string>
+    </property>
+    <property name="toolTipDuration">
+     <number>1500</number>
+    </property>
     <property name="text">
      <string>Backup</string>
     </property>
@@ -165,6 +189,12 @@
       <width>121</width>
       <height>40</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string>Upload saved changes to git</string>
+    </property>
+    <property name="toolTipDuration">
+     <number>1500</number>
     </property>
     <property name="text">
      <string>Upload</string>
@@ -315,7 +345,7 @@
    <widget class="QLabel" name="loaderAnimation_label">
     <property name="geometry">
      <rect>
-      <x>1400</x>
+      <x>1440</x>
       <y>910</y>
       <width>40</width>
       <height>40</height>
@@ -336,6 +366,12 @@
       <width>111</width>
       <height>40</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string>Toggle time recording</string>
+    </property>
+    <property name="toolTipDuration">
+     <number>1500</number>
     </property>
     <property name="text">
      <string>Log Time</string>
@@ -398,6 +434,12 @@
       <height>40</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string>Time spent on selected task</string>
+    </property>
+    <property name="toolTipDuration">
+     <number>1500</number>
+    </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
     </property>
@@ -434,6 +476,12 @@
       <height>40</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string>Time estimate of selected task</string>
+    </property>
+    <property name="toolTipDuration">
+     <number>1500</number>
+    </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
     </property>
@@ -456,6 +504,12 @@
       <width>71</width>
       <height>40</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string>Points gained for completing selected task</string>
+    </property>
+    <property name="toolTipDuration">
+     <number>1500</number>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -505,6 +559,12 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string>Create new project with title</string>
+    </property>
+    <property name="toolTipDuration">
+     <number>1500</number>
+    </property>
     <property name="text">
      <string>Add New Project</string>
     </property>
@@ -531,6 +591,12 @@
       <height>40</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string>Save task decription changes</string>
+    </property>
+    <property name="toolTipDuration">
+     <number>1500</number>
+    </property>
     <property name="text">
      <string>Save Changes</string>
     </property>
@@ -547,8 +613,27 @@
       <height>40</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string>Delete selected project</string>
+    </property>
+    <property name="toolTipDuration">
+     <number>1500</number>
+    </property>
     <property name="text">
      <string>Delete</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="timerAnimation_label">
+    <property name="geometry">
+     <rect>
+      <x>1390</x>
+      <y>910</y>
+      <width>40</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
     </property>
    </widget>
   </widget>

@@ -407,8 +407,10 @@ def task_title_changed(self: ToDoListController):
 def toggle_record_time(self: ToDoListController, _click: bool):
     ''' Turn time recording time on or off '''
     if self.timer.is_recording:
+        self.layout.timerAnimation_label.setVisible(False)
         loadQss(self.layout.recordingTime_pushButton, "Resources/QSS/NormalButton.qss")
         self.timer.stop_recording()
     else:
+        self.layout.timerAnimation_label.setVisible(True)
         loadQss(self.layout.recordingTime_pushButton, "Resources/QSS/RecordingButton.qss")
         self.timer.start_recording()
