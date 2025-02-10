@@ -7,6 +7,9 @@ import ast
 from cryptography.fernet import Fernet
 
 
+DECRYPT_KEY_HASH = {}
+
+
 def save_encryption_key_to_disk(key_file_name: Path, key: bytes):
     ''' Save an encryption key (should never be uploaded!) to local disk '''
     if key_file_name.exists():
@@ -21,11 +24,15 @@ def save_encryption_key_to_disk(key_file_name: Path, key: bytes):
 
 def load_fernet_key_from_path(key_file_name: Path) -> Fernet:
     ''' Load a fernet key from local disk '''
+    str_file_name = str(key_file_name)
+    if str_file_name in DECRYPT_KEY_HASH:
+        return DECRYPT_KEY_HASH[str_file_name]
 
-    with open(str(key_file_name), 'r', encoding='utf-8') as f:
+    with open(str_file_name, 'r', encoding='utf-8') as f:
         try:
             fernet_key = ast.literal_eval(f.read())
             fernet = Fernet(fernet_key)
+            DECRYPT_KEY_HASH[str_file_name] = fernet
         except Exception as e:
             raise ValueError(f"Fernet key {key_file_name} is not valid.") from e
 
@@ -51,6 +58,8 @@ def load_fernet_key_if_exists(key_path: Path):
 
         save_encryption_key_to_disk(key_path, fernet_key)
         fernet = Fernet(fernet_key)
+        DECRYPT_KEY_HASH[str(key_path)] = fernet
+
     return fernet
 
 
