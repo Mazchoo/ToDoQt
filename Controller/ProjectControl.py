@@ -9,6 +9,7 @@ from Common.ModelViewController import QtControlFunction
 from Controller.Controller import ToDoListController
 from Controller.ControlHelpers import (
     update_project_table, filter_available_tasks_for_selected_project, disable_time_edits,
+    delete_all_tasks_with_project_id
 )
 
 from Models.ProjectEntry import Project, create_new_project
@@ -118,3 +119,30 @@ def enable_add_new_project(self: ToDoListController):
     ''' If new project title not empty, enable add new task '''
     new_project_title_empty = self.layout.newProject_lineEdit.displayText() == ''
     self.layout.addNewProject_pushButton.setEnabled(not new_project_title_empty)
+
+
+@ClassMethod(ToDoListController)
+@QtControlFunction(True)
+def delete_current_project(self: ToDoListController, _click: bool):
+    ''' Delete project if selected '''
+    if (project_id := self.model.project_list.current_project_id) and \
+       (new_project_list := self.model.project_list.delete_selected_project()):
+
+        self.model.project_list = new_project_list
+        update_project_table(self.layout.project_tableView, self.model.project_list)
+
+        self.layout.project_tableView.clearSelection()
+        self.layout.newTask_lineEdit.setEnabled(False)
+        self.layout.saveTaskChanges_pushButton.setEnabled(False)
+        self.layout.deleteTask_pushButton.setEnabled(False)
+        self.layout.taskDescription_textEdit.setText("")
+        self.layout.taskDescription_textEdit.setEnabled(False)
+        disable_time_edits(self)
+
+        delete_all_tasks_with_project_id(self.model, project_id)
+
+        self.layout.deleteProject_pushButton.setEnabled(False)
+        self.layout.projectDescription_textEdit.setText("")
+        self.layout.projectDescription_textEdit.setEnabled(False)
+
+        self.layout.backup_pushButton.setEnabled(True)
