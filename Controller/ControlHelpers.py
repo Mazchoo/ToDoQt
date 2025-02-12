@@ -334,3 +334,59 @@ def clear_all_task_selections(self: Self):
     self.layout.saveTaskChanges_pushButton.setEnabled(False)
 
     disable_time_edits(self)
+
+
+def clear_new_task_entry(self: Self):
+    ''' Clear the text of new task '''
+    self.layout.newTask_lineEdit.setText("")
+    self.layout.addNewTask_pushButton.setEnabled(False)
+
+
+def enable_task_controls(self: Self):
+    ''' Set-up available controls for a selected task '''
+    self.layout.taskDescription_textEdit.setEnabled(True)
+    self.task_description_handler.render_markdown()
+    self.layout.deleteTask_pushButton.setEnabled(True)
+    self.layout.saveTaskChanges_pushButton.setEnabled(False)
+
+
+def disable_task_controls(self: Self):
+    ''' Set-up available controls for no task selected '''
+    self.layout.saveTaskChanges_pushButton.setEnabled(False)
+    self.layout.deleteTask_pushButton.setEnabled(False)
+    self.layout.taskDescription_textEdit.setText("")
+    self.layout.taskDescription_textEdit.setEnabled(False)
+
+
+def enable_new_task_control(self: Self):
+    ''' Enable ability to add new task '''
+    self.layout.newTask_lineEdit.setEnabled(True)
+
+
+def disable_new_task_control(self: Self):
+    ''' Disable ability to add new task '''
+    self.layout.taskDescription_textEdit.setText("")
+    self.layout.taskDescription_textEdit.setEnabled(False)
+
+
+def enable_project_controls(self: Self):
+    ''' Set-up available controls for a selected project '''
+    self.layout.deleteProject_pushButton.setEnabled(True)
+    self.layout.projectDescription_textEdit.setEnabled(True)
+    text_descrition = self.model.project_list.current_description
+    self.layout.projectDescription_textEdit.setText(text_descrition)
+    self.project_description_handler.render_markdown()
+
+
+def disable_project_controls(self: Self):
+    ''' Set-up available controls for no selected project '''
+    self.layout.project_tableView.clearSelection()
+    self.layout.deleteProject_pushButton.setEnabled(False)
+    self.layout.projectDescription_textEdit.setText("")
+    self.layout.projectDescription_textEdit.setEnabled(False)
+
+
+def clear_new_project_entry(self: Self):
+    ''' Clear the text of new project '''
+    self.layout.newTask_lineEdit.setText("")
+    self.layout.addNewTask_pushButton.setEnabled(False)

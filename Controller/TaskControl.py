@@ -11,6 +11,7 @@ from Controller.Controller import ToDoListController
 from Controller.ControlHelpers import (
     append_item_to_list_view, get_selected_task, delete_selected_task,
     update_standard_item_fields, enable_time_edits, disable_time_edits,
+    clear_new_task_entry, enable_task_controls
 )
 
 from Models.TaskEntry import create_new_task, get_date_tuple_now
@@ -29,8 +30,7 @@ def add_new_task_to_pending(self: ToDoListController, _click: bool):
 
         append_item_to_list_view(self.model.pending_list, self.model.pending_filter,
                                  self.layout.pending_listView, new_task)
-        self.layout.newTask_lineEdit.setText("")
-        self.layout.addNewTask_pushButton.setEnabled(False)
+        clear_new_task_entry(self)
         self.layout.backup_pushButton.setEnabled(True)
 
 
@@ -42,11 +42,7 @@ def select_current_task(self: ToDoListController, selected_task: Optional[QStand
         return
 
     self.layout.taskDescription_textEdit.setText(selected_task.accessibleDescription())
-    self.layout.taskDescription_textEdit.setEnabled(True)
-    self.task_description_handler.render_markdown()
-    self.layout.deleteTask_pushButton.setEnabled(True)
-    self.layout.saveTaskChanges_pushButton.setEnabled(False)
-
+    enable_task_controls(self)
     enable_time_edits(self, selected_task)
 
 

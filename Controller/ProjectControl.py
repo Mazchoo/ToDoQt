@@ -9,7 +9,9 @@ from Common.ModelViewController import QtControlFunction
 from Controller.Controller import ToDoListController
 from Controller.ControlHelpers import (
     update_project_table, filter_available_tasks_for_selected_project, disable_time_edits,
-    delete_all_tasks_with_project_id
+    delete_all_tasks_with_project_id, disable_task_controls, disable_new_task_control,
+    enable_project_controls, enable_new_task_control, disable_project_controls,
+    clear_new_project_entry
 )
 
 from Models.ProjectEntry import Project, create_new_project
@@ -29,8 +31,7 @@ def add_new_project(self: ToDoListController, _click: bool):
         self.model.project_list = self.model.project_list.add_project(new_project)
         update_project_table(self.layout.project_tableView, self.model.project_list)
 
-        self.layout.newProject_lineEdit.setText("")
-        self.layout.addNewProject_pushButton.setEnabled(False)
+        clear_new_project_entry(self)
         self.layout.backup_pushButton.setEnabled(True)
 
 
@@ -38,29 +39,23 @@ def add_new_project(self: ToDoListController, _click: bool):
 @QtControlFunction(MagicMock())
 def project_row_click(self: ToDoListController, clicked_index: QModelIndex):
     ''' Reset GUI for clicking on a project '''
+    self.project_description_handler.stop_editing()
+
     prev_project_id = self.model.project_list.current_project_id
     row = clicked_index.row()
     self.model.project_list.set_selected_row(row)
     project_id = self.model.project_list.current_project_id
-    self.project_description_handler.stop_editing()
 
     if project_id != prev_project_id:
         filter_available_tasks_for_selected_project(self.model, project_id)
 
-        self.layout.newTask_lineEdit.setEnabled(True)
-        self.layout.saveTaskChanges_pushButton.setEnabled(False)
-        self.layout.deleteTask_pushButton.setEnabled(False)
-        self.layout.taskDescription_textEdit.setText("")
-        self.layout.taskDescription_textEdit.setEnabled(False)
+        enable_new_task_control(self)
+        disable_task_controls(self)
         disable_time_edits(self)
 
         self.layout.saveProjectChanges_pushButton.setEnabled(False)
 
-        self.layout.deleteProject_pushButton.setEnabled(True)
-        self.layout.projectDescription_textEdit.setEnabled(True)
-        text_descrition = self.model.project_list.current_description
-        self.layout.projectDescription_textEdit.setText(text_descrition)
-        self.project_description_handler.render_markdown()
+        enable_project_controls(self)
 
 
 @ClassMethod(ToDoListController)
@@ -70,18 +65,10 @@ def project_header_click(self: ToDoListController, _clicked_index: QModelIndex):
     self.model.project_list.set_selected_row(None)
     filter_available_tasks_for_selected_project(self.model, None)
 
-    self.layout.newTask_lineEdit.setText("")
-    self.layout.newTask_lineEdit.setEnabled(False)
-    self.layout.saveTaskChanges_pushButton.setEnabled(False)
-    self.layout.deleteTask_pushButton.setEnabled(False)
-    self.layout.taskDescription_textEdit.setText("")
-    self.layout.taskDescription_textEdit.setEnabled(False)
+    disable_task_controls(self)
+    disable_new_task_control(self)
     disable_time_edits(self)
-
-    self.layout.project_tableView.clearSelection()
-    self.layout.deleteProject_pushButton.setEnabled(False)
-    self.layout.projectDescription_textEdit.setText("")
-    self.layout.projectDescription_textEdit.setEnabled(False)
+    disable_project_controls(self)
 
 
 @ClassMethod(ToDoListController)
@@ -131,18 +118,11 @@ def delete_current_project(self: ToDoListController, _click: bool):
         self.model.project_list = new_project_list
         update_project_table(self.layout.project_tableView, self.model.project_list)
 
-        self.layout.project_tableView.clearSelection()
-        self.layout.newTask_lineEdit.setEnabled(False)
-        self.layout.saveTaskChanges_pushButton.setEnabled(False)
-        self.layout.deleteTask_pushButton.setEnabled(False)
-        self.layout.taskDescription_textEdit.setText("")
-        self.layout.taskDescription_textEdit.setEnabled(False)
+        disable_task_controls(self)
+        disable_new_task_control(self)
         disable_time_edits(self)
 
         delete_all_tasks_with_project_id(self.model, project_id)
-
-        self.layout.deleteProject_pushButton.setEnabled(False)
-        self.layout.projectDescription_textEdit.setText("")
-        self.layout.projectDescription_textEdit.setEnabled(False)
+        disable_project_controls(self)
 
         self.layout.backup_pushButton.setEnabled(True)
