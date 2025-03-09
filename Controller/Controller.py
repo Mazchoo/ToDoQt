@@ -70,6 +70,8 @@ class ToDoListController(QWidget):
         controller.layout.points_spinBox.valueChanged.connect(lambda x: controller.edit_points_spinner(x))
 
         controller.model.pending_list.dataChanged.connect(lambda: controller.task_title_changed())
+        controller.model.in_progress_list.dataChanged.connect(lambda: controller.task_title_changed())
+        controller.model.done_list.dataChanged.connect(lambda: controller.task_title_changed())
 
         controller.task_description_handler = MarkdownFocusHandler(controller.layout.taskDescription_textEdit)
         controller.project_description_handler = MarkdownFocusHandler(controller.layout.projectDescription_textEdit)
