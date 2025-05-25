@@ -2,7 +2,7 @@
 
 ## Description
 
-Project manager that can:
+A project manager that can:
 * Create projects that summarise progress
 * Add tasks to project with three states: pending, doing and done
 * Can add estimates and record time spend in tasks in doing state
