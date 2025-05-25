@@ -388,5 +388,5 @@ def disable_project_controls(self: Self):
 
 def clear_new_project_entry(self: Self):
     ''' Clear the text of new project '''
-    self.layout.newTask_lineEdit.setText("")
-    self.layout.addNewTask_pushButton.setEnabled(False)
+    self.layout.newProject_lineEdit.setText("")
+    self.layout.addNewProject_pushButton.setEnabled(False)
