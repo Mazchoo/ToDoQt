@@ -1,3 +1,5 @@
+![image](https://github.com/user-attachments/assets/c09581d4-b1ac-4c3c-ab61-f33b72d99f9b)
+
 ## Description
 
 Project manager that can:
@@ -7,9 +9,7 @@ Project manager that can:
 * Add descriptions with markdown to tasks and projects
 * Can use emoji's in titles (very important)
 
-![image](https://github.com/user-attachments/assets/c09581d4-b1ac-4c3c-ab61-f33b72d99f9b)
-
-Uses PyQt5 for display
+Made using PyQt5.
 
 ## Installation
 
