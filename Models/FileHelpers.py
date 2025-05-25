@@ -1,6 +1,6 @@
 ''' Loading and saving file helper functions '''
 from pathlib import Path
-from os import listdir, getcwd
+from os import listdir, getcwd, mkdir
 from datetime import datetime
 from typing import Dict, List, Tuple
 
@@ -96,6 +96,8 @@ def save_model_data(save_path: Path, save_fields: List[str], encrypt_fields: Lis
 def check_folder_path(rel_path: str):
     ''' Raise expection if path is not valid folder '''
     path = Path(f"{CWD}/{rel_path}")
-    if not path.exists() or not path.is_dir():
+    if path.exists() and not path.is_dir():
         raise FileNotFoundError(f"Invalid directory {path}")
+    if not path.exists():
+        mkdir(str(path))
     return path
