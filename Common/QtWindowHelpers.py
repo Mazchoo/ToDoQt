@@ -1,9 +1,13 @@
 ''' Operations that change the properties of Qt windows '''
 import os
 
+try:
+    from pyqss import Qss as QssEditor
+except ImportError:
+    print("Warning: pyqss not installed")
+
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QWidget, QMainWindow
-from pyqss import Qss as QssEditor
 
 CWD = os.getcwd()
 QSS_CACHE = {}

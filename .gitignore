@@ -1,4 +1,6 @@
 
+SavedToDo/saved_projects.csv
+SavedToDo/saved_tasks.csv
 *.hash_brown
 *.pyc
 venv/
