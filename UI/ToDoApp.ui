@@ -500,7 +500,7 @@
     <property name="geometry">
      <rect>
       <x>1740</x>
-      <y>646</y>
+      <y>642</y>
       <width>61</width>
       <height>20</height>
      </rect>
@@ -590,6 +590,129 @@
     </property>
     <property name="text">
      <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="currentLevel_label">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>926</y>
+      <width>161</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Current Level</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="levelDisplayButton">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>916</y>
+      <width>171</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Delete selected project</string>
+    </property>
+    <property name="toolTipDuration">
+     <number>1500</number>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="totalPoints_label">
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>926</y>
+      <width>120</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Total Points</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="totalPoints_spinBox">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>500</x>
+      <y>916</y>
+      <width>111</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Points gained for completing selected task</string>
+    </property>
+    <property name="toolTipDuration">
+     <number>1500</number>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <property name="buttonSymbols">
+     <enum>QAbstractSpinBox::NoButtons</enum>
+    </property>
+    <property name="maximum">
+     <number>1000000</number>
+    </property>
+    <property name="singleStep">
+     <number>0</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="pointsTillNextLevel_label">
+    <property name="geometry">
+     <rect>
+      <x>630</x>
+      <y>926</y>
+      <width>191</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Points To Next Level</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="pointsTillNextLevel_spinBox">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>840</x>
+      <y>916</y>
+      <width>111</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Points gained for completing selected task</string>
+    </property>
+    <property name="toolTipDuration">
+     <number>1500</number>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <property name="buttonSymbols">
+     <enum>QAbstractSpinBox::NoButtons</enum>
+    </property>
+    <property name="maximum">
+     <number>1000000</number>
+    </property>
+    <property name="singleStep">
+     <number>0</number>
     </property>
    </widget>
   </widget>
