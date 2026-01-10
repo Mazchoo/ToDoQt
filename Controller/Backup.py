@@ -1,4 +1,5 @@
-''' Control functions for saving and uploading to git '''
+"""Control functions for saving and uploading to git"""
+
 from Common.ClassMethod import ClassMethod
 from Common.ModelViewController import QtControlFunction
 
@@ -10,7 +11,7 @@ from Controller.ControlHelpers import not_uploaded_changes_present
 @ClassMethod(ToDoListController)
 @QtControlFunction(True)
 def save_backups(self: ToDoListController, _click: bool):
-    ''' Save all model data to folder '''
+    """Save all model data to folder"""
     self.model.save_to_folder("SavedToDo")
     self.layout.backup_pushButton.setEnabled(False)
     self.layout.upload_pushButton.setEnabled(True)
@@ -18,7 +19,7 @@ def save_backups(self: ToDoListController, _click: bool):
 
 @ClassMethod(ToDoListController)
 def start_upload(self: ToDoListController):
-    ''' Set-up GUI for starting upload '''
+    """Set-up GUI for starting upload"""
     self.layout.loaderAnimation_label.setVisible(True)
     UPLOAD_THREAD_SINGLETON.running = True
     UPLOAD_THREAD_SINGLETON.started.disconnect()
@@ -26,7 +27,7 @@ def start_upload(self: ToDoListController):
 
 @ClassMethod(ToDoListController)
 def end_upload(self: ToDoListController):
-    ''' Set-up GUI for finishing upload '''
+    """Set-up GUI for finishing upload"""
     self.layout.loaderAnimation_label.setVisible(False)
     UPLOAD_THREAD_SINGLETON.running = False
     UPLOAD_THREAD_SINGLETON.finished.disconnect()
@@ -35,7 +36,7 @@ def end_upload(self: ToDoListController):
 
 @ClassMethod(ToDoListController)
 def git_push_backups(self: ToDoListController, _click: bool):
-    ''' Save backups in repo '''
+    """Save backups in repo"""
     if not UPLOAD_THREAD_SINGLETON.running:
         self.layout.upload_pushButton.setEnabled(False)
         UPLOAD_THREAD_SINGLETON.finished.connect(self.end_upload)
@@ -46,5 +47,5 @@ def git_push_backups(self: ToDoListController, _click: bool):
 @ClassMethod(ToDoListController)
 @QtControlFunction()
 def enable_upload_if_uncomitted_changes(self: ToDoListController):
-    ''' Enable upload if changes unuploaded changes present '''
+    """Enable upload if changes unuploaded changes present"""
     self.layout.upload_pushButton.setEnabled(not_uploaded_changes_present())

@@ -1,4 +1,5 @@
-''' Launch application '''
+"""Launch application"""
+
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow
 
@@ -8,13 +9,13 @@ from Models.ToDoModel import ToDoModel
 from Controller.ControlFunctions import ToDoListController
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = QApplication(sys.argv)
 
     parent_window = QMainWindow()
     widget = ToDoListController(parent_window, ToDoModel, Ui_ToDoLayout)
 
-    if 'RUN_QSS_EDITOR' in sys.argv:
+    if "RUN_QSS_EDITOR" in sys.argv:
         attachQssEditor(parent_window)
 
     parent_window.show()

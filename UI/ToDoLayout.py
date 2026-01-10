@@ -183,7 +183,9 @@ class Ui_ToDoLayout(object):
         self.saveProjectChanges_pushButton.setEnabled(False)
         self.saveProjectChanges_pushButton.setGeometry(QtCore.QRect(230, 635, 150, 40))
         self.saveProjectChanges_pushButton.setToolTipDuration(1500)
-        self.saveProjectChanges_pushButton.setObjectName("saveProjectChanges_pushButton")
+        self.saveProjectChanges_pushButton.setObjectName(
+            "saveProjectChanges_pushButton"
+        )
         self.deleteProject_pushButton = QtWidgets.QPushButton(self.centralwidget)
         self.deleteProject_pushButton.setEnabled(False)
         self.deleteProject_pushButton.setGeometry(QtCore.QRect(390, 635, 100, 40))
@@ -208,40 +210,73 @@ class Ui_ToDoLayout(object):
     def retranslateUi(self, ToDoLayout):
         _translate = QtCore.QCoreApplication.translate
         ToDoLayout.setWindowTitle(_translate("ToDoLayout", "MainWindow"))
-        self.addNewTask_pushButton.setToolTip(_translate("ToDoLayout", "Create new task with title"))
+        self.addNewTask_pushButton.setToolTip(
+            _translate("ToDoLayout", "Create new task with title")
+        )
         self.addNewTask_pushButton.setText(_translate("ToDoLayout", "Add New Task"))
-        self.saveTaskChanges_pushButton.setToolTip(_translate("ToDoLayout", "Save task decription changes"))
-        self.saveTaskChanges_pushButton.setText(_translate("ToDoLayout", "Save Changes"))
-        self.deleteTask_pushButton.setToolTip(_translate("ToDoLayout", "Delete selected task"))
+        self.saveTaskChanges_pushButton.setToolTip(
+            _translate("ToDoLayout", "Save task decription changes")
+        )
+        self.saveTaskChanges_pushButton.setText(
+            _translate("ToDoLayout", "Save Changes")
+        )
+        self.deleteTask_pushButton.setToolTip(
+            _translate("ToDoLayout", "Delete selected task")
+        )
         self.deleteTask_pushButton.setText(_translate("ToDoLayout", "Delete"))
         self.editDescription_label.setText(_translate("ToDoLayout", "Task Description"))
-        self.backup_pushButton.setToolTip(_translate("ToDoLayout", "Save current changes to disk"))
+        self.backup_pushButton.setToolTip(
+            _translate("ToDoLayout", "Save current changes to disk")
+        )
         self.backup_pushButton.setText(_translate("ToDoLayout", "Backup"))
         self.close_pushButton.setText(_translate("ToDoLayout", "Close"))
-        self.upload_pushButton.setToolTip(_translate("ToDoLayout", "Upload saved changes to git"))
+        self.upload_pushButton.setToolTip(
+            _translate("ToDoLayout", "Upload saved changes to git")
+        )
         self.upload_pushButton.setText(_translate("ToDoLayout", "Upload"))
         self.pending_label.setText(_translate("ToDoLayout", "Pending"))
         self.inProgress_label.setText(_translate("ToDoLayout", "In Progress"))
         self.done_label.setText(_translate("ToDoLayout", "Done"))
-        self.recordingTime_pushButton.setToolTip(_translate("ToDoLayout", "Toggle time recording"))
+        self.recordingTime_pushButton.setToolTip(
+            _translate("ToDoLayout", "Toggle time recording")
+        )
         self.recordingTime_pushButton.setText(_translate("ToDoLayout", "Log Time"))
-        self.editProjectDescription_label.setText(_translate("ToDoLayout", "Project Description"))
+        self.editProjectDescription_label.setText(
+            _translate("ToDoLayout", "Project Description")
+        )
         self.project_label.setText(_translate("ToDoLayout", "Project Summaries"))
-        self.timeSpent_timeEdit.setToolTip(_translate("ToDoLayout", "Time spent on selected task"))
+        self.timeSpent_timeEdit.setToolTip(
+            _translate("ToDoLayout", "Time spent on selected task")
+        )
         self.estimate_label.setText(_translate("ToDoLayout", "Estimate:"))
-        self.estimatedTime_timeEdit.setToolTip(_translate("ToDoLayout", "Time estimate of selected task"))
-        self.points_spinBox.setToolTip(_translate("ToDoLayout", "Points gained for completing selected task"))
+        self.estimatedTime_timeEdit.setToolTip(
+            _translate("ToDoLayout", "Time estimate of selected task")
+        )
+        self.points_spinBox.setToolTip(
+            _translate("ToDoLayout", "Points gained for completing selected task")
+        )
         self.points_label.setText(_translate("ToDoLayout", "Points:"))
-        self.addNewProject_pushButton.setToolTip(_translate("ToDoLayout", "Create new project with title"))
-        self.addNewProject_pushButton.setText(_translate("ToDoLayout", "Add New Project"))
-        self.saveProjectChanges_pushButton.setToolTip(_translate("ToDoLayout", "Save task decription changes"))
-        self.saveProjectChanges_pushButton.setText(_translate("ToDoLayout", "Save Changes"))
-        self.deleteProject_pushButton.setToolTip(_translate("ToDoLayout", "Delete selected project"))
+        self.addNewProject_pushButton.setToolTip(
+            _translate("ToDoLayout", "Create new project with title")
+        )
+        self.addNewProject_pushButton.setText(
+            _translate("ToDoLayout", "Add New Project")
+        )
+        self.saveProjectChanges_pushButton.setToolTip(
+            _translate("ToDoLayout", "Save task decription changes")
+        )
+        self.saveProjectChanges_pushButton.setText(
+            _translate("ToDoLayout", "Save Changes")
+        )
+        self.deleteProject_pushButton.setToolTip(
+            _translate("ToDoLayout", "Delete selected project")
+        )
         self.deleteProject_pushButton.setText(_translate("ToDoLayout", "Delete"))
 
 
 if __name__ == "__main__":
     import sys
+
     app = QtWidgets.QApplication(sys.argv)
     ToDoLayout = QtWidgets.QMainWindow()
     ui = Ui_ToDoLayout()

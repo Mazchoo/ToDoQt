@@ -1,4 +1,5 @@
-''' Functions to create save csv '''
+"""Functions to create save csv"""
+
 from typing import Set, Dict
 from pathlib import Path
 
@@ -9,36 +10,39 @@ from Common.GenerateEncryption import encrypt_dictionary_and_save_key
 
 
 def get_full_hash_path(save_folder: Path, file_name: str) -> str:
-    ''' Get path to hash brown file '''
-    return save_folder / 'Hashbrowns' / file_name
+    """Get path to hash brown file"""
+    return save_folder / "Hashbrowns" / file_name
 
 
-def turn_loaded_dict_into_df(note_data_dict: dict, path: Path,
-                             encrypt_fields: set) -> pd.DataFrame:
-    ''' Converted dict data into encrypted csv data '''
+def turn_loaded_dict_into_df(
+    note_data_dict: dict, path: Path, encrypt_fields: set
+) -> pd.DataFrame:
+    """Converted dict data into encrypted csv data"""
     encrypted_notes = {}
     for file_name, note_data in note_data_dict.items():
         file_path = get_full_hash_path(path, file_name)
 
         try:
-            encrypted_note = encrypt_dictionary_and_save_key(note_data, file_path, encrypt_fields)
+            encrypted_note = encrypt_dictionary_and_save_key(
+                note_data, file_path, encrypt_fields
+            )
         except InvalidToken as e:
             print(f"Error! Encryption failed {file_name} -> {e}")
         else:
             encrypted_notes[file_name] = encrypted_note
 
-    return pd.DataFrame.from_dict(encrypted_notes, orient='index')
+    return pd.DataFrame.from_dict(encrypted_notes, orient="index")
 
 
 def get_all_new_entries(all_note_data: dict, initial_data: dict) -> Set[str]:
-    ''' Return all new entry keys '''
+    """Return all new entry keys"""
     all_previous_keys = initial_data.keys()
     all_current_keys = set(all_note_data.keys())
     return all_current_keys.difference(all_previous_keys)
 
 
 def get_all_edited_entries(all_note_data: dict, initial_data: dict) -> Dict[str, dict]:
-    ''' Get all edited notes '''
+    """Get all edited notes"""
     edited_notes = {}
     for key, json_dict in all_note_data.items():
         if key in initial_data and initial_data[key] != json_dict:
@@ -48,14 +52,14 @@ def get_all_edited_entries(all_note_data: dict, initial_data: dict) -> Dict[str,
 
 
 def get_all_delete_entries(all_note_data: dict, initial_data: dict) -> Set[str]:
-    ''' Return all deleted keys '''
+    """Return all deleted keys"""
     all_previous_keys = set(initial_data.keys())
     all_current_keys = all_note_data.keys()
     return all_previous_keys.difference(all_current_keys)
 
 
 def get_new_columns(all_note_data: dict, current_cols: list) -> Set[str]:
-    ''' Get set of all new columns '''
+    """Get set of all new columns"""
     new_columns = set()
     if all_note_data:
         current_cols_set = set(current_cols)
@@ -65,7 +69,7 @@ def get_new_columns(all_note_data: dict, current_cols: list) -> Set[str]:
 
 
 def get_deleted_columns(all_note_data: dict, current_cols: list) -> Set[str]:
-    ''' Get set of all deleted columns '''
+    """Get set of all deleted columns"""
     deleted_columns = set()
     if all_note_data:
         first_note_set = set(list(all_note_data.values())[0])
@@ -74,25 +78,30 @@ def get_deleted_columns(all_note_data: dict, current_cols: list) -> Set[str]:
 
 
 def get_rows_from_keys(all_note_data: dict, filter_set: set):
-    ''' Get dict of row from key set '''
+    """Get dict of row from key set"""
     return {k: v for k, v in all_note_data.items() if k in filter_set}
 
 
 def check_for_duplicate_index(df: pd.DataFrame):
-    ''' If dataframe is re-indexed, drop extra index column and give warning '''
+    """If dataframe is re-indexed, drop extra index column and give warning"""
     init_len = len(df)
     df["_index"] = df.index
 
-    df.drop_duplicates(subset="_index", keep='last', inplace=True)
+    df.drop_duplicates(subset="_index", keep="last", inplace=True)
     if len(df) < init_len:
-        print('Warning!: Duplicate rows trying to be saved to database!')
+        print("Warning!: Duplicate rows trying to be saved to database!")
 
     df.drop(columns="_index", inplace=True)
 
 
-def create_updated_df(original_df: pd.DataFrame, new_data: dict, initial_data: dict,
-                      path: Path, encrypt_fields: set) -> pd.DataFrame:
-    ''' Create updated dataframe with minimal changes to encryption '''
+def create_updated_df(
+    original_df: pd.DataFrame,
+    new_data: dict,
+    initial_data: dict,
+    path: Path,
+    encrypt_fields: set,
+) -> pd.DataFrame:
+    """Create updated dataframe with minimal changes to encryption"""
     final_df = original_df.copy()
 
     edited_rows = get_all_edited_entries(new_data, initial_data)
@@ -119,7 +128,7 @@ def create_updated_df(original_df: pd.DataFrame, new_data: dict, initial_data: d
     final_df.drop(deleted_row_set, inplace=True)
     final_df = pd.concat([final_df, new_rows_df])
 
-    final_df.sort_values(by=['id_number'])
+    final_df.sort_values(by=["id_number"])
     check_for_duplicate_index(final_df)
 
     return final_df

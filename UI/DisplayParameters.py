@@ -1,4 +1,4 @@
-''' Paremeters related to layout of app not captured in the UI file '''
+"""Paremeters related to layout of app not captured in the UI file"""
 
 PROJECT_TABLE_COLUMN_SPACING = [70, 300, 100, 75, 75, 75, 75, 20]
 PROJECT_TABLE_LEFT_ALGIN_COLUMNS = [1]  # Title is left aligned
