@@ -388,7 +388,6 @@ def clear_all_task_selections(self: Self):
 
     self.layout.taskDescription_textEdit.setText("")
     self.layout.deleteTask_pushButton.setEnabled(False)
-    self.layout.saveTaskChanges_pushButton.setEnabled(False)
 
     disable_time_edits(self)
 
@@ -404,12 +403,10 @@ def enable_task_controls(self: Self):
     self.layout.taskDescription_textEdit.setEnabled(True)
     self.task_description_handler.render_markdown()
     self.layout.deleteTask_pushButton.setEnabled(True)
-    self.layout.saveTaskChanges_pushButton.setEnabled(False)
 
 
 def disable_task_controls(self: Self):
     """Set-up available controls for no task selected"""
-    self.layout.saveTaskChanges_pushButton.setEnabled(False)
     self.layout.deleteTask_pushButton.setEnabled(False)
     self.layout.taskDescription_textEdit.setText("")
     self.layout.taskDescription_textEdit.setEnabled(False)
