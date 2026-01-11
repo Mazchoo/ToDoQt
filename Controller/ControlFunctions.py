@@ -3,6 +3,8 @@ Import all functions that change state of the GUI from events on views
 This module should be imported into the controller at some level
 """
 
+from PyQt5.QtWidgets import QMessageBox
+
 from Common.ClassMethod import ClassMethod
 from Common.ModelViewController import QtControlFunction
 
@@ -19,4 +21,20 @@ import Controller.Timing  # noqa pylint: disable=unused-import
 @QtControlFunction(True)
 def close_window(self: ToDoListController, _click: bool):
     """Close window action"""
-    self.parent.close()
+    # Check if there are unsaved changes (backup button is enabled)
+    if self.layout.backup_pushButton.isEnabled():
+        # Show confirmation dialog
+        reply = QMessageBox.question(
+            self.parent,
+            "Unsaved Changes",
+            "You have unsaved changes.\nAre you sure you want to close?",
+            QMessageBox.Yes | QMessageBox.No,
+            QMessageBox.No,
+        )
+
+        # Only close if user confirms
+        if reply == QMessageBox.Yes:
+            self.parent.close()
+    else:
+        # No unsaved changes, close directly
+        self.parent.close()
