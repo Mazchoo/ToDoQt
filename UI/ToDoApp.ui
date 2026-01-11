@@ -737,7 +737,7 @@
      <string>Archive</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="addNewProject_pushButton_2">
+   <widget class="QPushButton" name="showArchive_pushButton">
     <property name="enabled">
      <bool>true</bool>
     </property>

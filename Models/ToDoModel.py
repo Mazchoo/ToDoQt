@@ -6,7 +6,7 @@ from PyQt5.QtGui import QStandardItemModel
 
 from Common.QtModel import QtStaticModel
 
-from Models.ProjectProxyFilter import ProjectFilterProxyModel
+from Models.TaskProxyFilter import TaskFilterProxyModel
 
 from Models.ModelParameters import (
     TASK_FIELDS_APPLY_EVAL,
@@ -36,11 +36,11 @@ class ToDoModel(QtStaticModel):
     """Singleton that stores Qt Model information"""
 
     pending_list = QStandardItemModel
-    pending_filter = ProjectFilterProxyModel
+    pending_filter = TaskFilterProxyModel
     in_progress_list = QStandardItemModel
-    in_progress_filter = ProjectFilterProxyModel
+    in_progress_filter = TaskFilterProxyModel
     done_list = QStandardItemModel
-    done_filter = ProjectFilterProxyModel
+    done_filter = TaskFilterProxyModel
     project_list = ProjectTableModel
 
     def get_all_task_data(self) -> Dict[str, List[dict]]:
@@ -142,9 +142,9 @@ class ToDoModel(QtStaticModel):
         for data in decrypted_note_data.values():
             self.load_task_json_dict_into_model(data)
 
-        self.pending_filter = ProjectFilterProxyModel(self.pending_list)
-        self.in_progress_filter = ProjectFilterProxyModel(self.in_progress_list)
-        self.done_filter = ProjectFilterProxyModel(self.done_list)
+        self.pending_filter = TaskFilterProxyModel(self.pending_list)
+        self.in_progress_filter = TaskFilterProxyModel(self.in_progress_list)
+        self.done_filter = TaskFilterProxyModel(self.done_list)
 
         decrypted_project_data = load_content_from_csv(
             path / SAVED_PROJECTS_FILENAME,

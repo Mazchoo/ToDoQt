@@ -212,7 +212,9 @@ class Ui_ToDoLayout(object):
         self.pointsTillNextLevel_spinBox.setGeometry(QtCore.QRect(836, 916, 111, 40))
         self.pointsTillNextLevel_spinBox.setToolTipDuration(1500)
         self.pointsTillNextLevel_spinBox.setAlignment(QtCore.Qt.AlignCenter)
-        self.pointsTillNextLevel_spinBox.setButtonSymbols(QtWidgets.QAbstractSpinBox.NoButtons)
+        self.pointsTillNextLevel_spinBox.setButtonSymbols(
+            QtWidgets.QAbstractSpinBox.NoButtons
+        )
         self.pointsTillNextLevel_spinBox.setMaximum(1000000)
         self.pointsTillNextLevel_spinBox.setSingleStep(0)
         self.pointsTillNextLevel_spinBox.setObjectName("pointsTillNextLevel_spinBox")
@@ -221,11 +223,11 @@ class Ui_ToDoLayout(object):
         self.archiveProject_pushButton.setGeometry(QtCore.QRect(340, 635, 100, 40))
         self.archiveProject_pushButton.setToolTipDuration(1500)
         self.archiveProject_pushButton.setObjectName("archiveProject_pushButton")
-        self.addNewProject_pushButton_2 = QtWidgets.QPushButton(self.centralwidget)
-        self.addNewProject_pushButton_2.setEnabled(True)
-        self.addNewProject_pushButton_2.setGeometry(QtCore.QRect(590, 5, 191, 41))
-        self.addNewProject_pushButton_2.setToolTipDuration(1500)
-        self.addNewProject_pushButton_2.setObjectName("addNewProject_pushButton_2")
+        self.showArchive_pushButton = QtWidgets.QPushButton(self.centralwidget)
+        self.showArchive_pushButton.setEnabled(True)
+        self.showArchive_pushButton.setGeometry(QtCore.QRect(590, 5, 191, 41))
+        self.showArchive_pushButton.setToolTipDuration(1500)
+        self.showArchive_pushButton.setObjectName("showArchive_pushButton")
         ToDoLayout.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(ToDoLayout)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1900, 26))
@@ -241,46 +243,83 @@ class Ui_ToDoLayout(object):
     def retranslateUi(self, ToDoLayout):
         _translate = QtCore.QCoreApplication.translate
         ToDoLayout.setWindowTitle(_translate("ToDoLayout", "MainWindow"))
-        self.addNewTask_pushButton.setToolTip(_translate("ToDoLayout", "Create new task with title"))
+        self.addNewTask_pushButton.setToolTip(
+            _translate("ToDoLayout", "Create new task with title")
+        )
         self.addNewTask_pushButton.setText(_translate("ToDoLayout", "Add New Task"))
-        self.deleteTask_pushButton.setToolTip(_translate("ToDoLayout", "Delete selected task"))
+        self.deleteTask_pushButton.setToolTip(
+            _translate("ToDoLayout", "Delete selected task")
+        )
         self.deleteTask_pushButton.setText(_translate("ToDoLayout", "Delete"))
         self.editDescription_label.setText(_translate("ToDoLayout", "Task Description"))
-        self.backup_pushButton.setToolTip(_translate("ToDoLayout", "Save current changes to disk"))
+        self.backup_pushButton.setToolTip(
+            _translate("ToDoLayout", "Save current changes to disk")
+        )
         self.backup_pushButton.setText(_translate("ToDoLayout", "Backup"))
         self.close_pushButton.setText(_translate("ToDoLayout", "Close"))
-        self.upload_pushButton.setToolTip(_translate("ToDoLayout", "Upload saved changes to git"))
+        self.upload_pushButton.setToolTip(
+            _translate("ToDoLayout", "Upload saved changes to git")
+        )
         self.upload_pushButton.setText(_translate("ToDoLayout", "Upload"))
         self.pending_label.setText(_translate("ToDoLayout", "Pending"))
         self.inProgress_label.setText(_translate("ToDoLayout", "In Progress"))
         self.done_label.setText(_translate("ToDoLayout", "Done"))
-        self.recordingTime_pushButton.setToolTip(_translate("ToDoLayout", "Toggle time recording"))
+        self.recordingTime_pushButton.setToolTip(
+            _translate("ToDoLayout", "Toggle time recording")
+        )
         self.recordingTime_pushButton.setText(_translate("ToDoLayout", "Log Time"))
-        self.editProjectDescription_label.setText(_translate("ToDoLayout", "Project Description"))
+        self.editProjectDescription_label.setText(
+            _translate("ToDoLayout", "Project Description")
+        )
         self.project_label.setText(_translate("ToDoLayout", "Project Summaries"))
-        self.timeSpent_timeEdit.setToolTip(_translate("ToDoLayout", "Time spent on selected task"))
+        self.timeSpent_timeEdit.setToolTip(
+            _translate("ToDoLayout", "Time spent on selected task")
+        )
         self.estimate_label.setText(_translate("ToDoLayout", "Estimate:"))
-        self.estimatedTime_timeEdit.setToolTip(_translate("ToDoLayout", "Time estimate of selected task"))
-        self.points_spinBox.setToolTip(_translate("ToDoLayout", "Points gained for completing selected task"))
+        self.estimatedTime_timeEdit.setToolTip(
+            _translate("ToDoLayout", "Time estimate of selected task")
+        )
+        self.points_spinBox.setToolTip(
+            _translate("ToDoLayout", "Points gained for completing selected task")
+        )
         self.points_label.setText(_translate("ToDoLayout", "Points:"))
-        self.addNewProject_pushButton.setToolTip(_translate("ToDoLayout", "Create new project with title"))
-        self.addNewProject_pushButton.setText(_translate("ToDoLayout", "Add New Project"))
-        self.deleteProject_pushButton.setToolTip(_translate("ToDoLayout", "Delete selected project"))
+        self.addNewProject_pushButton.setToolTip(
+            _translate("ToDoLayout", "Create new project with title")
+        )
+        self.addNewProject_pushButton.setText(
+            _translate("ToDoLayout", "Add New Project")
+        )
+        self.deleteProject_pushButton.setToolTip(
+            _translate("ToDoLayout", "Delete selected project")
+        )
         self.deleteProject_pushButton.setText(_translate("ToDoLayout", "Delete"))
         self.currentLevel_label.setText(_translate("ToDoLayout", "Current Level"))
-        self.levelDisplayButton.setToolTip(_translate("ToDoLayout", "Delete selected project"))
+        self.levelDisplayButton.setToolTip(
+            _translate("ToDoLayout", "Delete selected project")
+        )
         self.totalPoints_label.setText(_translate("ToDoLayout", "Total Points"))
-        self.totalPoints_spinBox.setToolTip(_translate("ToDoLayout", "Points gained for completing selected task"))
-        self.pointsTillNextLevel_label.setText(_translate("ToDoLayout", "Points To Next Level"))
-        self.pointsTillNextLevel_spinBox.setToolTip(_translate("ToDoLayout", "Points gained for completing selected task"))
-        self.archiveProject_pushButton.setToolTip(_translate("ToDoLayout", "Delete selected project"))
+        self.totalPoints_spinBox.setToolTip(
+            _translate("ToDoLayout", "Points gained for completing selected task")
+        )
+        self.pointsTillNextLevel_label.setText(
+            _translate("ToDoLayout", "Points To Next Level")
+        )
+        self.pointsTillNextLevel_spinBox.setToolTip(
+            _translate("ToDoLayout", "Points gained for completing selected task")
+        )
+        self.archiveProject_pushButton.setToolTip(
+            _translate("ToDoLayout", "Delete selected project")
+        )
         self.archiveProject_pushButton.setText(_translate("ToDoLayout", "Archive"))
-        self.addNewProject_pushButton_2.setToolTip(_translate("ToDoLayout", "Create new project with title"))
-        self.addNewProject_pushButton_2.setText(_translate("ToDoLayout", "Show Archive"))
+        self.showArchive_pushButton.setToolTip(
+            _translate("ToDoLayout", "Create new project with title")
+        )
+        self.showArchive_pushButton.setText(_translate("ToDoLayout", "Show Archive"))
 
 
 if __name__ == "__main__":
     import sys
+
     app = QtWidgets.QApplication(sys.argv)
     ToDoLayout = QtWidgets.QMainWindow()
     ui = Ui_ToDoLayout()

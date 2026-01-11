@@ -13,7 +13,7 @@ from Models.ModelParameters import (
     DEFAULT_HOUR_TO_POINT_CONVERSION,
 )
 from Models.ProjectTable import ProjectTableModel
-from Models.ProjectProxyFilter import ProjectFilterProxyModel
+from Models.TaskProxyFilter import TaskFilterProxyModel
 
 from Common.GitCommands import (
     get_all_uncomitted_files_in_folder,
@@ -43,7 +43,7 @@ def list_view_has_selected_item(list_view: QListView):
 
 
 def get_selected_model_index(
-    selected_row: int, model_filter: ProjectFilterProxyModel
+    selected_row: int, model_filter: TaskFilterProxyModel
 ) -> QModelIndex:
     """Get underlying model index from proxy filter"""
     filter_index = model_filter.index(selected_row, 0)
@@ -52,7 +52,7 @@ def get_selected_model_index(
 
 def get_selected_item_from_list(
     model_list: QStandardItemModel,
-    model_filter: ProjectFilterProxyModel,
+    model_filter: TaskFilterProxyModel,
     list_view: QListView,
 ) -> Optional[QStandardItem]:
     """Get model item from selected index in filter"""
@@ -65,7 +65,7 @@ def get_selected_item_from_list(
 
 def delete_item_if_selected(
     model_list: QStandardItemModel,
-    model_filter: ProjectFilterProxyModel,
+    model_filter: TaskFilterProxyModel,
     list_view: QListView,
 ) -> Optional[QStandardItem]:
     """Delete standard item for selected index in filter"""
@@ -82,7 +82,7 @@ def delete_item_if_selected(
 
 def append_item_to_list_view(
     model_list: QStandardItemModel,
-    model_filter: ProjectFilterProxyModel,
+    model_filter: TaskFilterProxyModel,
     list_view: QListView,
     new_item: Optional[QStandardItem],
 ) -> Optional[QStandardItem]:
@@ -135,7 +135,7 @@ def delete_selected_task(model: ToDoModel, layout: Ui_ToDoLayout):
 
 def delete_tasks_with_project_id(
     model_list: QStandardItemModel,
-    model_filter: ProjectFilterProxyModel,
+    model_filter: TaskFilterProxyModel,
     project_id: int,
 ):
     """Delete tasks that have project id"""
@@ -159,7 +159,7 @@ def delete_all_tasks_with_project_id(model: ToDoModel, project_id: int):
 
 def get_corresponding_model(
     model: ToDoModel, layout: Ui_ToDoLayout, list_view: QListView
-) -> Tuple[Optional[QStandardItemModel], Optional[ProjectFilterProxyModel]]:
+) -> Tuple[Optional[QStandardItemModel], Optional[TaskFilterProxyModel]]:
     """Get model and model filter given list view"""
     if layout.inProgress_listView == list_view:
         return model.in_progress_list, model.in_progress_filter
