@@ -220,7 +220,7 @@ class Ui_ToDoLayout(object):
         self.pointsTillNextLevel_spinBox.setObjectName("pointsTillNextLevel_spinBox")
         self.archiveProject_pushButton = QtWidgets.QPushButton(self.centralwidget)
         self.archiveProject_pushButton.setEnabled(False)
-        self.archiveProject_pushButton.setGeometry(QtCore.QRect(340, 635, 100, 40))
+        self.archiveProject_pushButton.setGeometry(QtCore.QRect(340, 635, 130, 40))
         self.archiveProject_pushButton.setToolTipDuration(1500)
         self.archiveProject_pushButton.setObjectName("archiveProject_pushButton")
         self.showArchive_pushButton = QtWidgets.QPushButton(self.centralwidget)

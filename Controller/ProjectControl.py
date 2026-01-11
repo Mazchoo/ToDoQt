@@ -129,6 +129,37 @@ def delete_current_project(self: ToDoListController, _click: bool):
 
 @ClassMethod(ToDoListController)
 @QtControlFunction(True)
+def archive_current_project(self: ToDoListController, _click: bool):
+    """Archive or unarchive the currently selected project based on current view"""
+    if self.model.project_list.selected_row is not None:
+        # Get the current project
+        current_row = self.model.project_list.selected_row
+        project = self.model.project_list._data[current_row]
+
+        is_showing_archive = self.layout.project_tableView.is_showing_archive
+        project.is_archived = not is_showing_archive
+
+        # Reset the proxy filter to update the view
+        self.layout.project_tableView._proxy_model.invalidateFilter()
+
+        # Clear project selection as the project is no longer visible
+        self.model.project_list.set_selected_row(None)
+        filter_available_tasks_for_selected_project(self.model, None)
+
+        disable_task_controls(self)
+        disable_new_task_control(self)
+        disable_time_edits(self)
+        disable_project_controls(self)
+
+        # Update the table view
+        update_project_table(self.layout.project_tableView, self.model.project_list)
+
+        # Enable backup button to save changes
+        self.layout.backup_pushButton.setEnabled(True)
+
+
+@ClassMethod(ToDoListController)
+@QtControlFunction(True)
 def toggle_show_archive(self: ToDoListController, _click: bool):
     """Toggle showing archived projects in the project table"""
     is_showing = self.layout.project_tableView.toggle_show_archive()
@@ -136,6 +167,10 @@ def toggle_show_archive(self: ToDoListController, _click: bool):
     # Update button text based on current state
     button_text = "Hide Archive" if is_showing else "Show Archive"
     self.layout.showArchive_pushButton.setText(button_text)
+
+    # Update archiveProject_pushButton text based on current state
+    archive_button_text = "Set Active" if is_showing else "Archive"
+    self.layout.archiveProject_pushButton.setText(archive_button_text)
 
     # Clear project selection as the selected project may no longer be visible
     self.model.project_list.set_selected_row(None)

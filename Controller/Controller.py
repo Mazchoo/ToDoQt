@@ -111,6 +111,9 @@ class ToDoListController(QWidget):
         controller.layout.deleteProject_pushButton.clicked.connect(
             lambda x: controller.delete_current_project(x)
         )
+        controller.layout.archiveProject_pushButton.clicked.connect(
+            lambda x: controller.archive_current_project(x)
+        )
         controller.layout.showArchive_pushButton.clicked.connect(
             lambda x: controller.toggle_show_archive(x)
         )
