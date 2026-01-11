@@ -18,7 +18,7 @@ CWD = getcwd()
 def get_date_tuple_now() -> Tuple[int, int, int, int, int, int, int]:
     """Get timestamp of right now according to local time year, month, day, hour, minute, second, ms"""
     now = datetime.now()
-    return [
+    return (
         now.year,
         now.month,
         now.day,
@@ -26,7 +26,7 @@ def get_date_tuple_now() -> Tuple[int, int, int, int, int, int, int]:
         now.minute,
         now.second,
         now.microsecond,
-    ]
+    )
 
 
 def get_hash_file_from_task_data(task_data: dict):
