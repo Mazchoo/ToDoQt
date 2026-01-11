@@ -64,7 +64,7 @@ def get_new_columns(all_note_data: dict, current_cols: list) -> Set[str]:
     if all_note_data:
         current_cols_set = set(current_cols)
         first_note = list(all_note_data.values())[0]
-        new_columns = current_cols_set.difference(first_note.keys())
+        new_columns = set(first_note.keys()).difference(current_cols_set)
     return new_columns
 
 
@@ -73,7 +73,7 @@ def get_deleted_columns(all_note_data: dict, current_cols: list) -> Set[str]:
     deleted_columns = set()
     if all_note_data:
         first_note_set = set(list(all_note_data.values())[0])
-        deleted_columns = first_note_set.difference(current_cols)
+        deleted_columns = set(current_cols).difference(first_note_set)
     return deleted_columns
 
 

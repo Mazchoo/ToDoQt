@@ -23,6 +23,7 @@ class Project(BaseModel):
     hr_spent: float
     hr_remain: float
     points_gained: int
+    is_archived: bool = False
 
     @field_validator("title")
     @classmethod
@@ -66,6 +67,7 @@ def create_new_project(name: str) -> dict:
         "hr_spent": 0,
         "hr_remain": 0,
         "points_gained": 0,
+        "is_archived": False,
     }
 
 

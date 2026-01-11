@@ -57,6 +57,7 @@ PROJECT_FIELDS_TO_ENCRYPT = [
     "hr_spent",
     "hr_remain",
     "points_gained",
+    "is_archived",
 ]
 
 
