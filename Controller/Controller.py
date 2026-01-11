@@ -170,12 +170,18 @@ class ToDoListController(QWidget):
     @staticmethod
     def initializeModels(controller):
         """Override load and set models"""
+        from Controller.ControlHelpers import recalculate_total_points
+        
         controller.model.load_from_folder("SavedToDo")
         controller.layout.pending_listView.setModel(controller.model.pending_filter)
         controller.layout.inProgress_listView.setModel(
             controller.model.in_progress_filter
         )
         controller.layout.done_listView.setModel(controller.model.done_filter)
+        
+        # Calculate and set total points from all projects
+        total_points_all_projects = recalculate_total_points(controller.model)
+        controller.layout.totalPoints_spinBox.setValue(total_points_all_projects)
 
     @staticmethod
     def initializeUi(controller):

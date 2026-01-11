@@ -13,9 +13,10 @@ from Controller.ControlHelpers import (
     get_seconds_from_qt_time,
     recalculate_hours_spent,
     recalculate_hours_remain,
-    recalculate_total_points,
+    recalculate_project_points,
     execute_layout_change,
     get_default_hour_to_points_valuation,
+    recalculate_total_points,
 )
 
 from Models.TaskEntry import get_date_tuple_now
@@ -69,9 +70,12 @@ def recalculate_current_project(self: ToDoListController):
             update_dict = {
                 "hr_spent": round(recalculate_hours_spent(self.model, project_id), 1),
                 "hr_remain": round(recalculate_hours_remain(self.model, project_id), 1),
-                "points_gained": recalculate_total_points(self.model, project_id),
+                "points_gained": recalculate_project_points(self.model, project_id),
             }
             self.model.project_list.update_project_data(project_id, **update_dict)
+
+        total_points_all_projects = recalculate_total_points(self.model)
+        self.layout.totalPoints_spinBox.setValue(total_points_all_projects)
 
 
 @ClassMethod(ToDoListController)

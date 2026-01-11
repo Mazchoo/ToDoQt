@@ -281,7 +281,7 @@ def recalculate_hours_remain(model: ToDoModel, project_id: int) -> float:
     return hr_remain
 
 
-def recalculate_total_points(model: ToDoModel, project_id: int):
+def recalculate_project_points(model: ToDoModel, project_id: int) -> int:
     """Recalculate completed points from all tasks"""
     total_points = 0
     for i in range(model.done_list.rowCount()):
@@ -290,6 +290,11 @@ def recalculate_total_points(model: ToDoModel, project_id: int):
             total_points += task_data["points"]
 
     return total_points
+
+
+def recalculate_total_points(model: ToDoModel) -> int:
+    """Recalculate total points from all projects"""
+    return sum(p.points_gained for p in model.project_list._data)
 
 
 def get_seconds_from_qt_time(time: QTime) -> int:
