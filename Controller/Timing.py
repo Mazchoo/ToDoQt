@@ -17,6 +17,7 @@ from Controller.ControlHelpers import (
     execute_layout_change,
     get_default_hour_to_points_valuation,
     recalculate_total_points,
+    update_level_display,
 )
 
 from Models.TaskEntry import get_date_tuple_now
@@ -76,6 +77,9 @@ def recalculate_current_project(self: ToDoListController):
 
         total_points_all_projects = recalculate_total_points(self.model)
         self.layout.totalPoints_spinBox.setValue(total_points_all_projects)
+
+        # Update level display based on new total points
+        update_level_display(self.layout, total_points_all_projects)
 
 
 @ClassMethod(ToDoListController)

@@ -14,6 +14,7 @@ from Models.ModelParameters import (
 )
 from Models.ProjectTable import ProjectTableModel
 from Models.TaskProxyFilter import TaskFilterProxyModel
+from Models.LevelScalingConfig import LevelScalingConfig
 
 from Common.GitCommands import (
     get_all_uncomitted_files_in_folder,
@@ -27,6 +28,9 @@ from UI import DisplayParameters
 from UI.ToDoLayout import Ui_ToDoLayout
 
 from Controller.UploadGitThread import CURRENT_REPO
+
+# Global level scaling configuration
+LEVEL_SCALING_CONFIG = LevelScalingConfig()
 
 
 def update_standard_item_fields(standard_item: QStandardItemModel, **kwargs):
@@ -295,6 +299,15 @@ def recalculate_project_points(model: ToDoModel, project_id: int) -> int:
 def recalculate_total_points(model: ToDoModel) -> int:
     """Recalculate total points from all projects"""
     return sum(p.points_gained for p in model.project_list._data)
+
+
+def update_level_display(layout: Ui_ToDoLayout, total_points: int):
+    """Update level display UI elements based on total points"""
+    threat_level, points_till_next = LEVEL_SCALING_CONFIG.get_level_info(total_points)
+
+    # Update UI elements
+    layout.levelDisplayButton.setText(threat_level)
+    layout.pointsTillNextLevel_spinBox.setValue(points_till_next)
 
 
 def get_seconds_from_qt_time(time: QTime) -> int:
