@@ -426,6 +426,7 @@ def disable_new_task_control(self: Self):
 def enable_project_controls(self: Self):
     """Set-up available controls for a selected project"""
     self.layout.deleteProject_pushButton.setEnabled(True)
+    self.layout.archiveProject_pushButton.setEnabled(True)
     self.layout.projectDescription_textEdit.setEnabled(True)
     text_descrition = self.model.project_list.current_description
     self.layout.projectDescription_textEdit.setText(text_descrition)
@@ -436,6 +437,7 @@ def disable_project_controls(self: Self):
     """Set-up available controls for no selected project"""
     self.layout.project_tableView.clearSelection()
     self.layout.deleteProject_pushButton.setEnabled(False)
+    self.layout.archiveProject_pushButton.setEnabled(False)
     self.layout.projectDescription_textEdit.setText("")
     self.layout.projectDescription_textEdit.setEnabled(False)
 
