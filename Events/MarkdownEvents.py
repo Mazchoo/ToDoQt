@@ -35,7 +35,9 @@ class MarkdownFocusHandler(QObject):
     def render_markdown(self):
         """Convert raw edit text to display html of markdown"""
         self._raw_markdown = self.text_edit.toPlainText()
-        rendered_html = markdown.markdown(self.raw_markdown)
+        rendered_html = markdown.markdown(
+            self.raw_markdown, extensions=["fenced_code", "codehilite"]
+        )
         self.text_edit.setHtml(rendered_html)
 
     def eventFilter(self, obj: QObject, event: QEvent):
