@@ -728,7 +728,7 @@
      </rect>
     </property>
     <property name="toolTip">
-     <string>Delete selected project</string>
+     <string>Archive selected project</string>
     </property>
     <property name="toolTipDuration">
      <number>1500</number>
@@ -750,7 +750,7 @@
      </rect>
     </property>
     <property name="toolTip">
-     <string>Create new project with title</string>
+     <string>Switch to Archive View</string>
     </property>
     <property name="toolTipDuration">
      <number>1500</number>

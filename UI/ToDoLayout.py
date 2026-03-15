@@ -308,11 +308,11 @@ class Ui_ToDoLayout(object):
             _translate("ToDoLayout", "Points gained for completing selected task")
         )
         self.archiveProject_pushButton.setToolTip(
-            _translate("ToDoLayout", "Delete selected project")
+            _translate("ToDoLayout", "Archive selected project")
         )
         self.archiveProject_pushButton.setText(_translate("ToDoLayout", "Archive"))
         self.showArchive_pushButton.setToolTip(
-            _translate("ToDoLayout", "Create new project with title")
+            _translate("ToDoLayout", "Switch to Archive View")
         )
         self.showArchive_pushButton.setText(_translate("ToDoLayout", "Show Archive"))
 
