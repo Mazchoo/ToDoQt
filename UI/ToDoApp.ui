@@ -618,7 +618,7 @@
      </rect>
     </property>
     <property name="toolTip">
-     <string>Delete selected project</string>
+     <string>Gamifies Completing Tasks</string>
     </property>
     <property name="toolTipDuration">
      <number>1500</number>

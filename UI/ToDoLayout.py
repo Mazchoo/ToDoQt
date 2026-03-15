@@ -295,7 +295,7 @@ class Ui_ToDoLayout(object):
         self.deleteProject_pushButton.setText(_translate("ToDoLayout", "Delete"))
         self.currentLevel_label.setText(_translate("ToDoLayout", "Current Level:"))
         self.levelDisplayButton.setToolTip(
-            _translate("ToDoLayout", "Delete selected project")
+            _translate("ToDoLayout", "Gamifies Completing Tasks")
         )
         self.totalPoints_label.setText(_translate("ToDoLayout", "Total Points:"))
         self.totalPoints_spinBox.setToolTip(

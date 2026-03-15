@@ -15,7 +15,8 @@
             "cwd": "${workspaceRoot}",
             "env": {
                 "PYTHONPATH": "${workspaceRoot}"
-            }
+            },
+            "postDebugTask": "Ruff format"
         },
         {
             "name": "Python: Release Mode",
